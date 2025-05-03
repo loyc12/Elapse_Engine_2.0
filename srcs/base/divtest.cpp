@@ -9,7 +9,7 @@ bool divtest( int d      ){ if ( d == 0 ){ return diverror( "an int",     "zero"
 bool divtest( long d     ){ if ( d == 0 ){ return diverror( "a long",     "zero" ); } return true; }
 bool divtest( uint32_t d ){ if ( d == 0 ){ return diverror( "a uint32_t", "zero" ); } return true; }
 bool divtest( uint64_t d ){ if ( d == 0 ){ return diverror( "a uint64_t", "zero" ); } return true; }
-bool divtest( fixed_t d  ){ if ( d == 0 ){ return diverror( "a fixed_t",  "zero" ); } return true; }
+//bool divtest( fixed_t d  ){ if ( d == 0 ){ return diverror( "a fixed_t",  "zero" ); } return true; }
 
 bool divtest( float d )
 {

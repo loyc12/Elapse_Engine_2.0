@@ -8,15 +8,31 @@ typedef byte_t CompC_t;
 typedef enum : CompC_t
 {
 	COMP_SCRIPT = 0,
+	COMP_POSITION,
 	COMP_PHYSIC,
 	COMP_MOVEMENT,
-	COMP_POSITION,
 	COMP_COLLIDE,
 	COMP_RENDER,
 	COMP_TYPE_COUNT,
 	COMP_BASE_TYPE = 255, // NOTE : should never be used for actual Components
 
 } comp_e;
+
+inline bool IsValidCompType( comp_e type )
+{ // NOTE : Checks if the type is valid ( 0 <= type < COMP_TYPE_COUN
+	flog( 0 );
+	if( type == COMP_BASE_TYPE )
+	{
+		qlog( "Component type cannot be COMP_BASE_TYPE", WARN, 0 );
+		return false;
+	}
+	if( type >= COMP_TYPE_COUNT )
+	{
+		qlog( "IsValidCompType : Component type is out of range", WARN, 0 );
+		return false;
+	}
+	return true;
+}
 
 // NOTE : Components, like Entities, are created and destroyed via the Component Manager
 class BaseComp
@@ -57,8 +73,6 @@ class BaseComp
 	inline virtual bool onTick(){ return _active; } // NOTE : ovveride this in derived classes
 };
 
-typedef array< BaseComp*, COMP_TYPE_COUNT > CompArr; // NOTE : Components should be stored
-
 // ================================ TEMPLATES
 
 #include <concepts>
@@ -70,6 +84,34 @@ concept IsBaseComp = std::is_base_of<BaseComp, T>::value; // NOTE : this is a co
 // NOTE : this is shorthand to define a template that requires the type to be derived from BaseComp
 # define TTC template <typename CompT> requires IsBaseComp< CompT >
 
+TTC inline bool IsValidComponent( CompT *comp )
+{
+	flog( 0 );
+	if( comp == nullptr )
+	{
+		qlog( "IsValidComponent : Component is nullptr", WARN, 0 );
+		return false;
+	}
+	if( comp->getID() == 0 )
+	{
+		qlog( "IsValidComponent : Component ID cannot be 0", WARN, 0 );
+		return false;
+	}
+	return true;
+}
 
+TTC inline CompT *CompFactory( id_t id = 0 )
+{
+	flog( 0 );
+	return ( new CompT( true, id ));
+}
+
+TTC inline CompT *CompFactory( CompT *src, id_t id = 0 )
+{
+	flog( 0 );
+	CompT *comp = new CompT( true, id );
+	if( comp != nullptr ){ *comp = *src; } // NOTE : copies the component
+	return comp;
+}
 
 #endif // BASE_COMP_HPP

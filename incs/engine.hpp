@@ -5,6 +5,15 @@
 
 # include "./base.hpp"
 
+# include "./engine/component/BaseComp.hpp"
+# include "./engine/component/CompPos.hpp"
+
+# include "./engine/entity/Entity.hpp"
+
+# include "./engine/system/CompManager.hpp"
+# include "./engine/system/Controller.hpp"
+# include "./engine/system/Viewport.hpp"
+
 # include "./engine/Engine.hpp"
 
 // add here the core ( aka engine ) includes

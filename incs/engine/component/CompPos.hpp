@@ -13,8 +13,7 @@ class CompPos : public BaseComp
 	// ================================ CORE METHODS
 		inline virtual void onAdd() override {} // NOTE : No additional behavior for CompPos
 		inline virtual void onDel() override {} // NOTE : No additional behavior for CompPos
-		//virtual void onCpy( const BaseComp &rhs );
-		virtual void onCpy( const CompPos  &rhs );
+		virtual void onCpy( const CompPos &rhs );
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
@@ -23,11 +22,8 @@ class CompPos : public BaseComp
 		CompPos();
 		CompPos( bool isActive, id_t id = 0, Vector2 pos = { 0, 0 });
 
-		//CompPos( const BaseComp &rhs );
 		CompPos( const CompPos  &rhs );
-
-		//CompPos &operator=( const BaseComp &rhs );
-		CompPos &operator=( const CompPos  &rhs );
+		CompPos &operator=( const CompPos &rhs );
 
 	// ================================ ACCESSORS / MUTATORS
 		inline Vector2 getPos() const { return _pos; }

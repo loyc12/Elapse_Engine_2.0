@@ -4,12 +4,10 @@
 # include <raylib.h>
 # include "../base.hpp"
 
-class Component;
-class Entity;
+# include "./system/Viewport.hpp"
+# include "./system/Controller.hpp"
+# include "./system/CompManager.hpp"
 
-class Viewport2D;
-class Controller;
-class CompManager;
 
 typedef enum : byte_t
 {
@@ -33,9 +31,8 @@ class Engine
 {
 	// ================================ ATTRIBUTES
 	private:
-		id_t _maxID;
-		float   _DT; // delta time
-		float   _TS; // time scale
+		float _DT; // delta time
+		float _TS; // time scale
 
 		Viewport2D  *_viewport2D;
 		Controller  *_controller;
@@ -67,9 +64,9 @@ class Engine
 	private:
 		void runStep(); // calls the update methods once
 			void readInputs();
-			void runPhysics();
-			void runScripts();
-			void runRenders(); // calls the render methods once
+			//void runPhysics();
+			//void runScripts();
+			void refreshScreen(); // calls the render methods once
 				void renderWorld();
 				void renderUIs();
 
@@ -85,22 +82,24 @@ class Engine
 
 	// ================================ ACCESSORS / MUTATORS
 	public:
-		engineState_e  getState();
+		inline engineState_e getState() { std::lock_guard< std::mutex > lock( mtx_state ); return _state; }
 
-		Camera2D    *getCamera();
-		Viewport2D  *getViewport();
+		inline inputs_s    &getLatestInputs(){   return _controller->getLatestInputs(); }
+		inline inputs_s    &getPreviousInputs(){ return _controller->getPreviousInputs(); }
+		inline Controller  *getController(){     return _controller; }
 
-		Controller  *getController();
+		inline Camera2D    *getCamera(){   return _viewport2D->getCamera(); }
+		inline Viewport2D  *getViewport(){ return _viewport2D; }
 
-		CompManager *getCompManager();
-		Entity      *getEntityByID( id_t id );
+		inline Entity      *getEntity( id_t id ){ return _compManager->getEntity( id ); }
+		inline CompManager *getCompManager(){     return _compManager; }
 
 		void  setTimeScale( float timeScale );
 		float getDeltaTime() const; // multiplied by the time scale
 
 	// ================================ MUTEXED ACCESSORS
 	private:
-		void setState( engineState_e newState );
+		inline void setState( engineState_e newState ) { std::lock_guard< std::mutex > lock( mtx_state ); _state = newState; }
 
 };
 
