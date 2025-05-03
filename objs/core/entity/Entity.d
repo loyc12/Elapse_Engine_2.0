@@ -25,6 +25,8 @@ objs/core/entity/Entity.o: srcs/core/entity/Entity.cpp \
  srcs/core/entity/../../../incs/./engine/entity/././Entity.hpp \
  srcs/core/entity/../../../incs/./engine/interface/injectors.hpp \
  srcs/core/entity/../../../incs/./engine/interface/../../base.hpp \
+ srcs/core/entity/../../../incs/./engine/interface/../../engine/system/Controller.hpp \
+ srcs/core/entity/../../../incs/./engine/interface/../../engine/system/../../base.hpp \
  srcs/core/entity/../../../incs/./engine/system/CompManager.hpp \
  srcs/core/entity/../../../incs/./engine/system/../../base.hpp \
  srcs/core/entity/../../../incs/./engine/system/../entity/Entity.hpp \
@@ -65,6 +67,8 @@ srcs/core/entity/../../../incs/./engine/entity/./Entity_T.hpp:
 srcs/core/entity/../../../incs/./engine/entity/././Entity.hpp:
 srcs/core/entity/../../../incs/./engine/interface/injectors.hpp:
 srcs/core/entity/../../../incs/./engine/interface/../../base.hpp:
+srcs/core/entity/../../../incs/./engine/interface/../../engine/system/Controller.hpp:
+srcs/core/entity/../../../incs/./engine/interface/../../engine/system/../../base.hpp:
 srcs/core/entity/../../../incs/./engine/system/CompManager.hpp:
 srcs/core/entity/../../../incs/./engine/system/../../base.hpp:
 srcs/core/entity/../../../incs/./engine/system/../entity/Entity.hpp:

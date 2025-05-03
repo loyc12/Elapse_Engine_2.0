@@ -25,6 +25,8 @@ objs/core/system/CompManagerTick.o: srcs/core/system/CompManagerTick.cpp \
  srcs/core/system/../../../incs/./engine/entity/././Entity.hpp \
  srcs/core/system/../../../incs/./engine/interface/injectors.hpp \
  srcs/core/system/../../../incs/./engine/interface/../../base.hpp \
+ srcs/core/system/../../../incs/./engine/interface/../../engine/system/Controller.hpp \
+ srcs/core/system/../../../incs/./engine/interface/../../engine/system/../../base.hpp \
  srcs/core/system/../../../incs/./engine/system/CompManager.hpp \
  srcs/core/system/../../../incs/./engine/system/../../base.hpp \
  srcs/core/system/../../../incs/./engine/system/../entity/Entity.hpp \
@@ -63,6 +65,8 @@ srcs/core/system/../../../incs/./engine/entity/./Entity_T.hpp:
 srcs/core/system/../../../incs/./engine/entity/././Entity.hpp:
 srcs/core/system/../../../incs/./engine/interface/injectors.hpp:
 srcs/core/system/../../../incs/./engine/interface/../../base.hpp:
+srcs/core/system/../../../incs/./engine/interface/../../engine/system/Controller.hpp:
+srcs/core/system/../../../incs/./engine/interface/../../engine/system/../../base.hpp:
 srcs/core/system/../../../incs/./engine/system/CompManager.hpp:
 srcs/core/system/../../../incs/./engine/system/../../base.hpp:
 srcs/core/system/../../../incs/./engine/system/../entity/Entity.hpp:

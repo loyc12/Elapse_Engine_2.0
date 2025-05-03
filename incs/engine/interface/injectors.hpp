@@ -2,6 +2,7 @@
 # define INJECTORS_HPP
 
 #include "../../base.hpp"
+#include "../../engine/system/Controller.hpp"
 
 /*
 these functions are called by the engine at an appropriate time during their respective function calls
@@ -23,7 +24,7 @@ they are used to inject game specific code into the engine without modifying the
 	void OnStartLoop();
 		void OnStartStep();
 
-			void OnReadInputs(); // NOTE : is this archaic ?
+			void OnReadInputs( inputs_s &inp, inputs_s &prev );
 
 			void OnTickScripts();
 			void OnTickPhysics();

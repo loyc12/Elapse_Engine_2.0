@@ -30,6 +30,7 @@ void Engine::runStep()
 	OnStartStep(); // from injectors.hpp
 
 	_DT = GetFrameTime();
+
 	_controller->refreshInputs();
 
 	_compManager->tickScripts();

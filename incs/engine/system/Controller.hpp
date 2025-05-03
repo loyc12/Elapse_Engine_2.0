@@ -49,8 +49,6 @@ class Controller
 
 	// ================================ METHODS
 		void refreshInputs();
-
-
 };
 
 

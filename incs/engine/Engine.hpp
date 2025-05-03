@@ -106,6 +106,7 @@ extern Viewport2D  *GVP;
 extern Controller  *GCN;
 extern CompManager *GCM;
 
-extern float GDTS();
+extern float    GDTS();
+extern inputs_s &GIN();
 
 #endif // ENGINE_HPP

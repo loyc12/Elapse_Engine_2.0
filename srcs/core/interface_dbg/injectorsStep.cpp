@@ -5,19 +5,36 @@
 // called when the engine calls the game step method - aka in the game loop of launchLoop()
 
 void OnStartLoop()
-{	// NOTE : this is called at the start of the game loop
+{
 	flog( 0 );
 	// TODO : add game specific code here
 }
-void OnStartStep()
-{	// NOTE : this is called at the start of the game step
+void OnEndLoop()
+{
 	flog( 0 );
 	// TODO : add game specific code here
 }
 
-void OnReadInputs()
+void OnStartStep()
 {
 	flog( 0 );
+	// TODO : add game specific code here
+}
+void OnEndStep()
+{
+	flog( 0 );
+	// TODO : add game specific code here
+}
+
+void OnReadInputs( inputs_s &inp, inputs_s &prev )
+{
+	flog( 0 );
+
+	if ( inp.P && !prev.P )
+	{
+		qlog( "P pressed", INFO, 0 );
+		GNG->togglePause();
+	}
 	// TODO : add game specific code here
 }
 
@@ -81,15 +98,4 @@ void OnRenderUI()
 	//string plInfo = "G_Player  : " + to_string( ( int )playerScreenPos.x ) + ":" + to_string( ( int )playerScreenPos.y ) + " | " + to_string( ( int )playerWorldPos.x ) + ":" + to_string( ( int )playerWorldPos.y );
 	//qlog( plInfo, INFO, 0 );
 	//DrawText( plInfo.c_str(), FontSizeUI, ( 5.5f * FontSizeUI ), FontSizeUI, WHITE );
-}
-
-void OnEndStep()
-{	// NOTE : this is called at the end of the game step
-	flog( 0 );
-	// TODO : add game specific code here
-}
-void OnEndLoop()
-{	// NOTE : this is called at the end of the game loop
-	flog( 0 );
-	// TODO : add game specific code here
 }

@@ -94,4 +94,6 @@ void Controller::refreshInputs() // NOTE : archaic way of doing things, but it w
 	_latestInputs.EQU = IsKeyDown( KEY_EQUAL );
 	_latestInputs.MIN = IsKeyDown( KEY_MINUS );
 	_latestInputs.SLA = IsKeyDown( KEY_SLASH );
+
+	OnReadInputs( _latestInputs, _previousInputs ); // from injectors.hpp
 }
