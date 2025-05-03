@@ -37,6 +37,7 @@ TTC CompT *CpyCompOver( CompT *dst, CompT *src )
 
 // ================================ ACCESSORS / MUTATORS
 
+/*
 TTC CompT *Entity::getComponent( comp_e compType ) const
 {
 	flog( _id );
@@ -51,6 +52,25 @@ TTC CompT *Entity::getComponent( comp_e compType ) const
 		return nullptr;
 	}
 	return _components[ compType ];
+}
+*/
+TTC CompT *Entity::getComponent() const
+{
+	flog( _id );
+	comp_e compType = CompT::getType();
+
+	if ( compType == COMP_BASE_TYPE )
+	{
+		qlog( "getComponent : Invalid component type", ERROR, 0 );
+		return nullptr;
+	}
+	if ( compType >= COMP_TYPE_COUNT )
+	{
+		qlog( "getComponent : Component type is out of range", ERROR, 0 );
+		return nullptr;
+	}
+	// casting to CompT
+	return static_cast< CompT* >( _components[ compType ] );
 }
 
 #endif // ENTITY_TPP

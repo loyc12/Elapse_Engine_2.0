@@ -51,15 +51,18 @@ class CompManager
 		bool addThatEntity( Entity *Ntt );
 		bool delThatEntity( Entity *Ntt, bool freeMem = true );
 
+		bool defragEntityMap(); // NOTE : removes nullptr entities from the map and recalculates the max ID
+
 		// NOTE : add + copy entity and its components
 		bool dupEntity( id_t src );
 		bool dupEntity( Entity *src );
 
+
 	// ================ COMPONENT METHODS
 		CompC_t getCompCount( id_t id ) const;
 
-		TTC inline CompT *getComponent( id_t id ) const { return getComponent( id, CompT::getType() ); };
-		TTC CompT *getComponent( id_t id, comp_e compType ) const;
+		TTC inline CompT *getComponent( id_t id, comp_e compType ) const { ( void )compType; return getComponent< CompT >( id ); };
+		TTC CompT *getComponent( id_t id ) const;
 
 		TTC inline bool hasComponent( id_t id ) const { return hasComponent( id, CompT::getType() ); };
 		bool hasComponent( id_t id, comp_e compType ) const;

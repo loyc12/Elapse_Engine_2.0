@@ -32,6 +32,7 @@ void CompManager::updateAllComponents()
 void CompManager::updateCompsByType( comp_e compType )
 {	// NOTE : calls the onTick() method of all components of the given type in the map
 	flog( 0 );
+	qlog( "updateCompsByType : Updating components of type: " + std::to_string( compType ), INFO, 0 );
 	if( !IsValidCompType( compType ))
 	{
 		qlog( "updateCompsByType : Invalid component type", ERROR, 0 );

@@ -1,5 +1,5 @@
-# include <raylib.h>
-# include "../../../incs/engine.hpp"
+#include <raylib.h>
+#include "../../../incs/game.hpp"
 
 // ==================== ENGINE STEP INJECTION FUNCTIONS
 // called when the engine calls the game step method - aka in the game loop of launchLoop()
@@ -93,9 +93,14 @@ void OnRenderUI()
 	qlog( caInfo, INFO, 0 );
 	DrawText( caInfo.c_str(), FontSizeUI, ( 4.0f * FontSizeUI ), FontSizeUI, WHITE );
 
-	//Vector2 playerWorldPos = G_Player->getPosition();
-	//Vector2 playerScreenPos = GetWorldToScreen2D( playerWorldPos, GVP->getCamera() );
-	//string plInfo = "G_Player  : " + to_string( ( int )playerScreenPos.x ) + ":" + to_string( ( int )playerScreenPos.y ) + " | " + to_string( ( int )playerWorldPos.x ) + ":" + to_string( ( int )playerWorldPos.y );
-	//qlog( plInfo, INFO, 0 );
-	//DrawText( plInfo.c_str(), FontSizeUI, ( 5.5f * FontSizeUI ), FontSizeUI, WHITE );
+	if ( G_PlayerNtt == nullptr )
+	{
+		qlog( "G_PlayerNtt is nullptr", ERROR, 0 );
+		return;
+	}
+	Vector2 playerWorldPos = G_PlayerNtt->getComponent< CompPos >()->getPos();
+	Vector2 playerScreenPos = GetWorldToScreen2D( playerWorldPos, *GVP->getCamera() );
+	string plInfo = "G_Player  : " + to_string( ( int )playerScreenPos.x ) + ":" + to_string( ( int )playerScreenPos.y ) + " | " + to_string( ( int )playerWorldPos.x ) + ":" + to_string( ( int )playerWorldPos.y );
+	qlog( plInfo, INFO, 0 );
+	DrawText( plInfo.c_str(), FontSizeUI, ( 5.5f * FontSizeUI ), FontSizeUI, WHITE );
 }

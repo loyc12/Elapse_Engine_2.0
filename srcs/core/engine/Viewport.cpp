@@ -8,16 +8,17 @@ void Viewport2D::init()
 	flog( 0 );
 	_targetFPS = WINDOW_DEFAULT_FPS;
 
-	_windowSize     = { SCREEN_DEFAULT_WIDTH, SCREEN_DEFAULT_HEIGHT };
-	_mousePos       = { 0, 0 };
-	_mouseWorldPos  = { 0, 0 };
+	_windowSize    = { SCREEN_DEFAULT_WIDTH, SCREEN_DEFAULT_HEIGHT };
+	_mousePos      = { 0, 0 };
+	_mouseWorldPos = { 0, 0 };
 
 	_camera.target   = { 0.0f, 0.0f };
 	_camera.zoom     = DEFAULT_ZOOM;
 	_camera.rotation = 0.0f;
 	_camera.offset   = { _windowSize.x / 2, _windowSize.y / 2 };
 
-	_trackingObject  = false;
+	_trackingEntitity = false;
+	_trackedEntitity  = nullptr;
 }
 
 // ================================ CONSTRUCTORS / DESTRUCTORS
@@ -71,7 +72,7 @@ void Viewport2D::moveTarget( Vector2 offset )
 void Viewport2D::setTarget( Vector2 target, bool overrideTracking )
 {
 	flog( 0 );
-	if ( _trackingObject )
+	if ( _trackedEntitity )
 	{
 		if ( !overrideTracking )
 		{
@@ -81,8 +82,8 @@ void Viewport2D::setTarget( Vector2 target, bool overrideTracking )
 		}
 		else { qlog( "setTarget : Overriding tracking", INFO, 0 ); }
 	}
-	_trackingObject = false;
-	_camera.target = target;
+	_trackingEntitity = true;
+	_camera.target    = target;
 }
 
 float Viewport2D::getZoom(){ return _camera.zoom; }
@@ -121,7 +122,7 @@ void Viewport2D::open()
 		qlog( "open : Failed to open window", ERROR, 0 );
 		return;
 	}
-	qlog( "open : Window opened", INFO, 0 );
+	qlog( "open : Window successfully opened", INFO, 0 );
 
 	SetTargetFPS( _targetFPS );
 }
@@ -142,7 +143,7 @@ void Viewport2D::close()
 		qlog( "close : Failed to close window", ERROR, 0 );
 		return;
 	}
-	qlog( "close : Window closed", INFO, 0 );
+	qlog( "close : Window successfully closed", INFO, 0 );
 }
 
 void Viewport2D::update()
@@ -178,7 +179,7 @@ void Viewport2D::updateMouse()
 void Viewport2D::updateCamera()
 {
 	flog( 0 );
-	//if ( _trackingObject ){ _camera.target = { _trackedObject->getPosition() }; } // TODO : implement this
+	//if ( _trackedEntitity ){ _camera.target = { _trackedEntitity->getPosition() }; } // TODO : implement this
 
 	// Clamping camera values
 	if ( _camera.zoom > MIN_ZOOM ){ _camera.zoom = MIN_ZOOM; }
@@ -193,44 +194,44 @@ void Viewport2D::updateCamera()
 
 // ================================ OBJECTS TRACKING
 
-Entity *Viewport2D::getTrackedObject() const { return _trackedObject; }
+Entity *Viewport2D::getTrackedEntity() const { return _trackedEntitity; }
 
-bool Viewport2D::isTracking() const { return _trackingObject; }
+bool Viewport2D::isTracking() const { return _trackingEntitity; }
 
-bool Viewport2D::trackObject( Entity *Ntt, bool overrideTracking )
+bool Viewport2D::trackEntity( Entity *Ntt, bool overrideTracking )
 {
 	flog( 0 );
 	if ( Ntt == nullptr )
 	{
-		qlog( "trackObject : Cannot track a nullptr", INFO, 0 );
-		qlog( "trackObject : Use untrackObject() to stop tracking", DEBUG, 0 );
+		qlog( "trackEntity : Cannot track a nullptr", INFO, 0 );
+		qlog( "trackEntity : Use untrackEntity() to stop tracking", DEBUG, 0 );
 		return false;
 	}
 
-	if ( _trackingObject )
+	if ( _trackingEntitity )
 	{
 		if ( !overrideTracking )
 		{
-			qlog( "trackObject : Already tracking an object", WARN, 0 );
-			qlog( "trackObject : Use overrideTracking = true to override", INFO, 0 );
+			qlog( "trackEntity : Already tracking an object", WARN, 0 );
+			qlog( "trackEntity : Use overrideTracking = true to override", INFO, 0 );
 			return false;
 		}
-		else { qlog( "trackObject : Overriding tracking", INFO, 0 ); }
+		else { qlog( "trackEntity : Overriding tracking", INFO, 0 ); }
 	}
 
-	_trackedObject  = Ntt;
-	_trackingObject = true;
+	_trackedEntitity  = Ntt;
+	_trackingEntitity = true;
 
 	return true;
 }
 
-bool Viewport2D::untrackObject()
+bool Viewport2D::untrackEntity()
 {
 	flog( 0 );
-	_trackedObject = nullptr;
+	_trackedEntitity = nullptr;
 
-	if ( !_trackingObject ){ return false; }
+	if ( !_trackingEntitity ){ return false; }
 
-	_trackingObject = false; return true;
+	_trackingEntitity = false; return true;
 }
 

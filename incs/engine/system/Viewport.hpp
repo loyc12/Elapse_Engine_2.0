@@ -29,9 +29,9 @@ class Viewport2D
 		Vector2	_mouseWorldPos; // latest position of the mouse in world units
 
 		Camera2D _camera;       // contains target, zoom, rotation, offset
-		Entity  *_trackedObject;
+		Entity  *_trackedEntitity;
 
-		bool _trackingObject;
+		bool _trackingEntitity;
 
 		// ================================ CORE METHODS
 		void init();
@@ -95,11 +95,11 @@ class Viewport2D
 		void updateCamera();
 
 	// ================================ OBJECT TRACKING
-		Entity *getTrackedObject() const;
+		Entity *getTrackedEntity() const;
 
 		bool isTracking() const;
-		bool trackObject( Entity *obj, bool overrideTracking = false );
-		bool untrackObject();
+		bool trackEntity( Entity *obj, bool overrideTracking = false );
+		bool untrackEntity();
 };
 
 

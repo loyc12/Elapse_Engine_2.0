@@ -1,8 +1,72 @@
 #include "../../../incs/engine.hpp"
 #include "../../../incs/engine/entity/Entity.hpp"
 #include "../../../incs/engine/system/CompManager.hpp"
+#include <cstddef>
 
+// ================================ ASSOCIATED FUNCTIONS
+
+bool IsValidEntity( Entity *Ntt )
+{
+	flog( 0 );
+	if ( Ntt == nullptr )
+	{
+		qlog( "IsValidEntity : Entity is nullptr", WARN, 0 );
+		return false;
+	}
+	if ( Ntt->getID() == 0 )
+	{
+		qlog( "IsValidEntity : Entity ID is 0", WARN, 0 );
+		return false;
+	}
+	return true;
+}
 // ================================ CORE METHODS
+
+bool Entity::onAdd()
+{
+	flog( 0 );
+	qlog( "onAdd : Initializing a new entity", INFO, 0 );
+	_active = true; // NOTE : set the active state to true
+	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i ){ _components[ i ] = nullptr; }
+	return true;
+}
+bool Entity::onDel()
+{
+	flog( _id );
+
+	if ( GVP != nullptr && GVP->isTracking() && GVP->getTrackedEntity() == this )
+	{
+		qlog( "delFromManager : Untracking entity due to deletion", INFO, _id );
+		GVP->untrackEntity();
+	}
+
+	qlog( "onDel : Deleting this entity", INFO, _id );
+	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i )
+	{
+		if ( _components[ i ] != nullptr )
+		{
+			qlog( "onDel : Deleting component of type: " + std::to_string( i ), DEBUG, _id );
+			delete _components[ i ];
+		}
+		else{ qlog( "onDel : Component of type: " + std::to_string( i ) + " is already a nullptr", DEBUG, _id ); }
+	}
+	return delFromManager();
+}
+bool Entity::onCpy( const Entity &rhs )
+{
+	flog( _id );
+	if( this == &rhs ){ return false; } // NOTE : check if the object is the same
+
+	qlog( "onCpy : Copying data from entity with ID: " + std::to_string( rhs._id ) + " to this entity", INFO, _id );
+
+	_active = rhs._active; // NOTE : copy the active state
+	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i )
+	{
+		// NOTE : copies each component respective state, allocating or freeing memory as required
+		_components[ i ] = CpyCompOver( _components[ i ], rhs._components[ i ] );
+	}
+	return true;
+}
 
 bool Entity::addToManager()
 {
@@ -13,27 +77,21 @@ bool Entity::addToManager()
 bool Entity::delFromManager()
 {
 	flog( _id );
-	if ( _id == 0 ){ return false; } // NOTE : if the ID is 0, the entity is not supposed to be in the map
 
-	qlog( "delFromManager : Deleting entity with ID: " + std::to_string( _id ), INFO, 0 );
+	qlog( "delFromManager : Deleting this entity", INFO, _id );
+	if ( _id != 0 )
+	{
+		if ( GCM->hasThatEntity( this ))
+		{
+			qlog( "delFromManager : removing entity from manager", INFO, _id );
+			GCM->delThatEntity( this, false );
+		}
+		else{ qlog( "delFromManager : Entity has id but is not in manager", WARN, _id ); }
 
-	GCM->delThatEntity( this, false );
-	_id = 0;
+		_id = 0;
+	}
 
 	return true;
-}
-void Entity::onCpy( const Entity &rhs )
-{
-	flog( _id );
-	if( this == &rhs ){ return; } // NOTE : check if the object is the same
-
-	qlog( "Entity : Copying entity with ID: " + std::to_string( rhs._id ) + " to entity with ID: " + std::to_string( _id ), INFO, 0 );
-
-	_active = rhs._active; // NOTE : copy the active state
-	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i )
-	{ // NOTE : copies each component respective state, allocating or freeing memory as required
-		_components[ i ] = CpyCompOver( _components[ i ], rhs._components[ i ] );
-	}
 }
 
 // ================================ CONSTRUCTORS / DESTRUCTORS
@@ -41,24 +99,27 @@ void Entity::onCpy( const Entity &rhs )
 Entity::~Entity()
 {
 	flog( _id );
-	delFromManager();
+	onDel();
+	qlog( "Entity : Entity deleted", INFO, 0 );
 }
 
 Entity::Entity() : _id( 0 )
 {
 	flog( _id );
+	onAdd();
 	addToManager();
 }
 Entity::Entity( bool addEntityToManager, id_t id ) : _id( id ) // NOTE : should only be called by CompManager
 {
 	flog( _id );
+	onAdd();
 	if ( addEntityToManager ){ addToManager(); }
-	qlog( "Entity : Created entity with ID: " + std::to_string( _id ), INFO, 0 );
 }
 
 Entity::Entity( const Entity &rhs ) : _id( 0 )
 {
 	flog( _id );
+	onAdd();
 	addToManager();
 	*this = rhs; // NOTE : calls the copy assignment operator
 }
@@ -102,8 +163,9 @@ bool Entity::isCompActive( comp_e compType, bool activate )
 bool Entity::hasComponent( comp_e compType ) const
 {
 	flog( _id );
-	if ( !IsValidCompType( compType )){ return false; }
-	return ( _components[ compType ] != nullptr );
+	if ( !IsValidCompType( compType )){        return false; }
+	if ( _components[ compType ] == nullptr ){ return false; }
+	return true;
 }
 
 bool Entity::addComponent( comp_e compType )
@@ -141,6 +203,7 @@ bool Entity::tickComponent( comp_e compType )
 	if ( !IsValidCompType( compType )){ return false; }
 	if ( !IsValidComponent( _components[ compType ] )){ return false; }
 
+	qlog( "tickComponent : Ticking component of type: " + std::to_string( compType ) + " from this entity", INFO, _id );
 	return _components[ compType ]->onTick();
 }
 
@@ -151,22 +214,4 @@ BaseComp *Entity::operator[]( comp_e compType ) const
 	flog( _id );
 	if ( compType >= COMP_TYPE_COUNT ){ return nullptr; }
 	return _components[ compType ];
-}
-
-// ================================ ASSOCIATED FUNCTIONS
-
-bool IsValidEntity( Entity *Ntt )
-{
-	flog( 0 );
-	if ( Ntt == nullptr )
-	{
-		qlog( "IsValidEntity : Entity is nullptr", WARN, 0 );
-		return false;
-	}
-	if ( Ntt->getID() == 0 )
-	{
-		qlog( "IsValidEntity : Entity ID is 0", WARN, 0 );
-		return false;
-	}
-	return true;
 }

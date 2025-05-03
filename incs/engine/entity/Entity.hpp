@@ -19,9 +19,13 @@ class Entity
 
 	// ================================ CORE METHODS
 		// NOTE : mutex these is multithreading is implemented
+
+		bool onAdd();
+		bool onDel();
+		bool onCpy( const Entity &rhs );
+
 		bool addToManager(); //   NOTE : automatically adds this instance to CompManager's map
 		bool delFromManager(); // NOTE : automatically removes this instance to CompManager's map
-		void onCpy( const Entity &rhs );
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
@@ -41,10 +45,12 @@ class Entity
 		inline bool isActive() const { return _active; }
 		inline bool isActive( bool activate ) { _active = activate; return _active; }
 
+		inline BaseComp **getAllComps() { return _components; }
+
 		CompC_t  getCompCount() const;
 
-		TTC inline CompT *getComponent() const { return getComponent( CompT::getType() ); }
-		TTC CompT *getComponent( comp_e compType ) const;
+		TTC inline CompT *getComponent( comp_e compType ) const { ( void )compType; return getComponent< CompT >(); } // NOTE " temporary workaround"
+		TTC CompT *getComponent() const;
 
 		TTC inline bool isCompActive() const { return isCompActive( CompT::getType() ); }
 		bool isCompActive( comp_e compType ) const;

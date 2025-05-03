@@ -22,7 +22,7 @@ typedef enum
 # define LOG_LVL_DEBUG 4
 # define LOG_LVL_FUNCT 5
 
-#	define LOG_LVL 4 // NONE, DEBUG, INFO, WARN, ERROR, FUNCT ( each level includes the previous one(s) )
+#	define LOG_LVL 5 // NONE, DEBUG, INFO, WARN, ERROR, FUNCT ( each level includes the previous one(s) )
 
 #	define HERE __FILE__, __LINE__
 
@@ -33,6 +33,7 @@ typedef enum
 
 #	if LOG_LVL > LOG_LVL_NONE
 #	 define qlog( msg, lvl, id ) log( msg, lvl, id, HERE )
+#  define BLOCK std::cin.get();
 #	else
 #	 define qlog( msg, lvl, id ) ;
 #	endif

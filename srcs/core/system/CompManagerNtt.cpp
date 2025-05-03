@@ -1,5 +1,7 @@
 #include "../../../incs/engine.hpp"
 
+// ================================ ASSOCIATED FUNCTIONS
+
 Entity *CpyEntityOver( Entity *src, Entity *dst )
 {
 	flog( 0 );
@@ -32,6 +34,22 @@ Entity *CpyEntityOver( Entity *src, Entity *dst )
 		}
 	}
 	return dst;
+}
+
+// ================================ CORE METHODS
+
+void CompManager::deleteAllEntities() // TODO : TEST ME
+{
+	flog( 0 );
+	for( auto it = _NttMap.begin(); it != _NttMap.end(); )
+	{
+		if ( !delThatEntity( it->second, true )) { qlog( "deleteAllEntities : entity already deleted for ID:" + std::to_string( it->first ), INFO, 0 ); }
+		it = _NttMap.erase( it );
+	}
+
+	qlog( "deleteAllEntities : Clearing the entity map", INFO, 0 );
+	_NttMap.clear();
+	_maxID = 0;
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -110,15 +128,22 @@ bool CompManager::hasThatEntity( Entity *Ntt ) const
 {
 	flog( 0 );
 	if( Ntt == nullptr ){ return false; }
+
 	for ( auto it = _NttMap.begin(); it != _NttMap.end(); ++it )
 	{
+		if( it->second == nullptr )
+		{
+			qlog( "hasThatEntity : Skipping nullptr entity", INFO, 0 );
+			continue;
+		}
 		if( it->second == Ntt )
 		{
-			qlog( "hasThatEntity : Found entity with ID: " + std::to_string( it->first ), INFO, 0 );
+			qlog( "hasThatEntity : Found entity with ID: " + std::to_string( it->first ), DEBUG, 0 );
 			return true;
 		}
 	}
-	qlog( "hasThatEntity : Specific entity not found in the map", INFO, 0 );
+	qlog( "hasThatEntity : Specific entity not found in the map", DEBUG, 0 );
+
 	return ( false );
 }
 bool CompManager::addThatEntity( Entity *Ntt )
@@ -148,17 +173,35 @@ bool CompManager::delThatEntity( Entity *Ntt, bool freeMemory )
 
 	if( it->second != nullptr )
 	{
+		it->second->delID();
 		if( freeMemory )
 		{
+			qlog( "delThatEntity : Freeing the memory of entity with ID: " + std::to_string( it->first ), DEBUG, 0 );
 			delete it->second;
-			it->second = nullptr;
 		}
-		else { it->second->delID(); }
+		it->second = nullptr;
 	}
-	else { qlog( "delThatEntity : Entity is already a nullptr", WARN, 0 ); }
-	_NttMap.erase( it );
 
-	qlog( "delThatEntity : Deleted entity with ID: " + std::to_string( Ntt->getID()), INFO, 0 );
+	qlog( "delThatEntity : Deleted the entity", INFO, 0 );
+	return true;
+}
+
+bool CompManager::defragEntityMap()
+{
+	flog( 0 );
+	qlog( "defragEntityMap : Defragmenting the entity map", INFO, 0 );
+
+	for( auto it = _NttMap.begin(); it != _NttMap.end(); )
+	{
+		if( it->second == nullptr )
+		{
+			qlog( "defragEntityMap : Removing nullptr entity", INFO, 0 );
+			it = _NttMap.erase( it );
+		}
+		else{ ++it; }
+	}
+
+	updateMaxID();
 	return true;
 }
 
