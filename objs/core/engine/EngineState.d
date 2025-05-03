@@ -18,8 +18,13 @@ objs/core/engine/EngineState.o: srcs/core/engine/EngineState.cpp \
  srcs/core/engine/../../../incs/./engine/component/CompPos.hpp \
  srcs/core/engine/../../../incs/./engine/component/../component/BaseComp.hpp \
  srcs/core/engine/../../../incs/./engine/entity/Entity.hpp \
- srcs/core/engine/../../../incs/./engine/entity/../component/BaseComp.hpp \
  srcs/core/engine/../../../incs/./engine/entity/../../base.hpp \
+ srcs/core/engine/../../../incs/./engine/entity/../component/BaseComp.hpp \
+ srcs/core/engine/../../../incs/./engine/entity/../component/CompPos.hpp \
+ srcs/core/engine/../../../incs/./engine/entity/./Entity_T.hpp \
+ srcs/core/engine/../../../incs/./engine/entity/././Entity.hpp \
+ srcs/core/engine/../../../incs/./engine/interface/injectors.hpp \
+ srcs/core/engine/../../../incs/./engine/interface/../../base.hpp \
  srcs/core/engine/../../../incs/./engine/system/CompManager.hpp \
  srcs/core/engine/../../../incs/./engine/system/../../base.hpp \
  srcs/core/engine/../../../incs/./engine/system/../entity/Entity.hpp \
@@ -51,8 +56,13 @@ srcs/core/engine/../../../incs/./engine/component/../../base.hpp:
 srcs/core/engine/../../../incs/./engine/component/CompPos.hpp:
 srcs/core/engine/../../../incs/./engine/component/../component/BaseComp.hpp:
 srcs/core/engine/../../../incs/./engine/entity/Entity.hpp:
-srcs/core/engine/../../../incs/./engine/entity/../component/BaseComp.hpp:
 srcs/core/engine/../../../incs/./engine/entity/../../base.hpp:
+srcs/core/engine/../../../incs/./engine/entity/../component/BaseComp.hpp:
+srcs/core/engine/../../../incs/./engine/entity/../component/CompPos.hpp:
+srcs/core/engine/../../../incs/./engine/entity/./Entity_T.hpp:
+srcs/core/engine/../../../incs/./engine/entity/././Entity.hpp:
+srcs/core/engine/../../../incs/./engine/interface/injectors.hpp:
+srcs/core/engine/../../../incs/./engine/interface/../../base.hpp:
 srcs/core/engine/../../../incs/./engine/system/CompManager.hpp:
 srcs/core/engine/../../../incs/./engine/system/../../base.hpp:
 srcs/core/engine/../../../incs/./engine/system/../entity/Entity.hpp:

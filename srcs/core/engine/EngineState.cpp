@@ -109,8 +109,7 @@ void Engine::init()
 	_viewport2D  = new Viewport2D();   GVP = _viewport2D;
 	_compManager = new CompManager();  GCM = _compManager;
 
-	//OnGameInit(); // from game.hpp
-
+	OnEngineInit(); // from injectors.hpp
 	setState( ES_INITIALIZED );
 }
 
@@ -122,7 +121,7 @@ void Engine::start()
 
 	_viewport2D->open();
 
-	//OnGameStart(); // from game.hpp
+	OnEngineStart(); // from injectors.hpp
 	setState( ES_STARTED );
 }
 
@@ -132,10 +131,8 @@ void Engine::resume()
 	if ( getState() > ES_RESUMING ){ qlog( "resume : Engine already running", ERROR, 0 ); return; }
 	if ( getState() < ES_STARTED ){  qlog( "resume : Engine not yet started", ERROR, 0 ); return; }
 
-	//OnGameResume(); // from game.hpp
+	OnEngineResume(); // from injectors.hpp
 	setState( ES_RUNNING );
-
-
 }
 
 void Engine::pause()
@@ -144,7 +141,7 @@ void Engine::pause()
 	if ( getState() < ES_PAUSING ){ qlog( "pause : Engine not currently running", ERROR, 0 ); return; }
 	if ( getState() > ES_RUNNING ){ qlog( "pause : how did you even get here ?",  ERROR, 0 ); return; }
 
-	//OnGamePause(); // from game.hpp
+	OnEnginePause(); // from injectors.hpp
 	setState( ES_STARTED );
 }
 
@@ -156,7 +153,7 @@ void Engine::stop()
 
 	_viewport2D->close();
 
-	//OnGameStop(); // from game.hpp
+	OnEngineStop(); // from injectors.hpp
 	setState( ES_INITIALIZED );
 }
 
@@ -166,7 +163,7 @@ void Engine::close()
 	if ( getState() < ES_CLOSING ){     qlog( "close : Engine not initialized", ERROR, 0 ); return; }
 	if ( getState() > ES_INITIALIZED ){ qlog( "close : Engine still started",   ERROR, 0 ); return; }
 
-	//OnGameClose(); // from game.hpp
+	OnEngineClose(); // from injectors.hpp
 	setState( ES_CLOSED );
 
 	delete _compManager;  _compManager = nullptr;  GCM = nullptr;

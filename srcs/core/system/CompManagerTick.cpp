@@ -43,3 +43,40 @@ void CompManager::updateCompsByType( comp_e compType )
 		it->second->tickComponent( compType );
 	}
 }
+
+// ================ TICK METHODS
+
+void CompManager::tickScripts()
+{
+	flog( 0 );
+	OnTickScripts(); // from injectors.hpp
+	updateCompsByType( COMP_SCRIPT );
+}
+
+void CompManager::tickPhysics()
+{
+	flog( 0 );
+	OnTickPhysics(); // from injectors.hpp
+	updateCompsByType( COMP_PHYSIC );
+}
+
+void CompManager::tickCollides()
+{
+	flog( 0 );
+	OnTickCollides(); // from injectors.hpp
+	updateCompsByType( COMP_COLLIDE );
+}
+
+void CompManager::tickMovements()
+{
+	flog( 0 );
+	OnTickMovements(); // from injectors.hpp
+	updateCompsByType( COMP_MOVEMENT );
+}
+
+void CompManager::tickVisuals()
+{
+	flog( 0 );
+	OnTickVisuals(); // from injectors.hpp
+	updateCompsByType( COMP_GRAPHIC );
+}

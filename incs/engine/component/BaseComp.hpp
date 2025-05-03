@@ -12,7 +12,7 @@ typedef enum : CompC_t
 	COMP_PHYSIC,
 	COMP_MOVEMENT,
 	COMP_COLLIDE,
-	COMP_RENDER,
+	COMP_GRAPHIC,
 	COMP_TYPE_COUNT,
 	COMP_BASE_TYPE = 255, // NOTE : should never be used for actual Components
 
@@ -78,11 +78,12 @@ class BaseComp
 #include <concepts>
 #include <type_traits>
 
-template <typename T>
-concept IsBaseComp = std::is_base_of<BaseComp, T>::value; // NOTE : this is a concept to check if a type is derived from BaseComp
+template <typename CompT>
+concept IsBaseComp = std::is_base_of<BaseComp, CompT>::value; // NOTE : this is a concept to check if a type is derived from BaseComp
 
 // NOTE : this is shorthand to define a template that requires the type to be derived from BaseComp
 # define TTC template <typename CompT> requires IsBaseComp< CompT >
+
 
 TTC inline bool IsValidComponent( CompT *comp )
 {

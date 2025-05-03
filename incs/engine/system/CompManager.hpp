@@ -77,15 +77,21 @@ class CompManager
 		TTC inline void updateComps() { updateCompsByType( CompT::getType() ); };
 		void updateCompsByType( comp_e compType ); // NOTE : calls the onTick() method of all components of the given type in the map
 
-	// ================================ STATIC METHODS
+	// ================ TICK METHODS
+		void tickScripts(); //   NOTE : script execution
+		void tickPhysics(); //   NOTE : eg. gravity
+		void tickCollides(); //  NOTE : collision detection
+		void tickMovements(); // NOTE : position update
+		void tickVisuals(); //   NOTE : rendering
 
+	// ================================ STATIC METHODS
 		// NOTE : these log errors if the check fails ( aka return false )
 		static bool isValidID(   id_t id     ); // NOTE : Checks if the ID is above the current ID use range ( _maxID )
 
 	// ================================ FACTORY METHODS
 		// NOTE : if ID is 0, the entity is not supposed to be in CompManager's map
-		static Entity *NttFactory( id_t id = 0 ); // NOTE : allocs a new entity with the given ID
-		static Entity *NttFactory( Entity *src, id_t id = 0 ); // NOTE : allocs a new entity with the given ID, based on the src entity
+		static Entity *EntityFactory( id_t id = 0 ); // NOTE : allocs a new entity with the given ID
+		static Entity *EntityFactory( Entity *src, id_t id = 0 ); // NOTE : allocs a new entity with the given ID, based on the src entity
 };
 
 BaseComp *CompFactory( comp_e compType, id_t id = 0 );

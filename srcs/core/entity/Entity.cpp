@@ -1,4 +1,5 @@
 #include "../../../incs/engine.hpp"
+#include "../../../incs/engine/entity/Entity.hpp"
 #include "../../../incs/engine/system/CompManager.hpp"
 
 // ================================ CORE METHODS
@@ -30,7 +31,7 @@ void Entity::onCpy( const Entity &rhs )
 
 	_active = rhs._active; // NOTE : copy the active state
 	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i )
-	{ // NOTE : copies each component respective state, allocating or freeing memory as needed
+	{ // NOTE : copies each component respective state, allocating or freeing memory as required
 		_components[ i ] = CpyCompOver( _components[ i ], rhs._components[ i ] );
 	}
 }
@@ -75,10 +76,7 @@ CompC_t Entity::getCompCount() const
 {
 	flog( _id );
 	CompC_t count = 0;
-	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i )
-	{
-		if ( _components[ i ] != nullptr ){ count++; }
-	}
+	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i ){ if ( _components[ i ] != nullptr ){ count++; }}
 	return count;
 }
 
@@ -90,6 +88,7 @@ bool Entity::isCompActive( comp_e compType ) const
 
 	return _components[ compType ]->isActive();
 }
+
 bool Entity::isCompActive( comp_e compType, bool activate )
 {
 	flog( _id );
@@ -113,12 +112,25 @@ bool Entity::addComponent( comp_e compType )
 	if ( !IsValidCompType( compType )){ return false; }
 	if ( _components[ compType ] != nullptr )
 	{
-		qlog( "Component already exists : aborting", INFO, 0 );
+		qlog( "Component of type: " + std::to_string( compType ) + " already exists for this entity", WARN, _id );
 		return false;
 	}
 
-	qlog( "addComponent : Adding component with ID: " + std::to_string( _id ), INFO, 0 );
+	qlog( "addComponent : Adding component of type: " + std::to_string( compType ) + " to this entity", INFO, _id );
 	_components[ compType ] = CompFactory( compType, _id ); // TODO : add the component type to the factory
+
+	return true;
+}
+
+bool Entity::delComponent( comp_e compType, bool freeMem )
+{
+	flog( _id );
+	if ( !IsValidCompType( compType )){ return false; }
+	if ( !IsValidComponent( _components[ compType ] )){ return false; }
+
+	qlog( "delComponent : Deleting component of type: " + std::to_string( compType ) + " from this entity", INFO, _id );
+	if ( freeMem ){ delete _components[ compType ]; }
+	_components[ compType ] = nullptr;
 
 	return true;
 }
@@ -143,15 +155,15 @@ BaseComp *Entity::operator[]( comp_e compType ) const
 
 // ================================ ASSOCIATED FUNCTIONS
 
-bool IsValidEntity( Entity *ent )
+bool IsValidEntity( Entity *Ntt )
 {
 	flog( 0 );
-	if ( ent == nullptr )
+	if ( Ntt == nullptr )
 	{
 		qlog( "IsValidEntity : Entity is nullptr", WARN, 0 );
 		return false;
 	}
-	if ( ent->getID() == 0 )
+	if ( Ntt->getID() == 0 )
 	{
 		qlog( "IsValidEntity : Entity ID is 0", WARN, 0 );
 		return false;

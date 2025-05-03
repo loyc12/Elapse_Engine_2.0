@@ -15,8 +15,13 @@ objs/main.o: srcs/main.cpp srcs/../incs/engine.hpp \
  srcs/../incs/./engine/component/CompPos.hpp \
  srcs/../incs/./engine/component/../component/BaseComp.hpp \
  srcs/../incs/./engine/entity/Entity.hpp \
- srcs/../incs/./engine/entity/../component/BaseComp.hpp \
  srcs/../incs/./engine/entity/../../base.hpp \
+ srcs/../incs/./engine/entity/../component/BaseComp.hpp \
+ srcs/../incs/./engine/entity/../component/CompPos.hpp \
+ srcs/../incs/./engine/entity/./Entity_T.hpp \
+ srcs/../incs/./engine/entity/././Entity.hpp \
+ srcs/../incs/./engine/interface/injectors.hpp \
+ srcs/../incs/./engine/interface/../../base.hpp \
  srcs/../incs/./engine/system/CompManager.hpp \
  srcs/../incs/./engine/system/../../base.hpp \
  srcs/../incs/./engine/system/../entity/Entity.hpp \
@@ -47,8 +52,13 @@ srcs/../incs/./engine/component/../../base.hpp:
 srcs/../incs/./engine/component/CompPos.hpp:
 srcs/../incs/./engine/component/../component/BaseComp.hpp:
 srcs/../incs/./engine/entity/Entity.hpp:
-srcs/../incs/./engine/entity/../component/BaseComp.hpp:
 srcs/../incs/./engine/entity/../../base.hpp:
+srcs/../incs/./engine/entity/../component/BaseComp.hpp:
+srcs/../incs/./engine/entity/../component/CompPos.hpp:
+srcs/../incs/./engine/entity/./Entity_T.hpp:
+srcs/../incs/./engine/entity/././Entity.hpp:
+srcs/../incs/./engine/interface/injectors.hpp:
+srcs/../incs/./engine/interface/../../base.hpp:
 srcs/../incs/./engine/system/CompManager.hpp:
 srcs/../incs/./engine/system/../../base.hpp:
 srcs/../incs/./engine/system/../entity/Entity.hpp:

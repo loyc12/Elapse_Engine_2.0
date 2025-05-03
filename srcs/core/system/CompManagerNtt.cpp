@@ -23,7 +23,7 @@ Entity *CpyEntityOver( Entity *src, Entity *dst )
 		if ( dst == nullptr )
 		{
 			qlog( "cpyEntityOver : dst is nullptr : creating new dst", INFO, 0 );
-			dst = CompManager::NttFactory( src );
+			dst = CompManager::EntityFactory( src );
 		}
 		else
 		{
@@ -71,7 +71,7 @@ bool CompManager::addEntity( id_t id )
 
 	qlog( "addEntity : Adding entity with ID: " + std::to_string( id ), INFO, 0 );
 
-	_NttMap[ id ] = CompManager::NttFactory( id );
+	_NttMap[ id ] = CompManager::EntityFactory( id );
 
 	qlog( "addEntity : Added entity with ID: " + std::to_string( id ), INFO, 0 );
 
@@ -168,7 +168,7 @@ bool CompManager::dupEntity( Entity *src )
 	flog( 0 );
 	if( src == nullptr ){ return false; }
 
-	Entity *newNtt = CompManager::NttFactory( src );
+	Entity *newNtt = CompManager::EntityFactory( src );
 
 	if( newNtt == nullptr )
 	{
@@ -182,7 +182,7 @@ bool CompManager::dupEntity( Entity *src )
 
 // ================================ FACTORY METHODS
 
-Entity *CompManager::NttFactory( id_t id )
+Entity *CompManager::EntityFactory( id_t id )
 {
 	flog( 0 );
 
@@ -190,15 +190,15 @@ Entity *CompManager::NttFactory( id_t id )
 
 	if( Ntt == nullptr )
 	{
-		qlog( "NttFactory : Failed to allocate memory for new entity", ERROR, 0 );
+		qlog( "EntityFactory : Failed to allocate memory for new entity", ERROR, 0 );
 		return nullptr;
 	}
 	return Ntt;
 }
-Entity *CompManager::NttFactory( Entity *src, id_t id )
+Entity *CompManager::EntityFactory( Entity *src, id_t id )
 {
 	flog( 0 );
-	Entity* Ntt = CompManager::NttFactory( id );
+	Entity* Ntt = CompManager::EntityFactory( id );
 
 	if ( Ntt != nullptr ){ *Ntt = *src; } // NOTE : copies the entity and its components
 

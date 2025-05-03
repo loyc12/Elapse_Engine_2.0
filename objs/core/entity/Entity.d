@@ -18,8 +18,13 @@ objs/core/entity/Entity.o: srcs/core/entity/Entity.cpp \
  srcs/core/entity/../../../incs/./engine/component/CompPos.hpp \
  srcs/core/entity/../../../incs/./engine/component/../component/BaseComp.hpp \
  srcs/core/entity/../../../incs/./engine/entity/Entity.hpp \
- srcs/core/entity/../../../incs/./engine/entity/../component/BaseComp.hpp \
  srcs/core/entity/../../../incs/./engine/entity/../../base.hpp \
+ srcs/core/entity/../../../incs/./engine/entity/../component/BaseComp.hpp \
+ srcs/core/entity/../../../incs/./engine/entity/../component/CompPos.hpp \
+ srcs/core/entity/../../../incs/./engine/entity/./Entity_T.hpp \
+ srcs/core/entity/../../../incs/./engine/entity/././Entity.hpp \
+ srcs/core/entity/../../../incs/./engine/interface/injectors.hpp \
+ srcs/core/entity/../../../incs/./engine/interface/../../base.hpp \
  srcs/core/entity/../../../incs/./engine/system/CompManager.hpp \
  srcs/core/entity/../../../incs/./engine/system/../../base.hpp \
  srcs/core/entity/../../../incs/./engine/system/../entity/Entity.hpp \
@@ -32,6 +37,7 @@ objs/core/entity/Entity.o: srcs/core/entity/Entity.cpp \
  srcs/core/entity/../../../incs/./engine/./system/Viewport.hpp \
  srcs/core/entity/../../../incs/./engine/./system/Controller.hpp \
  srcs/core/entity/../../../incs/./engine/./system/CompManager.hpp \
+ srcs/core/entity/../../../incs/engine/entity/Entity.hpp \
  srcs/core/entity/../../../incs/engine/system/CompManager.hpp
 srcs/core/entity/../../../incs/engine.hpp:
 srcs/core/entity/../../../incs/./base.hpp:
@@ -52,8 +58,13 @@ srcs/core/entity/../../../incs/./engine/component/../../base.hpp:
 srcs/core/entity/../../../incs/./engine/component/CompPos.hpp:
 srcs/core/entity/../../../incs/./engine/component/../component/BaseComp.hpp:
 srcs/core/entity/../../../incs/./engine/entity/Entity.hpp:
-srcs/core/entity/../../../incs/./engine/entity/../component/BaseComp.hpp:
 srcs/core/entity/../../../incs/./engine/entity/../../base.hpp:
+srcs/core/entity/../../../incs/./engine/entity/../component/BaseComp.hpp:
+srcs/core/entity/../../../incs/./engine/entity/../component/CompPos.hpp:
+srcs/core/entity/../../../incs/./engine/entity/./Entity_T.hpp:
+srcs/core/entity/../../../incs/./engine/entity/././Entity.hpp:
+srcs/core/entity/../../../incs/./engine/interface/injectors.hpp:
+srcs/core/entity/../../../incs/./engine/interface/../../base.hpp:
 srcs/core/entity/../../../incs/./engine/system/CompManager.hpp:
 srcs/core/entity/../../../incs/./engine/system/../../base.hpp:
 srcs/core/entity/../../../incs/./engine/system/../entity/Entity.hpp:
@@ -66,4 +77,5 @@ srcs/core/entity/../../../incs/./engine/../base.hpp:
 srcs/core/entity/../../../incs/./engine/./system/Viewport.hpp:
 srcs/core/entity/../../../incs/./engine/./system/Controller.hpp:
 srcs/core/entity/../../../incs/./engine/./system/CompManager.hpp:
+srcs/core/entity/../../../incs/engine/entity/Entity.hpp:
 srcs/core/entity/../../../incs/engine/system/CompManager.hpp:

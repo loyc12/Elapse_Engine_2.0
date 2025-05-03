@@ -62,13 +62,8 @@ class Engine
 		// DEBUG : for now, this is called manually in main.cpp once I know the window is opened
 
 	private:
-		void runStep(); // calls the update methods once
-			void readInputs();
-			//void runPhysics();
-			//void runScripts();
-			void refreshScreen(); // calls the render methods once
-				void renderWorld();
-				void renderUIs();
+		void runStep();
+			void refreshScreen();
 
 	// ================================ CONSTRUCTORS / DESTRUCTORS
 	private:

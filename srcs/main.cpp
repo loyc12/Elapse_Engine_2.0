@@ -6,7 +6,7 @@ int main()
 
 	GNG->switchState( ES_RUNNING );
 
-	//GNG->launchLoop();
+	GNG->launchLoop();
 
 	GNG->switchState( ES_CLOSED );
 

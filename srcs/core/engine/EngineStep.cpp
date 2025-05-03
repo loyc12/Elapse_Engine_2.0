@@ -13,11 +13,11 @@ bool Engine::launchLoop()
 		return false;
 	}
 
-	//OnGameLaunch(); // from game.hpp
-	while ( getState() >= ES_STARTED && !WindowShouldClose() )
-	{
-		runStep(); // TODO : Multithread this shit
-	}
+	OnStartLoop(); // from injectors.hpp
+
+	while ( getState() >= ES_STARTED && !WindowShouldClose() ){ runStep(); } // TODO : Multithread this
+
+	OnEndLoop(); // from injectors.hpp
 
 	return true;
 }
@@ -27,44 +27,20 @@ void Engine::runStep()
 	flog( 0 );
 	if ( getState() < ES_STARTED ){ qlog( "runStep : Engine not started", ERROR, 0 ); return; }
 
-	_DT = GetFrameTime();
+	OnStartStep(); // from injectors.hpp
 
+	_DT = GetFrameTime();
 	_controller->refreshInputs();
 
-	//runScripts();
+	_compManager->tickScripts();
+	_compManager->tickPhysics();
+	_compManager->tickCollides();
+	_compManager->tickMovements();
 
-	//if ( getState() >= ES_RUNNING ){ runPhysics(); } // Only runs the physics call if the enguine is unpaused
-
+	// NOTE : tickVisuals() is called in refreshScreen()
 	refreshScreen();
 
-	//OnGameStep(); // from game.hpp
-}
-
-void Engine::readInputs()
-{
-	flog( 0 );
-	_controller->refreshInputs();
-}
-
-
-
-void Engine::renderWorld()
-{
-	flog( 0 );
-
-	BeginMode2D( *_viewport2D->getCamera() );
-
-	// TODO : update the render components here
-
-	//OnRenderWorld(); // from game.hpp
-
-	EndMode2D();
-}
-
-void Engine::renderUIs()
-{
-	flog( 0 );
-	//OnRenderUI(); // from game.hpp
+	OnEndStep(); // from injectors.hpp
 }
 
 void Engine::refreshScreen()
@@ -72,10 +48,17 @@ void Engine::refreshScreen()
 	flog( 0 );
 
 	BeginDrawing();
-	_viewport2D->refresh();
+	{
+		_viewport2D->refresh();
 
-	renderWorld();
-	renderUIs();
-
+		OnRenderBackground(); // from injectors.hpp
+		BeginMode2D( *_viewport2D->getCamera() );
+		{
+			_compManager->tickVisuals();
+			OnRenderWorld(); // from injectors.hpp
+		}
+		EndMode2D();
+		OnRenderUI(); // from injectors.hpp
+	}
 	EndDrawing();
 }

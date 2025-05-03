@@ -2,11 +2,9 @@
 # define ENTITY_HPP
 
 # include <raylib.h>
-# include "../component/BaseComp.hpp"
 # include "../../base.hpp"
-
-// NOTE : Entities, like Components, are created and destroyed via the CompManager
-// NOTE : However, creating an entity anywhere adds calls the apropriate CompManager functions and adds it to the map
+# include "../component/BaseComp.hpp"
+# include "../component/CompPos.hpp"
 
 TTC CompT *CpyCompOver( CompT *dst, CompT *src );
 
@@ -72,9 +70,9 @@ class Entity
 
 typedef vector< Entity > NttVec;
 
-bool IsValidNtt( Entity *Ntt ); // NOTE : Checks if the entity is valid ( ID != 0 )
+bool IsValidEntity( Entity *Ntt ); // NOTE : Checks if the entity is valid ( ID != 0 )
 
-//# include "./Entity_T.hpp"
+# include "./Entity_T.hpp"
 
 #endif // ENTITY_HPP
 

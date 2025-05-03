@@ -187,10 +187,10 @@ Entity *Viewport2D::getTrackedObject() const { return _trackedObject; }
 
 bool Viewport2D::isTracking() const { return _trackingObject; }
 
-bool Viewport2D::trackObject( Entity *ent, bool overrideTracking )
+bool Viewport2D::trackObject( Entity *Ntt, bool overrideTracking )
 {
 	flog( 0 );
-	if ( ent == nullptr )
+	if ( Ntt == nullptr )
 	{
 		qlog( "trackObject : Cannot track a nullptr", INFO, 0 );
 		qlog( "trackObject : Use untrackObject() to stop tracking", DEBUG, 0 );
@@ -208,7 +208,7 @@ bool Viewport2D::trackObject( Entity *ent, bool overrideTracking )
 		else { qlog( "trackObject : Overriding tracking", INFO, 0 ); }
 	}
 
-	_trackedObject  = ent;
+	_trackedObject  = Ntt;
 	_trackingObject = true;
 
 	return true;

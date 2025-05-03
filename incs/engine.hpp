@@ -10,6 +10,8 @@
 
 # include "./engine/entity/Entity.hpp"
 
+# include "./engine/interface/injectors.hpp"
+
 # include "./engine/system/CompManager.hpp"
 # include "./engine/system/Controller.hpp"
 # include "./engine/system/Viewport.hpp"

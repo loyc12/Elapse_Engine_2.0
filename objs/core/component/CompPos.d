@@ -18,8 +18,13 @@ objs/core/component/CompPos.o: srcs/core/component/CompPos.cpp \
  srcs/core/component/../../../incs/./engine/component/CompPos.hpp \
  srcs/core/component/../../../incs/./engine/component/../component/BaseComp.hpp \
  srcs/core/component/../../../incs/./engine/entity/Entity.hpp \
- srcs/core/component/../../../incs/./engine/entity/../component/BaseComp.hpp \
  srcs/core/component/../../../incs/./engine/entity/../../base.hpp \
+ srcs/core/component/../../../incs/./engine/entity/../component/BaseComp.hpp \
+ srcs/core/component/../../../incs/./engine/entity/../component/CompPos.hpp \
+ srcs/core/component/../../../incs/./engine/entity/./Entity_T.hpp \
+ srcs/core/component/../../../incs/./engine/entity/././Entity.hpp \
+ srcs/core/component/../../../incs/./engine/interface/injectors.hpp \
+ srcs/core/component/../../../incs/./engine/interface/../../base.hpp \
  srcs/core/component/../../../incs/./engine/system/CompManager.hpp \
  srcs/core/component/../../../incs/./engine/system/../../base.hpp \
  srcs/core/component/../../../incs/./engine/system/../entity/Entity.hpp \
@@ -51,8 +56,13 @@ srcs/core/component/../../../incs/./engine/component/../../base.hpp:
 srcs/core/component/../../../incs/./engine/component/CompPos.hpp:
 srcs/core/component/../../../incs/./engine/component/../component/BaseComp.hpp:
 srcs/core/component/../../../incs/./engine/entity/Entity.hpp:
-srcs/core/component/../../../incs/./engine/entity/../component/BaseComp.hpp:
 srcs/core/component/../../../incs/./engine/entity/../../base.hpp:
+srcs/core/component/../../../incs/./engine/entity/../component/BaseComp.hpp:
+srcs/core/component/../../../incs/./engine/entity/../component/CompPos.hpp:
+srcs/core/component/../../../incs/./engine/entity/./Entity_T.hpp:
+srcs/core/component/../../../incs/./engine/entity/././Entity.hpp:
+srcs/core/component/../../../incs/./engine/interface/injectors.hpp:
+srcs/core/component/../../../incs/./engine/interface/../../base.hpp:
 srcs/core/component/../../../incs/./engine/system/CompManager.hpp:
 srcs/core/component/../../../incs/./engine/system/../../base.hpp:
 srcs/core/component/../../../incs/./engine/system/../entity/Entity.hpp:
