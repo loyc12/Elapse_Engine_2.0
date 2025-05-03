@@ -116,7 +116,12 @@ void Viewport2D::open()
 
 	InitWindow( _windowSize.x, _windowSize.y, WINDOW_DEFAULT_TITLE );
 
-	// TODO : handle failure case
+	if ( !IsWindowReady() )
+	{
+		qlog( "open : Failed to open window", ERROR, 0 );
+		return;
+	}
+	qlog( "open : Window opened", INFO, 0 );
 
 	SetTargetFPS( _targetFPS );
 }
@@ -130,9 +135,14 @@ void Viewport2D::close()
 		return;
 	}
 
-	// TODO : handle failure case
-
 	CloseWindow();
+
+	if ( IsWindowReady() )
+	{
+		qlog( "close : Failed to close window", ERROR, 0 );
+		return;
+	}
+	qlog( "close : Window closed", INFO, 0 );
 }
 
 void Viewport2D::update()
