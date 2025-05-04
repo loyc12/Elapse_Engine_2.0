@@ -16,18 +16,15 @@ void CompPos::onCpy( const CompPos &rhs )
 CompPos::~CompPos()
 {
 	flog( 0 );
-	onDel();
 }
 
 CompPos::CompPos() : CompBase(), _pos({ 0, 0 })
 {
 	flog( 0 );
-	onAdd();
 }
 CompPos::CompPos( Entity *Ntt, bool isActive, Vector2 pos ) : CompBase( Ntt, isActive ), _pos( pos )
 {
 	flog( 0 );
-	onAdd();
 }
 
 CompPos::CompPos( const CompPos &rhs ) : CompBase( rhs )

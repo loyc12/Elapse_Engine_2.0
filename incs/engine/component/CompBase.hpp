@@ -7,19 +7,24 @@
 typedef byte_t comp_count_t;
 typedef enum : comp_count_t
 {
-	COMP_SCRIPT = 0,
-	COMP_POSITION,
+	COMP_POSITION = 0,
 	COMP_MOVEMENT,
 	COMP_PHYSIC,
 	COMP_COLLIDE,
-	COMP_GRAPHIC,
-	COMP_TYPE_COUNT,
-	COMP_TYPE_BASE = 255, // NOTE : should never be used for actual Components
 
+	COMP_TEXT,
+	COMP_SOUND,
+	COMP_SHAPE, // TODO : implement the shape component
+	COMP_GRAPHIC,
+
+	COMP_SCRIPT,
+
+	COMP_TYPE_COUNT, //      NOTE : should never be used for actual components
+	COMP_TYPE_BASE = 255, // NOTE : should never be used for actual components
 } comp_type_e;
 
 inline bool IsValidCompType( comp_type_e type )
-{ // NOTE : Checks if the type is valid ( 0 <= type < COMP_TYPE_COUN
+{
 	flog( 0 );
 	if( type == COMP_TYPE_BASE )
 	{
@@ -46,18 +51,16 @@ class CompBase
 		Entity *_Ntt; // NOTE : the entity this component belongs to
 		bool _active; // NOTE : mutex this if we ever multithread onTick() calls
 
-		inline virtual void onAdd(){} //                                              NOTE : ovveride this in derived classes
-		inline virtual void onDel(){} //                                              NOTE : ovveride this in derived classes
 		inline virtual void onCpy( const CompBase &rhs ){ _active = rhs._active; } // NOTE : ovveride this in derived classes
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		inline virtual ~CompBase(){ onDel(); };
+		inline virtual ~CompBase(){};
 
-		inline CompBase() : _Ntt( nullptr ), _active( COMP_DEF_ACTIVITY ){ onAdd(); }
-		inline CompBase( Entity *Ntt, bool isActive = COMP_DEF_ACTIVITY ) : _Ntt( Ntt ), _active( isActive ){ onAdd(); }
+		inline CompBase() : _Ntt( nullptr ), _active( COMP_DEF_ACTIVITY ){}
+		inline CompBase( Entity *Ntt, bool isActive = COMP_DEF_ACTIVITY ) : _Ntt( Ntt ), _active( isActive ){}
 
-		inline CompBase( const CompBase &rhs ){ *this = rhs; }
+		inline CompBase( const CompBase &rhs ) : CompBase(){ *this = rhs; }
 		inline CompBase &operator=( const CompBase &rhs ){ onCpy( rhs ); return *this; }
 
 	// ================================ ACCESSORS / MUTATORS

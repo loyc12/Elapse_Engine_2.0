@@ -17,21 +17,19 @@ void CompGraph::onCpy( const CompGraph &rhs )
 CompGraph::~CompGraph()
 {
 	flog( 0 );
-	onDel();
 }
 
-CompGraph::CompGraph() : CompBase(), _col( DEF_COLOUR)
+CompGraph::CompGraph() : CompBase(), _col( COMP_DEF_COLOUR)
 {
 	flog( 0 );
-	onAdd();
 }
-CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col ) : CompBase( Ntt, isActive ), _col( col )
+CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col, float cirRad ) : CompBase( Ntt, isActive ), _col( col ), _cirRad( cirRad )
+
 {
 	flog( 0 );
-	onAdd();
 }
 
-CompGraph::CompGraph( const CompGraph &rhs ) : CompBase( rhs )
+CompGraph::CompGraph( const CompGraph &rhs ) : CompGraph()
 {
 	flog( 0 );
 	*this = rhs;
@@ -49,11 +47,12 @@ bool CompGraph::onTick()
 {
 	flog( 0 );
 	if( !isActive() ){ return false; }
+	if( _cirRad <= 0 ){ return false; }
 
 	DrawCircle(
 		_Ntt->getPos().x,
 		_Ntt->getPos().y,
-		_cirleRadius,
+		_cirRad,
 		_col
 	);
 

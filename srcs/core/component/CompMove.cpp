@@ -17,20 +17,17 @@ void CompMove::onCpy( const CompMove &rhs )
 CompMove::~CompMove()
 {
 	flog( 0 );
-	onDel();
 }
 
 CompMove::CompMove() : CompBase(), _vel({ 0, 0 }), _acc({ 0, 0 })
 {
 	flog( 0 );
-	onAdd();
 }
 CompMove::CompMove( Entity *Ntt, bool isActive, Vector2 vel, Vector2 acc ) : CompBase( Ntt, isActive ), _vel( vel ), _acc( acc ){
 	flog( 0 );
-	onAdd();
 }
 
-CompMove::CompMove( const CompMove &rhs ) : CompBase( rhs )
+CompMove::CompMove( const CompMove &rhs ) : CompMove()
 {
 	flog( 0 );
 	*this = rhs;
@@ -59,8 +56,7 @@ bool CompMove::onTick()
 	_vel.y += _acc.y * dt;
 
 	 // NOTE : reset acceleration after applying it, meaning it needs to be reset every tick for continual acceleration
-	_acc.x = 0;
-	_acc.y = 0;
+	_acc = COMP_DEF_ACC;
 
 	if( !hasEntity() )
 	{
@@ -74,6 +70,6 @@ bool CompMove::onTick()
 		qlog( "CompMove::onTick() : no CompPos found for this entity", WARN, getEntityID() );
 		return false;
 	}
-	cmp->changePos( _vel.x * dt, _vel.y * dt ); // NOTE : move this logic to physic component
+	cmp->changePos( _vel.x * dt, _vel.y * dt ); // TODO : move this logic to physic component
 	return true;
 }

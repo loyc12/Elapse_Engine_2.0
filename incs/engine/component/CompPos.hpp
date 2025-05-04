@@ -4,6 +4,8 @@
 # include <raylib.h>
 # include "../component/CompBase.hpp"
 
+# define COMP_DEF_POS { 0, 0 } // NOTE : default position for the component
+
 class CompPos : public CompBase
 {
 	protected:
@@ -11,8 +13,6 @@ class CompPos : public CompBase
 		Vector2 _pos; // NOTE : position of the component
 
 	// ================================ CORE METHODS
-		inline void onAdd() override {} // NOTE : No additional behavior for CompPos
-		inline void onDel() override {} // NOTE : No additional behavior for CompPos
 		void onCpy( const CompPos &rhs );
 
 	public:
@@ -20,9 +20,12 @@ class CompPos : public CompBase
 		~CompPos();
 
 		CompPos();
-		CompPos( Entity *Ntt, bool isActive = COMP_DEF_ACTIVITY, Vector2 pos = { 0, 0 });
+		CompPos( Entity *Ntt,
+			bool isActive = COMP_DEF_ACTIVITY,
+			Vector2 pos   = COMP_DEF_POS
+		);
 
-		CompPos( const CompPos  &rhs );
+		CompPos( const CompPos &rhs );
 		CompPos &operator=( const CompPos &rhs );
 
 	// ================================ ACCESSORS / MUTATORS
@@ -31,13 +34,13 @@ class CompPos : public CompBase
 
 	// ================ POSITION METHODS
 		inline Vector2 getPos() const { return _pos; }
-		inline bool voidPos(){ _pos = { 0, 0 }; return true; }
+		inline bool   voidPos(){ _pos = COMP_DEF_POS; return true; }
 
 		inline bool setPos( Vector2 pos ){ _pos = pos; return true; }
 		inline bool setPos( float x, float y ){ _pos.x = x; _pos.y = y; return true; }
 
-		inline bool changePos( Vector2 pos ){ _pos.x += pos.x; _pos.y += pos.y; return true; }
-		inline bool changePos( float x, float y ){ _pos.x += x; _pos.y += y; return true; }
+		inline bool changePos( Vector2 delta ){ _pos.x += delta.x; _pos.y += delta.y; return true; }
+		inline bool changePos( float dx, float dy ){ _pos.x += dx; _pos.y += dy; return true; }
 
 	// ================================ TICK METHODS
 		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompPos
