@@ -7,7 +7,7 @@
 void OnEntityTickScript( Entity *Ntt )
 {
 	flog( Ntt->getID() );
-	if ( Ntt == nullptr ){ return; }
+	if( Ntt == nullptr ){ return; }
 
 	// TODO : add game specific code here
 }
@@ -15,7 +15,7 @@ void OnEntityTickScript( Entity *Ntt )
 void OnEntityTickPhysic( Entity *Ntt )
 {
 	flog( Ntt->getID() );
-	if ( Ntt == nullptr ){ return; }
+	if( Ntt == nullptr ){ return; }
 
 	// TODO : add game specific code here
 }
@@ -23,7 +23,7 @@ void OnEntityTickPhysic( Entity *Ntt )
 void OnEntityTickCollide( Entity *Ntt )
 {
 	flog( Ntt->getID() );
-	if ( Ntt == nullptr ){ return; }
+	if( Ntt == nullptr ){ return; }
 
 	// TODO : add game specific code here
 }
@@ -31,7 +31,7 @@ void OnEntityTickCollide( Entity *Ntt )
 void OnEntityTickMovement( Entity *Ntt )
 {
 	flog( Ntt->getID() );
-	if ( Ntt == nullptr ){ return; }
+	if( Ntt == nullptr ){ return; }
 
 	// TODO : add game specific code here
 }
@@ -39,7 +39,7 @@ void OnEntityTickMovement( Entity *Ntt )
 void OnEntityTickVisual( Entity *Ntt )
 {
 	flog( Ntt->getID() );
-	if ( Ntt == nullptr ){ return; }
+	if( Ntt == nullptr ){ return; }
 
 	// TODO : add game specific code here
 }

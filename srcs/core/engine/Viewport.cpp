@@ -72,9 +72,9 @@ void Viewport2D::moveTarget( Vector2 offset )
 void Viewport2D::setTarget( Vector2 target, bool overrideTracking )
 {
 	flog( 0 );
-	if ( _trackedEntitity )
+	if( _trackedEntitity )
 	{
-		if ( !overrideTracking )
+		if( !overrideTracking )
 		{
 			qlog( "setTarget : Already tracking an object", INFO, 0 );
 			qlog( "setTarget : Use overrideTracking = true to override", INFO, 0 );
@@ -109,7 +109,7 @@ void Viewport2D::moveOffset( Vector2 &delta )
 void Viewport2D::open()
 {
 	flog( 0 );
-	if ( IsWindowReady() )
+	if( IsWindowReady() )
 	{
 		qlog( "open : Window already opened", WARN, 0 );
 		return;
@@ -117,7 +117,7 @@ void Viewport2D::open()
 
 	InitWindow( _windowSize.x, _windowSize.y, WINDOW_DEFAULT_TITLE );
 
-	if ( !IsWindowReady() )
+	if( !IsWindowReady() )
 	{
 		qlog( "open : Failed to open window", ERROR, 0 );
 		return;
@@ -130,7 +130,7 @@ void Viewport2D::open()
 void Viewport2D::close()
 {
 	flog( 0 );
-	if ( !IsWindowReady() )
+	if( !IsWindowReady() )
 	{
 		qlog( "close : Window already closed", WARN, 0 );
 		return;
@@ -138,7 +138,7 @@ void Viewport2D::close()
 
 	CloseWindow();
 
-	if ( IsWindowReady() )
+	if( IsWindowReady() )
 	{
 		qlog( "close : Failed to close window", ERROR, 0 );
 		return;
@@ -179,14 +179,14 @@ void Viewport2D::updateMouse()
 void Viewport2D::updateCamera()
 {
 	flog( 0 );
-	//if ( _trackedEntitity ){ _camera.target = { _trackedEntitity->getPosition() }; } // TODO : implement this
+	//if( _trackedEntitity ){ _camera.target = { _trackedEntitity->getPosition() }; } // TODO : implement this
 
 	// Clamping camera values
-	if ( _camera.zoom > MIN_ZOOM ){ _camera.zoom = MIN_ZOOM; }
-	if ( _camera.zoom < MAX_ZOOM ){ _camera.zoom = MAX_ZOOM; }
+	if( _camera.zoom > MIN_ZOOM ){ _camera.zoom = MIN_ZOOM; }
+	if( _camera.zoom < MAX_ZOOM ){ _camera.zoom = MAX_ZOOM; }
 
-	if ( _camera.rotation < 0.0f   ) while ( _camera.rotation < 0.0f   ){ _camera.rotation += 360.0f; }
-	if ( _camera.rotation > 360.0f ) while ( _camera.rotation > 360.0f ){ _camera.rotation -= 360.0f; }
+	if( _camera.rotation < 0.0f   ) while( _camera.rotation < 0.0f   ){ _camera.rotation += 360.0f; }
+	if( _camera.rotation > 360.0f ) while( _camera.rotation > 360.0f ){ _camera.rotation -= 360.0f; }
 
 	//_camera.offset = { ( float )_windowSize.x / 2, ( float )_windowSize.y / 2 };
 
@@ -201,16 +201,16 @@ bool Viewport2D::isTracking() const { return _trackingEntitity; }
 bool Viewport2D::trackEntity( Entity *Ntt, bool overrideTracking )
 {
 	flog( 0 );
-	if ( Ntt == nullptr )
+	if( Ntt == nullptr )
 	{
 		qlog( "trackEntity : Cannot track a nullptr", INFO, 0 );
 		qlog( "trackEntity : Use untrackEntity() to stop tracking", DEBUG, 0 );
 		return false;
 	}
 
-	if ( _trackingEntitity )
+	if( _trackingEntitity )
 	{
-		if ( !overrideTracking )
+		if( !overrideTracking )
 		{
 			qlog( "trackEntity : Already tracking an object", WARN, 0 );
 			qlog( "trackEntity : Use overrideTracking = true to override", INFO, 0 );
@@ -230,7 +230,7 @@ bool Viewport2D::untrackEntity()
 	flog( 0 );
 	_trackedEntitity = nullptr;
 
-	if ( !_trackingEntitity ){ return false; }
+	if( !_trackingEntitity ){ return false; }
 
 	_trackingEntitity = false; return true;
 }

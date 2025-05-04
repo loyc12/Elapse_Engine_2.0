@@ -5,7 +5,7 @@ void log_time(){ log( "< clock time", INFO ); }
 
 bool open_log_file( ofstream &log_file ) // orivate function
 {
-	if ( !log_file.is_open() )
+	if( !log_file.is_open() )
 	{
 		printf( "Generating log file\n" );
 
@@ -14,28 +14,28 @@ bool open_log_file( ofstream &log_file ) // orivate function
 
 		log_file.open( file_name, std::ios::out | std::ios::app );
 
-		if ( !log_file.is_open() ){ return false; }
+		if( !log_file.is_open() ){ return false; }
 
 		printf( "Log file Generated successfully\n" );
 	}
 	return true;
 }
 
-bool log( ostrs msg,       log_level_e lvl, id_t id, const char *file, int line ) { return log( msg.str().c_str(), lvl, id, file, line ); }
-bool log( string msg,      log_level_e lvl, id_t id, const char *file, int line ) { return log( msg.c_str(), lvl, id, file, line ); }
+bool log( ostrs msg,       log_level_e lvl, id_t id, const char *file, int line ){ return log( msg.str().c_str(), lvl, id, file, line ); }
+bool log( string msg,      log_level_e lvl, id_t id, const char *file, int line ){ return log( msg.c_str(), lvl, id, file, line ); }
 bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line )
 {
-	if ( lvl > LOG_LVL )           return false;
-	if ( !SHOW_OBJ_MSG && id > 0 ) return false;
+	if( lvl > LOG_LVL )           return false;
+	if( !SHOW_OBJ_MSG && id > 0 ) return false;
 
 	ostream *log_out = &cout;
 
 	static bool disregard_log_file = false;
 
-	if ( !disregard_log_file && LOG_FILE )
+	if( !disregard_log_file && LOG_FILE )
 	{
 		static ofstream log_file;
-		if ( !open_log_file( log_file ) )
+		if( !open_log_file( log_file ) )
 		{
 			disregard_log_file = true;
 			log( "Failed to open log file. Logging to console instead", ERROR );
@@ -45,7 +45,7 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 
 	static bool use_clr = ( log_out == &cout );
 
-	if ( LOG_TIME ) *log_out << ( use_clr ? CLR_LGR : "" ) << get_time_str() << " ";
+	if( LOG_TIME ) *log_out << ( use_clr ? CLR_LGR : "" ) << get_time_str() << " ";
 
 	switch ( lvl )
 	{
@@ -59,8 +59,8 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 
 	*log_out << ( use_clr ? CLR_LGR : "" );
 
-	if ( LOG_LINE && file != nullptr ) *log_out << " [" << file << ":" << line << "]";
-	if ( id > 0 ) *log_out << " [" << id << "]";
+	if( LOG_LINE && file != nullptr ) *log_out << " [" << file << ":" << line << "]";
+	if( id > 0 ) *log_out << " [" << id << "]";
 
 	*log_out << ( use_clr ? CLR_RST : "" ) << " " << msg << endl;
 

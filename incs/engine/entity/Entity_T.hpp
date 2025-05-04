@@ -7,21 +7,21 @@
 TTC CompT *CpyCompOver( CompT *dst, CompT *src )
 {
 	flog( 0 );
-	if ( src == nullptr )
+	if( src == nullptr )
 	{
 		qlog( "CpyCompOver : src is nullptr", INFO, 0 );
-		if ( dst != nullptr )
+		if( dst != nullptr )
 		{
 			qlog( "CpyCompOver : dst is not nullptr : deleting dst", INFO, 0 );
 			delete dst;
 			dst = nullptr;
 		}
-		else{ qlog( "CpyCompOver : dst is nullptr : nothing to do", INFO, 0 ); }
+		else { qlog( "CpyCompOver : dst is nullptr : nothing to do", INFO, 0 ); }
 	}
 	else
 	{
 		qlog( "CpyCompOver : src is not nullptr", INFO, 0 );
-		if ( dst == nullptr )
+		if( dst == nullptr )
 		{
 			qlog( "CpyCompOver : dst is nullptr : creating new dst", INFO, 0 );
 			dst = new CompT( *src );
@@ -38,15 +38,15 @@ TTC CompT *CpyCompOver( CompT *dst, CompT *src )
 // ================================ ACCESSORS / MUTATORS
 
 /*
-TTC CompT *Entity::getComponent( comp_e compType ) const
+TTC CompT *Entity::getComponent( comp_type_e compType ) const
 {
 	flog( _id );
-	if ( compType == COMP_BASE_TYPE )
+	if( compType == COMP_TYPE_BASE )
 	{
 		qlog( "getComponent : Invalid component type", ERROR, 0 );
 		return nullptr;
 	}
-	if ( compType >= COMP_TYPE_COUNT )
+	if( compType >= COMP_TYPE_COUNT )
 	{
 		qlog( "getComponent : Component type is out of range", ERROR, 0 );
 		return nullptr;
@@ -57,14 +57,14 @@ TTC CompT *Entity::getComponent( comp_e compType ) const
 TTC CompT *Entity::getComponent() const
 {
 	flog( _id );
-	comp_e compType = CompT::getType();
+	comp_type_e compType = CompT::getStaticType();
 
-	if ( compType == COMP_BASE_TYPE )
+	if( compType == COMP_TYPE_BASE )
 	{
 		qlog( "getComponent : Invalid component type", ERROR, 0 );
 		return nullptr;
 	}
-	if ( compType >= COMP_TYPE_COUNT )
+	if( compType >= COMP_TYPE_COUNT )
 	{
 		qlog( "getComponent : Component type is out of range", ERROR, 0 );
 		return nullptr;

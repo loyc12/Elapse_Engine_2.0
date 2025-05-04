@@ -2,42 +2,45 @@
 # define COMP_POS_HPP
 
 # include <raylib.h>
-# include "../component/BaseComp.hpp"
+# include "../component/CompBase.hpp"
 
-class CompPos : public BaseComp
+class CompPos : public CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
 		Vector2 _pos; // NOTE : position of the component
 
 	// ================================ CORE METHODS
-		inline virtual void onAdd() override {} // NOTE : No additional behavior for CompPos
-		inline virtual void onDel() override {} // NOTE : No additional behavior for CompPos
-		virtual void onCpy( const CompPos &rhs );
+		inline void onAdd() override {} // NOTE : No additional behavior for CompPos
+		inline void onDel() override {} // NOTE : No additional behavior for CompPos
+		void onCpy( const CompPos &rhs );
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		virtual ~CompPos();
+		~CompPos();
 
 		CompPos();
-		CompPos( bool isActive, id_t id = 0, Vector2 pos = { 0, 0 });
+		CompPos( Entity *Ntt, bool isActive = COMP_DEF_ACTIVITY, Vector2 pos = { 0, 0 });
 
 		CompPos( const CompPos  &rhs );
 		CompPos &operator=( const CompPos &rhs );
 
 	// ================================ ACCESSORS / MUTATORS
+		inline static comp_type_e getStaticType(){    return COMP_POSITION; }
+		inline comp_type_e getType() const override { return COMP_POSITION; } // NOTE : overide this in derived classes
+
+	// ================ POSITION METHODS
 		inline Vector2 getPos() const { return _pos; }
+		inline bool voidPos(){ _pos = { 0, 0 }; return true; }
 
-		inline void setPos( Vector2 pos ){ _pos = pos; }
-		inline void setPos( float x, float y ){ _pos.x = x; _pos.y = y; }
+		inline bool setPos( Vector2 pos ){ _pos = pos; return true; }
+		inline bool setPos( float x, float y ){ _pos.x = x; _pos.y = y; return true; }
 
-		inline void changePos( Vector2 pos ){ _pos.x += pos.x; _pos.y += pos.y; }
-		inline void changePos( float x, float y ){ _pos.x += x; _pos.y += y; }
-
-		inline static comp_e getType(){ return COMP_POSITION; }
+		inline bool changePos( Vector2 pos ){ _pos.x += pos.x; _pos.y += pos.y; return true; }
+		inline bool changePos( float x, float y ){ _pos.x += x; _pos.y += y; return true; }
 
 	// ================================ TICK METHODS
-		inline virtual bool onTick() override { return _active; } // NOTE : No additional behavior for CompPos
+		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompPos
 };
 
 #endif // COMP_POS_HPP

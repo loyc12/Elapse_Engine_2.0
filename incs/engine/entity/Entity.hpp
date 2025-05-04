@@ -3,10 +3,15 @@
 
 # include <raylib.h>
 # include "../../base.hpp"
-# include "../component/BaseComp.hpp"
+
+# include "../component/CompBase.hpp"
 # include "../component/CompPos.hpp"
+# include "../component/CompMove.hpp"
+# include "../component/CompGraph.hpp"
 
 TTC CompT *CpyCompOver( CompT *dst, CompT *src );
+
+typedef array< CompBase*, COMP_TYPE_COUNT > CompArray; // NOTE : array of pointers to components
 
 class Entity
 {
@@ -15,7 +20,7 @@ class Entity
 		id_t _id; //     NOTE : if the ID is 0, the entity is not supposed to be in CompManager's map
 		bool _active; // NOTE : if flase, all component are treated as unactive, when possible
 
-		BaseComp *_components[ COMP_TYPE_COUNT ];
+		CompArray _components;
 
 	// ================================ CORE METHODS
 		// NOTE : mutex these is multithreading is implemented
@@ -43,35 +48,60 @@ class Entity
 		inline bool delID(){ _id = 0; return true; } //           NOTE : should only be called by CompManager
 
 		inline bool isActive() const { return _active; }
-		inline bool isActive( bool activate ) { _active = activate; return _active; }
+		inline bool setActivity( bool activate ){ _active = activate; return _active; }
 
-		inline BaseComp **getAllComps() { return _components; }
+	// ================ GENERAL COMPONENT METHODS
+		inline CompArray *getCompArray(){   return &_components; }
+		comp_count_t      getCompCount()    const; // NOTE : returns the number of non nullptr components
+		comp_count_t      getActCompCount() const; // NOTE : returns the number of active components
 
-		CompC_t  getCompCount() const;
-
-		TTC inline CompT *getComponent( comp_e compType ) const { ( void )compType; return getComponent< CompT >(); } // NOTE " temporary workaround"
+		TTC inline CompT *getComponent( comp_type_e compType ) const { ( void )compType; return getComponent< CompT >(); } // NOTE " temporary workaround"
 		TTC CompT *getComponent() const;
 
-		TTC inline bool isCompActive() const { return isCompActive( CompT::getType() ); }
-		bool isCompActive( comp_e compType ) const;
+		TTC inline bool isCompActive() const { return isCompActive( CompT::getStaticType() ); }
+		bool isCompActive( comp_type_e compType ) const;
 
-		TTC inline bool isCompActive( bool activate ){ return isCompActive( CompT::getType(), activate ); }
-		bool isCompActive( comp_e compType, bool activate );
+		TTC inline bool isCompActive( bool activate ){ return isCompActive( CompT::getStaticType(), activate ); }
+		bool isCompActive( comp_type_e compType, bool activate );
 
-		TTC inline bool hasComponent() const { return hasComponent( CompT::getType() ); }
-		bool hasComponent( comp_e compType ) const;
+		TTC inline bool hasComponent() const { return hasComponent( CompT::getStaticType() ); }
+		bool hasComponent( comp_type_e compType ) const;
 
-		TTC inline bool addComponent(){ return addComponent( CompT::getType() ); }
-		bool addComponent( comp_e compType );
+		TTC inline bool addComponent(){ return addComponent( CompT::getStaticType() ); }
+		bool addComponent( comp_type_e compType );
 
-		TTC inline bool delComponent(){ return delComponent( CompT::getType() ); }
-		bool delComponent( comp_e compType, bool freeMem = true );
+		TTC inline bool delComponent(){ return delComponent( CompT::getStaticType() ); }
+		bool delComponent( comp_type_e compType, bool freeMem = true );
 
-		TTC inline bool tickComponent(){ return tickComponent( CompT::getType() ); }
-		bool tickComponent( comp_e compType );
+		TTC inline bool tickComponent(){ return tickComponent( CompT::getStaticType() ); }
+		bool tickComponent( comp_type_e compType );
+
+	// ================ SPECIFIC COMPONENT METHODS
+		// NOTE : CompPos
+		Vector2 getPos() const;
+		bool setPos( Vector2 pos );
+		bool setPos( float x, float y );
+
+		// NOTE : CompMove
+		Vector2 getVel() const;
+		bool setVel( Vector2 vel );
+		bool setVel( float x, float y );
+
+		Vector2 getAcc() const;
+		bool setAcc( Vector2 acc );
+		bool setAcc( float x, float y );
+
+		// NOTE : CompGraph
+		Color getCol() const;
+		bool setCol( Color col );
+		bool setCol( byte_t r, byte_t g, byte_t b, byte_t a );
+
+		float getCircleRadius() const;
+		bool setCircleRadius( float radius );
+		bool setCircleRadius( float x, float y );
 
 		//================================ OPERATORS
-		BaseComp  *operator[]( comp_e compType ) const;
+		CompBase  *operator[]( comp_type_e compType ) const;
 };
 
 typedef vector< Entity > NttVec;

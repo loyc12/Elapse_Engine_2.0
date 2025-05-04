@@ -7,7 +7,7 @@
 bool Engine::launchLoop()
 {
 	flog( 0 );
-	if ( getState() < ES_STARTED )
+	if( getState() < ES_STARTED )
 	{
 		qlog( "launchLoop : Engine not yet started", ERROR, 0 );
 		return false;
@@ -15,7 +15,7 @@ bool Engine::launchLoop()
 
 	OnStartLoop(); // from injectors.hpp
 
-	while ( getState() >= ES_STARTED && !WindowShouldClose() ){ runStep(); } // TODO : Multithread this
+	while( getState() >= ES_STARTED && !WindowShouldClose() ){ runStep(); } // TODO : Multithread this
 
 	OnEndLoop(); // from injectors.hpp
 
@@ -25,7 +25,7 @@ bool Engine::launchLoop()
 void Engine::runStep()
 {
 	flog( 0 );
-	if ( getState() < ES_STARTED ){ qlog( "runStep : Engine not started", ERROR, 0 ); return; }
+	if( getState() < ES_STARTED ){ qlog( "runStep : Engine not started", ERROR, 0 ); return; }
 
 	OnStartStep(); // from injectors.hpp
 

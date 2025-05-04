@@ -17,25 +17,25 @@
 
 inline int    abs(  int a )   { return a < 0 ? -a : a; }
 //inline long   abs(  long a )  { return a < 0 ? -a : a; }
-inline float  abs(  float a ) { return a < 0 ? -a : a; }
+inline float  abs(  float a ){ return a < 0 ? -a : a; }
 //inline double abs(  double a ){ return a < 0 ? -a : a; }
 
 inline int    sign( int a )   { return a < 0 ? -1 : a > 0 ? 1 : 0; }
 //inline long   sign( long a )  { return a < 0 ? -1 : a > 0 ? 1 : 0; }
-inline float  sign( float a ) { return a < 0 ? -1 : a > 0 ? 1 : 0; }
+inline float  sign( float a ){ return a < 0 ? -1 : a > 0 ? 1 : 0; }
 //inline double sign( double a ){ return a < 0 ? -1 : a > 0 ? 1 : 0; }
 
 inline int    sqr(  int a )   { return a * a; }
 //inline long   sqr(  long a )  { return a * a; }
-inline float  sqr(  float a ) { return a * a; }
+inline float  sqr(  float a ){ return a * a; }
 //inline double sqr(  double a ){ return a * a; }
 
 inline int    cub(  int a )   { return a * a * a; }
 //inline long   cub(  long a )  { return a * a * a; }
-inline float  cub(  float a ) { return a * a * a; }
+inline float  cub(  float a ){ return a * a * a; }
 //inline double cub(  double a ){ return a * a * a; }
 
-inline float  cbrt( float a ) { return pow( a, 1.0f/3.0f ); }
+inline float  cbrt( float a ){ return pow( a, 1.0f/3.0f ); }
 //inline double cbrt( double a ){ return pow( a, 1.0/3.0 ); }
 
 inline float  root( float a, float n )  { return pow( a, 1.0f/n ); }
@@ -46,17 +46,17 @@ inline float  root( float a, float n )  { return pow( a, 1.0f/n ); }
 inline int    min( int a, int b )       { return a < b ? a : b; }
 //inline long   min( long a, long b )     { return a < b ? a : b; }
 inline float  min( float a, float b )   { return a < b ? a : b; }
-//inline double min( double a, double b ) { return a < b ? a : b; }
+//inline double min( double a, double b ){ return a < b ? a : b; }
 
 inline int    avg( int a, int b )       { return ( a + b ) / 2; }
 //inline long   avg( long a, long b )     { return ( a + b ) / 2; }
 inline float  avg( float a, float b )   { return ( a + b ) / 2; }
-//inline double avg( double a, double b ) { return ( a + b ) / 2; }
+//inline double avg( double a, double b ){ return ( a + b ) / 2; }
 
 inline int    max( int a, int b )       { return a > b ? a : b; }
 //inline long   max( long a, long b )     { return a > b ? a : b; }
 inline float  max( float a, float b )   { return a > b ? a : b; }
-//inline double max( double a, double b ) { return a > b ? a : b; }
+//inline double max( double a, double b ){ return a > b ? a : b; }
 
 inline int    span( int a, int b )      { return abs( a - b ); }
 //inline long   span( long a, long b )    { return abs( a - b ); }
@@ -102,15 +102,15 @@ inline int    min4( int a, int b, int c, int d )            { return min( min( a
 inline float  min4( float a, float b, float c, float d )    { return min( min( a, b ), min( c, d )); }
 //inline double min4( double a, double b, double c, double d ){ return min( min( a, b ), min( c, d )); }
 
-inline int    pmod( int a, int b )      { int    r = a % b;        if ( r < 0 ) r += b; return r; }
-//inline long   pmod( long a, long b )    { long   r = a % b;        if ( r < 0 ) r += b; return r; }
-inline float  pmod( float a, float b )  { float  r = fmod( a, b ); if ( r < 0 ) r += b; return r; }
-//inline double pmod( double a, double b ){ double r = fmod( a, b ); if ( r < 0 ) r += b; return r; }
+inline int    pmod( int a, int b )      { int    r = a % b;        if( r < 0 ) r += b; return r; }
+//inline long   pmod( long a, long b )    { long   r = a % b;        if( r < 0 ) r += b; return r; }
+inline float  pmod( float a, float b )  { float  r = fmod( a, b ); if( r < 0 ) r += b; return r; }
+//inline double pmod( double a, double b ){ double r = fmod( a, b ); if( r < 0 ) r += b; return r; }
 
-inline float  deg2rad( float d ) { return d * DtoR; }
+inline float  deg2rad( float d ){ return d * DtoR; }
 //inline double deg2rad( double d ){ return d * DtoR; }
 
-inline float  rad2deg( float r ) { return r * RtoD; }
+inline float  rad2deg( float r ){ return r * RtoD; }
 //inline double rad2deg( double r ){ return r * RtoD; }
 
 

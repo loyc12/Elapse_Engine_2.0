@@ -5,10 +5,10 @@
 Entity *CpyEntityOver( Entity *src, Entity *dst )
 {
 	flog( 0 );
-	if ( src == nullptr )
+	if( src == nullptr )
 	{
 		qlog( "cpyEntityOver : src is nullptr", INFO, 0 );
-		if ( dst != nullptr )
+		if( dst != nullptr )
 		{
 			qlog( "cpyEntityOver : dst is not nullptr : deleting dst", INFO, 0 );
 			delete dst;
@@ -22,7 +22,7 @@ Entity *CpyEntityOver( Entity *src, Entity *dst )
 	else
 	{
 		qlog( "cpyEntityOver : src is not nullptr", INFO, 0 );
-		if ( dst == nullptr )
+		if( dst == nullptr )
 		{
 			qlog( "cpyEntityOver : dst is nullptr : creating new dst", INFO, 0 );
 			dst = CompManager::EntityFactory( src );
@@ -43,7 +43,7 @@ void CompManager::deleteAllEntities() // TODO : TEST ME
 	flog( 0 );
 	for( auto it = _NttMap.begin(); it != _NttMap.end(); )
 	{
-		if ( !delThatEntity( it->second, true )) { qlog( "deleteAllEntities : entity already deleted for ID:" + std::to_string( it->first ), INFO, 0 ); }
+		if( !delThatEntity( it->second, true )){ qlog( "deleteAllEntities : entity already deleted for ID:" + std::to_string( it->first ), INFO, 0 ); }
 		it = _NttMap.erase( it );
 	}
 
@@ -198,7 +198,7 @@ bool CompManager::defragEntityMap()
 			qlog( "defragEntityMap : Removing nullptr entity", INFO, 0 );
 			it = _NttMap.erase( it );
 		}
-		else{ ++it; }
+		else { ++it; }
 	}
 
 	updateMaxID();
@@ -243,7 +243,7 @@ Entity *CompManager::EntityFactory( Entity *src, id_t id )
 	flog( 0 );
 	Entity* Ntt = CompManager::EntityFactory( id );
 
-	if ( Ntt != nullptr ){ *Ntt = *src; } // NOTE : copies the entity and its components
+	if( Ntt != nullptr ){ *Ntt = *src; } // NOTE : copies the entity and its components
 
 	return Ntt;
 }

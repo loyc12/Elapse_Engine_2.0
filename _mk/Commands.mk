@@ -86,7 +86,7 @@ tidy:
 # Check for memory leaks
 leaks: debug
 	@printf "Checking for memory leaks...\n"
-	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt ./$(PROJECT_NAME)$(EXT)
+	@valgrind --log-file=valgrind-out.txt $(VFLAGS) ./$(PROJECT_NAME)$(EXT)
 	@printf "Memory leaks checked\n"
 	@printf "Check valgrind-out.txt for details\n"
 

@@ -77,7 +77,7 @@ class Engine
 
 	// ================================ ACCESSORS / MUTATORS
 	public:
-		inline engineState_e getState() { std::lock_guard< std::mutex > lock( mtx_state ); return _state; }
+		inline engineState_e getState(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state; }
 
 		inline inputs_s    &getLatestInputs(){   return _controller->getLatestInputs(); }
 		inline inputs_s    &getPreviousInputs(){ return _controller->getPreviousInputs(); }
@@ -94,7 +94,7 @@ class Engine
 
 	// ================================ MUTEXED ACCESSORS
 	private:
-		inline void setState( engineState_e newState ) { std::lock_guard< std::mutex > lock( mtx_state ); _state = newState; }
+		inline void setState( engineState_e newState ){ std::lock_guard< std::mutex > lock( mtx_state ); _state = newState; }
 
 };
 

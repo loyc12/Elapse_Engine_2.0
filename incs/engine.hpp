@@ -5,7 +5,7 @@
 
 # include "./base.hpp"
 
-# include "./engine/component/BaseComp.hpp"
+# include "./engine/component/CompBase.hpp"
 # include "./engine/component/CompPos.hpp"
 
 # include "./engine/entity/Entity.hpp"

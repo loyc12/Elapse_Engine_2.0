@@ -1,17 +1,17 @@
 #include "../../../incs/engine.hpp"
 
-BaseComp *CompFactory( comp_e compType, id_t id )
+CompBase *CompFactory( comp_type_e compType, Entity *Ntt, bool isActive )
 {
 	flog( 0 );
 	switch( compType )
 	{
-		case COMP_BASE_TYPE: return CompFactory< BaseComp >( id );
-		//case COMP_SCRIPT:    return CompFactory< CompScript >( id );
-		//case COMP_PHYSIC:    return CompFactory< CompPhysic >( id );
-		//case COMP_MOVEMENT:  return CompFactory< CompMovement >( id );
-		case COMP_POSITION:  return CompFactory< CompPos >( id );
-		//case COMP_COLLIDE:   return CompFactory< CompCollide >( id );
-		//case COMP_GRAPHIC:    return CompFactory< CompGraphic >( id );
+		case COMP_TYPE_BASE: return CompFactory< CompBase >( Ntt, isActive );
+		//case COMP_SCRIPT:    return CompFactory< CompScript >( Ntt, isActive );
+		//case COMP_PHYSIC:    return CompFactory< CompPhysic >( Ntt, isActive );
+		case COMP_MOVEMENT:  return CompFactory< CompMove >( Ntt, isActive );
+		case COMP_POSITION:  return CompFactory< CompPos >( Ntt, isActive );
+		//case COMP_COLLIDE:   return CompFactory< CompCollide >( Ntt, isActive );
+		case COMP_GRAPHIC:    return CompFactory< CompGraph >( Ntt, isActive );
 		default: qlog( "CompFactory : Invalid component type", ERROR, 0 );
 	}
 	return nullptr;
@@ -21,7 +21,7 @@ BaseComp *CompFactory( comp_e compType, id_t id )
 
 // ================ COMPONENT METHODS
 
-CompC_t CompManager::getCompCount( id_t id ) const
+comp_count_t CompManager::getCompCount( id_t id ) const
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return 0; }
@@ -31,8 +31,18 @@ CompC_t CompManager::getCompCount( id_t id ) const
 
 	return Ntt->getCompCount();
 }
+comp_count_t CompManager::getActCompCount( id_t id ) const
+{
+	flog( 0 );
+	if( !hasEntity( id )){ return 0; }
 
-bool CompManager::hasComponent( id_t id, comp_e compType ) const
+	Entity *Ntt = getEntity( id );
+	if( Ntt == nullptr ){ return 0; }
+
+	return Ntt->getActCompCount();
+}
+
+bool CompManager::hasComponent( id_t id, comp_type_e compType ) const
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return false; }
@@ -46,7 +56,7 @@ bool CompManager::hasComponent( id_t id, comp_e compType ) const
 
 	return ( Ntt->hasComponent( compType ));
 }
-bool CompManager::addComponent( id_t id, comp_e compType )
+bool CompManager::addComponent( id_t id, comp_type_e compType )
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return false; }
@@ -60,7 +70,7 @@ bool CompManager::addComponent( id_t id, comp_e compType )
 
 	return ( Ntt->addComponent( compType ));
 }
-bool CompManager::delComponent( id_t id, comp_e compType, bool freeMem )
+bool CompManager::delComponent( id_t id, comp_type_e compType, bool freeMem )
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return false; }

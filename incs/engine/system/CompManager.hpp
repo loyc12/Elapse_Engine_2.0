@@ -2,10 +2,8 @@
 # define COMP_MANAGER_HPP
 
 # include "../../base.hpp"
+# include "../component/CompBase.hpp"
 # include "../entity/Entity.hpp"
-
-# include "../component/BaseComp.hpp"
-# include "../component/CompPos.hpp"
 
 typedef std::unordered_map< id_t, Entity* > NttMap_t;
 
@@ -59,26 +57,27 @@ class CompManager
 
 
 	// ================ COMPONENT METHODS
-		CompC_t getCompCount( id_t id ) const;
+		comp_count_t getCompCount( id_t id ) const;
+		comp_count_t getActCompCount( id_t id ) const;
 
-		TTC inline CompT *getComponent( id_t id, comp_e compType ) const { ( void )compType; return getComponent< CompT >( id ); };
+		TTC inline CompT *getComponent( id_t id, comp_type_e compType ) const { ( void )compType; return getComponent< CompT >( id ); };
 		TTC CompT *getComponent( id_t id ) const;
 
-		TTC inline bool hasComponent( id_t id ) const { return hasComponent( id, CompT::getType() ); };
-		bool hasComponent( id_t id, comp_e compType ) const;
+		TTC inline bool hasComponent( id_t id ) const { return hasComponent( id, CompT::getStaticType() ); };
+		bool hasComponent( id_t id, comp_type_e compType ) const;
 
-		TTC inline bool addComponent( id_t id ) { return addComponent( id, CompT::getType() ); };
-		bool addComponent( id_t id, comp_e compType );
+		TTC inline bool addComponent( id_t id ){ return addComponent( id, CompT::getStaticType() ); };
+		bool addComponent( id_t id, comp_type_e compType );
 
-		TTC inline bool delComponent( id_t id, bool freeMem = true ) { return delComponent( id, CompT::getType(), freeMem ); };
-		bool delComponent( id_t id, comp_e compType, bool freeMem = true );
+		TTC inline bool delComponent( id_t id, bool freeMem = true ){ return delComponent( id, CompT::getStaticType(), freeMem ); };
+		bool delComponent( id_t id, comp_type_e compType, bool freeMem = true );
 
 	// ================================ UPDATE METHODS
 		void updateAllEntities(); //   NOTE : calls the onTick() method of all components in the map ( one entity at a time )
 		void updateAllComponents(); // NOTE : calls the onTick() method of all components in the map ( each component type at a time)
 
-		TTC inline void updateComps() { updateCompsByType( CompT::getType() ); };
-		void updateCompsByType( comp_e compType ); // NOTE : calls the onTick() method of all components of the given type in the map
+		TTC inline void updateComps(){ updateCompsByType( CompT::getStaticType() ); };
+		void updateCompsByType( comp_type_e compType ); // NOTE : calls the onTick() method of all components of the given type in the map
 
 	// ================ TICK METHODS
 		void tickScripts(); //   NOTE : script execution
@@ -97,9 +96,9 @@ class CompManager
 		static Entity *EntityFactory( Entity *src, id_t id = 0 ); // NOTE : allocs a new entity with the given ID, based on the src entity
 };
 
-BaseComp *CompFactory( comp_e compType, id_t id = 0 );
+CompBase *CompFactory( comp_type_e compType, Entity *Ntt = nullptr, bool isActive = COMP_DEF_ACTIVITY );
 
-//# include "./CompManagerT.hpp"
+# include "./CompManagerT.hpp"
 
 #endif // COMP_MANAGER_HPP
 

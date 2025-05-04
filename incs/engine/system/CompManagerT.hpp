@@ -10,10 +10,10 @@
 // ================ COMPONENT METHODS
 
 /*
-TTC CompT *CompManager::getComponent( id_t id, comp_e compType ) const
+TTC CompT *CompManager::getComponent( id_t id, comp_type_e compType ) const
 {
 	flog( 0 );
-	if( !hasEntity( id )){ return nullptr; } // NOTE : returns a null BaseComponent ( innactive )
+	if( !hasEntity( id )){ return nullptr; } // NOTE : returns a null CompBaseonent ( innactive )
 
 	Entity *Ntt = _NttMap.find( id )->second;
 	if( Ntt == nullptr )
@@ -34,7 +34,7 @@ TTC CompT *CompManager::getComponent( id_t id, comp_e compType ) const
 TTC CompT *CompManager::getComponent( id_t id ) const
 {
 	flog( 0 );
-	if( !hasEntity( id )){ return nullptr; } // NOTE : returns a null BaseComponent ( innactive )
+	if( !hasEntity( id )){ return nullptr; } // NOTE : returns a null CompBaseonent ( innactive )
 
 	Entity *Ntt = _NttMap.find( id )->second;
 	if( Ntt == nullptr )

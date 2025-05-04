@@ -1,19 +1,16 @@
 #include "../../../incs/engine.hpp"
-#include "../../../incs/engine/entity/Entity.hpp"
-#include "../../../incs/engine/system/CompManager.hpp"
-#include <cstddef>
 
 // ================================ ASSOCIATED FUNCTIONS
 
 bool IsValidEntity( Entity *Ntt )
 {
 	flog( 0 );
-	if ( Ntt == nullptr )
+	if( Ntt == nullptr )
 	{
 		qlog( "IsValidEntity : Entity is nullptr", WARN, 0 );
 		return false;
 	}
-	if ( Ntt->getID() == 0 )
+	if( Ntt->getID() == 0 )
 	{
 		qlog( "IsValidEntity : Entity ID is 0", WARN, 0 );
 		return false;
@@ -27,28 +24,28 @@ bool Entity::onAdd()
 	flog( 0 );
 	qlog( "onAdd : Initializing a new entity", INFO, 0 );
 	_active = true; // NOTE : set the active state to true
-	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i ){ _components[ i ] = nullptr; }
+	_components.fill( nullptr ); // NOTE : set all components to nullptr
 	return true;
 }
 bool Entity::onDel()
 {
 	flog( _id );
 
-	if ( GVP != nullptr && GVP->isTracking() && GVP->getTrackedEntity() == this )
+	if( GVP != nullptr && GVP->isTracking() && GVP->getTrackedEntity() == this )
 	{
 		qlog( "delFromManager : Untracking entity due to deletion", INFO, _id );
 		GVP->untrackEntity();
 	}
 
 	qlog( "onDel : Deleting this entity", INFO, _id );
-	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i )
+for ( comp_count_t i = 0; i < COMP_TYPE_COUNT; ++i )
 	{
-		if ( _components[ i ] != nullptr )
+		if( _components[ i ] != nullptr )
 		{
 			qlog( "onDel : Deleting component of type: " + std::to_string( i ), DEBUG, _id );
 			delete _components[ i ];
 		}
-		else{ qlog( "onDel : Component of type: " + std::to_string( i ) + " is already a nullptr", DEBUG, _id ); }
+		else { qlog( "onDel : Component of type: " + std::to_string( i ) + " is already a nullptr", DEBUG, _id ); }
 	}
 	return delFromManager();
 }
@@ -60,7 +57,7 @@ bool Entity::onCpy( const Entity &rhs )
 	qlog( "onCpy : Copying data from entity with ID: " + std::to_string( rhs._id ) + " to this entity", INFO, _id );
 
 	_active = rhs._active; // NOTE : copy the active state
-	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i )
+	for ( comp_count_t i = 0; i < COMP_TYPE_COUNT; ++i )
 	{
 		// NOTE : copies each component respective state, allocating or freeing memory as required
 		_components[ i ] = CpyCompOver( _components[ i ], rhs._components[ i ] );
@@ -79,14 +76,14 @@ bool Entity::delFromManager()
 	flog( _id );
 
 	qlog( "delFromManager : Deleting this entity", INFO, _id );
-	if ( _id != 0 )
+	if( _id != 0 )
 	{
-		if ( GCM->hasThatEntity( this ))
+		if( GCM->hasThatEntity( this ))
 		{
 			qlog( "delFromManager : removing entity from manager", INFO, _id );
 			GCM->delThatEntity( this, false );
 		}
-		else{ qlog( "delFromManager : Entity has id but is not in manager", WARN, _id ); }
+		else { qlog( "delFromManager : Entity has id but is not in manager", WARN, _id ); }
 
 		_id = 0;
 	}
@@ -113,7 +110,7 @@ Entity::Entity( bool addEntityToManager, id_t id ) : _id( id ) // NOTE : should 
 {
 	flog( _id );
 	onAdd();
-	if ( addEntityToManager ){ addToManager(); }
+	if( addEntityToManager ){ addToManager(); }
 }
 
 Entity::Entity( const Entity &rhs ) : _id( 0 )
@@ -126,92 +123,36 @@ Entity::Entity( const Entity &rhs ) : _id( 0 )
 Entity &Entity::operator=( const Entity &rhs )
 {
 	flog( _id );
-	if ( this == &rhs ){ return *this; } // NOTE : check if the object is the same
+	if( this == &rhs ){ return *this; } // NOTE : check if the object is the same
 	onCpy( rhs );
 	return *this;
 }
 
 // ================================ ACCESSORS / MUTATORS
 
-CompC_t Entity::getCompCount() const
+comp_count_t Entity::getCompCount() const
 {
 	flog( _id );
-	CompC_t count = 0;
-	for ( CompC_t i = 0; i < COMP_TYPE_COUNT; ++i ){ if ( _components[ i ] != nullptr ){ count++; }}
+	comp_count_t count = 0;
+	for ( comp_count_t i = 0; i < COMP_TYPE_COUNT; ++i ){ if( _components[ i ] != nullptr ){ count++; }}
 	return count;
 }
-
-bool Entity::isCompActive( comp_e compType ) const
+comp_count_t Entity::getActCompCount() const
 {
 	flog( _id );
-	if ( !IsValidCompType( compType )){ return false; }
-	if ( !IsValidComponent( _components[ compType ] )){ return false; }
-
-	return _components[ compType ]->isActive();
-}
-
-bool Entity::isCompActive( comp_e compType, bool activate )
-{
-	flog( _id );
-	if ( !IsValidCompType( compType )){ return false; }
-	if ( !IsValidComponent( _components[ compType ] )){ return false; }
-
-	_components[ compType ]->isActive( activate );
-	return _components[ compType ]->isActive();
-}
-
-bool Entity::hasComponent( comp_e compType ) const
-{
-	flog( _id );
-	if ( !IsValidCompType( compType )){        return false; }
-	if ( _components[ compType ] == nullptr ){ return false; }
-	return true;
-}
-
-bool Entity::addComponent( comp_e compType )
-{
-	flog( _id );
-	if ( !IsValidCompType( compType )){ return false; }
-	if ( _components[ compType ] != nullptr )
+	comp_count_t count = 0;
+	for ( comp_count_t i = 0; i < COMP_TYPE_COUNT; ++i )
 	{
-		qlog( "Component of type: " + std::to_string( compType ) + " already exists for this entity", WARN, _id );
-		return false;
+		if( _components[ i ] != nullptr && _components[ i ]->isActive() ){ count++; }
 	}
-
-	qlog( "addComponent : Adding component of type: " + std::to_string( compType ) + " to this entity", INFO, _id );
-	_components[ compType ] = CompFactory( compType, _id ); // TODO : add the component type to the factory
-
-	return true;
-}
-
-bool Entity::delComponent( comp_e compType, bool freeMem )
-{
-	flog( _id );
-	if ( !IsValidCompType( compType )){ return false; }
-	if ( !IsValidComponent( _components[ compType ] )){ return false; }
-
-	qlog( "delComponent : Deleting component of type: " + std::to_string( compType ) + " from this entity", INFO, _id );
-	if ( freeMem ){ delete _components[ compType ]; }
-	_components[ compType ] = nullptr;
-
-	return true;
-}
-
-bool Entity::tickComponent( comp_e compType )
-{
-	flog( _id );
-	if ( !IsValidCompType( compType )){ return false; }
-	if ( !IsValidComponent( _components[ compType ] )){ return false; }
-
-	qlog( "tickComponent : Ticking component of type: " + std::to_string( compType ) + " from this entity", INFO, _id );
-	return _components[ compType ]->onTick();
+	return count;
 }
 
 //================================== OPERATORS
 
-BaseComp *Entity::operator[]( comp_e compType ) const
+CompBase *Entity::operator[]( comp_type_e compType ) const
 {
 	flog( _id );
-	if ( compType >= COMP_TYPE_COUNT ){ return nullptr; }
+	if( compType >= COMP_TYPE_COUNT ){ return nullptr; }
 	return _components[ compType ];
 }

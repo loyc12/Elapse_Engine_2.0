@@ -30,12 +30,18 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 {
 	flog( 0 );
 
-	if ( inp.P && !prev.P )
+	if( inp.P && !prev.P )
 	{
 		qlog( "P pressed", INFO, 0 );
 		GNG->togglePause();
 	}
-	// TODO : add game specific code here
+
+	if( inp.CLICK_LEFT && !prev.CLICK_LEFT )
+	{
+		qlog( "CLICK_LEFT pressed", INFO, 0 );
+
+	}
+
 }
 
 void OnTickScripts()
@@ -93,13 +99,22 @@ void OnRenderUI()
 	qlog( caInfo, INFO, 0 );
 	DrawText( caInfo.c_str(), FontSizeUI, ( 4.0f * FontSizeUI ), FontSizeUI, WHITE );
 
-	if ( G_PlayerNtt == nullptr )
+	if( G_PlayerNtt == nullptr )
 	{
 		qlog( "G_PlayerNtt is nullptr", ERROR, 0 );
 		return;
 	}
-	Vector2 playerWorldPos = G_PlayerNtt->getComponent< CompPos >()->getPos();
+
+	CompPos *cmpPos = G_PlayerNtt->getComponent< CompPos >();
+	if( cmpPos == nullptr )
+	{
+		qlog( "G_PlayerNtt has no position component", ERROR, 0 );
+		return;
+	}
+
+	Vector2 playerWorldPos = G_PlayerNtt->getPos();
 	Vector2 playerScreenPos = GetWorldToScreen2D( playerWorldPos, *GVP->getCamera() );
+
 	string plInfo = "G_Player  : " + to_string( ( int )playerScreenPos.x ) + ":" + to_string( ( int )playerScreenPos.y ) + " | " + to_string( ( int )playerWorldPos.x ) + ":" + to_string( ( int )playerWorldPos.y );
 	qlog( plInfo, INFO, 0 );
 	DrawText( plInfo.c_str(), FontSizeUI, ( 5.5f * FontSizeUI ), FontSizeUI, WHITE );

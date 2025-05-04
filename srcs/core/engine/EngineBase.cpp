@@ -6,14 +6,14 @@
 Engine::Engine() : _DT( 0 ), _TS( 1 ), _state( ES_CLOSED )
 {
 	flog( 0 );
-	if ( getState() < ES_CLOSING )
+	if( getState() < ES_CLOSING )
 		switchState(  ES_INITIALIZED );
 }
 
 Engine::~Engine()
 {
 	flog( 0 );
-	if ( getState() > ES_CLOSED )
+	if( getState() > ES_CLOSED )
 		switchState(  ES_CLOSED );
 }
 
@@ -31,7 +31,7 @@ float Engine::getDeltaTime() const { return _DT * _TS; }
 void  Engine::setTimeScale( float timeScale )
 {
 	flog( 0 );
-	if ( timeScale < 0 )
+	if( timeScale < 0 )
 	{
 		qlog( "setTimeScale : Time scale cannot be negative", WARN, 0 );
 		_TS = 0;

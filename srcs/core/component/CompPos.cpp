@@ -7,7 +7,7 @@ void CompPos::onCpy( const CompPos &rhs )
 	flog( 0 );
 	if( this == &rhs ){ return; } // NOTE : checks if the objects are the same
 
-	BaseComp::onCpy( rhs );
+	CompBase::onCpy( rhs );
 	_pos = rhs._pos;
 }
 
@@ -19,18 +19,18 @@ CompPos::~CompPos()
 	onDel();
 }
 
-CompPos::CompPos() : BaseComp(), _pos({ 0, 0 })
+CompPos::CompPos() : CompBase(), _pos({ 0, 0 })
 {
 	flog( 0 );
 	onAdd();
 }
-CompPos::CompPos( bool isActive, id_t id, Vector2 pos ) : BaseComp( isActive, id ), _pos( pos )
+CompPos::CompPos( Entity *Ntt, bool isActive, Vector2 pos ) : CompBase( Ntt, isActive ), _pos( pos )
 {
 	flog( 0 );
 	onAdd();
 }
 
-CompPos::CompPos( const CompPos &rhs ) : BaseComp( rhs )
+CompPos::CompPos( const CompPos &rhs ) : CompBase( rhs )
 {
 	flog( 0 );
 	*this = rhs;

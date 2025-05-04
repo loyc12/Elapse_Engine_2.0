@@ -55,3 +55,12 @@ CFLAGS +=	-std=gnu++20 \
 					-Wextra \
 					-Wshadow \
 					-Wno-missing-braces \
+					#-fsanitize=address \
+					#-fsanitize=undefined \
+
+VFLAGS += --leak-check=full \
+					--show-leak-kinds=all \
+					--track-origins=yes \
+					--show-reachable=yes \
+					--show-possibly-lost=yes \
+					--verbose \
