@@ -6,27 +6,27 @@
 
 # define COMP_DEF_SCRIPT "UNDEFINED" // NOTE : default sound for the component
 
-class CompSound : public CompBase
+class CompScript : public CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
 		string _scriptPath; // NOTE : path to the sound file
 
 	// ================================ CORE METHODS
-		void onCpy( const CompSound &rhs );
+		void onCpy( const CompScript &rhs );
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		~CompSound();
+		~CompScript();
 
-		CompSound();
-		CompSound( Entity *Ntt,
-			bool isActive     = COMP_DEF_ACTIVITY,
+		CompScript();
+		CompScript( Entity *Ntt,
+			bool   isActive   = COMP_DEF_ACTIVITY,
 			string scriptPath = COMP_DEF_SCRIPT
 		);
 
-		CompSound( const CompSound &rhs );
-		CompSound &operator=( const CompSound &rhs );
+		CompScript( const CompScript &rhs );
+		CompScript &operator=( const CompScript &rhs );
 
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getStaticType(){    return COMP_SCRIPT; }
@@ -42,7 +42,7 @@ class CompSound : public CompBase
 		bool runScript( string scriptPath ); // NOTE : switches to and runs the script at the given path
 
 	// ================================ TICK METHODS
-		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompSound
+		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompScript
 };
 
 #endif // COMP_SCRIPT_HPP

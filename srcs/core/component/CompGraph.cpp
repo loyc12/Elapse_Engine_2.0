@@ -24,7 +24,6 @@ CompGraph::CompGraph() : CompBase(), _col( COMP_DEF_COLOUR)
 	flog( 0 );
 }
 CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col, float cirRad ) : CompBase( Ntt, isActive ), _col( col ), _cirRad( cirRad )
-
 {
 	flog( 0 );
 }
@@ -39,6 +38,24 @@ CompGraph &CompGraph::operator=( const CompGraph &rhs )
 	flog( 0 );
 	onCpy( rhs );
 	return *this;
+}
+
+// ================================ ACCESSORS / MUTATORS
+
+bool CompGraph::hasSisterComps() const
+{
+	flog( 0 );
+	if( !hasEntity() )
+	{
+		qlog( "CompGraph::hasSisterComps() : no entity found for component", ERROR, 0 );
+		return false;
+	}
+	if( !getEntity()->hasComponent< CompPos  >() )
+	{
+		qlog( "CompGraph::hasSisterComps() : no position component found for entity", ERROR, 0 );
+		return false;
+	}
+	return true;
 }
 
 // ================================ TICK METHODS

@@ -21,8 +21,8 @@ class CompCollide : public CompBase
 
 		CompCollide();
 		CompCollide( Entity *Ntt,
-			bool isActive = COMP_DEF_ACTIVITY,
-			float hitRad  = COMP_DEF_HITRAD
+			bool  isActive = COMP_DEF_ACTIVITY,
+			float hitRad   = COMP_DEF_HITRAD
 		);
 
 		CompCollide( const CompCollide &rhs );

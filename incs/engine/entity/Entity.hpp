@@ -5,9 +5,18 @@
 # include "../../base.hpp"
 
 # include "../component/CompBase.hpp"
+
 # include "../component/CompPos.hpp"
 # include "../component/CompMove.hpp"
+# include "../component/CompCollide.hpp"
+# include "../component/CompPhys.hpp"
+
+# include "../component/CompText.hpp"
+# include "../component/CompSound.hpp"
+# include "../component/CompShape.hpp"
 # include "../component/CompGraph.hpp"
+
+# include "../component/CompScript.hpp"
 
 TTC CompT *CpyCompOver( CompT *dst, CompT *src );
 

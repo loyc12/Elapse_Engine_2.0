@@ -11,6 +11,7 @@ class CompPos : public CompBase
 	protected:
 	// ================================ ATTRIBUTES
 		Vector2 _pos; // NOTE : position of the component
+		//angle_t _angle; // NOTE : angle of the component ( not used yet )
 
 	// ================================ CORE METHODS
 		void onCpy( const CompPos &rhs );
@@ -21,8 +22,8 @@ class CompPos : public CompBase
 
 		CompPos();
 		CompPos( Entity *Ntt,
-			bool isActive = COMP_DEF_ACTIVITY,
-			Vector2 pos   = COMP_DEF_POS
+			bool    isActive = COMP_DEF_ACTIVITY,
+			Vector2 pos      = COMP_DEF_POS
 		);
 
 		CompPos( const CompPos &rhs );
@@ -30,7 +31,10 @@ class CompPos : public CompBase
 
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getStaticType(){    return COMP_POSITION; }
-		inline comp_type_e getType() const override { return COMP_POSITION; } // NOTE : overide this in derived classes
+		inline comp_type_e getType() const override { return COMP_POSITION; }
+
+		// NOTE : checks if the parent entity exists ( no component dependencies for CompPos )
+		inline bool hasSisterComps() const override { return hasEntity(); }
 
 	// ================ POSITION METHODS
 		inline Vector2 getPos() const { return _pos; }

@@ -4,11 +4,13 @@
 # include <raylib.h>
 # include "../component/CompBase.hpp"
 
+typedef byte_t Shape2D; // NOTE : this is a placeholder for the actual shape type
+
 class CompShape : public CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
-		byte_t _shape; // NOTE : temporary variable for the shape component
+		Shape2D _shape;
 
 	// ================================ CORE METHODS
 		void onCpy( const CompShape &rhs );
@@ -19,8 +21,8 @@ class CompShape : public CompBase
 
 		CompShape();
 		CompShape( Entity *Ntt,
-			bool isActive = COMP_DEF_ACTIVITY,
-			byte_t shape  = 0
+			bool    isActive = COMP_DEF_ACTIVITY,
+			Shape2D shape    = 0
 		);
 
 		CompShape( const CompShape &rhs );
@@ -31,10 +33,10 @@ class CompShape : public CompBase
 		inline comp_type_e getType() const override { return COMP_POSITION; } // NOTE : overide this in derived classes
 
 	// ================ POSITION METHODS
-		inline byte_t getShape() const { return _shape; }
+		inline Shape2D getShape() const { return _shape; }
 		inline bool voidShape(){ _shape = 0; return true; }
-		inline bool setShape(    byte_t shape ){ _shape  = shape; return true; }
-		inline bool changeShape( byte_t delta ){ _shape += delta; return true; }
+		inline bool setShape(    Shape2D shape ){ _shape  = shape; return true; }
+		inline bool changeShape( Shape2D delta ){ _shape += delta; return true; }
 
 	// ================================ TICK METHODS
 		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompShape

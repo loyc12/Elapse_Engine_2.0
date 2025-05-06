@@ -28,11 +28,11 @@ class CompText : public CompBase
 
 		CompText();
 		CompText( Entity *Ntt,
-			bool isActive  = COMP_DEF_ACTIVITY,
-			string title   = COMP_DEF_TEXT,
-			string content = COMP_DEF_TEXT,
-			float fontSize = COMP_DEF_FONTSIZE,
-			Color fontCol  = COMP_DEF_COLOR
+			bool   isActive = COMP_DEF_ACTIVITY,
+			string title    = COMP_DEF_TEXT,
+			string content  = COMP_DEF_TEXT,
+			float  fontSize = COMP_DEF_FONTSIZE,
+			Color  fontCol  = COMP_DEF_COLOR
 		);
 
 		CompText( const CompText &rhs );

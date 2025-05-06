@@ -6,8 +6,6 @@
 # include "./base.hpp"
 
 # include "./engine/component/CompBase.hpp"
-# include "./engine/component/CompPos.hpp"
-
 # include "./engine/entity/Entity.hpp"
 
 # include "./engine/interface/injectors.hpp"

@@ -9,8 +9,8 @@ typedef enum : comp_count_t
 {
 	COMP_POSITION = 0,
 	COMP_MOVEMENT,
-	COMP_PHYSIC,
 	COMP_COLLIDE,
+	COMP_PHYSIC,
 
 	COMP_TEXT,
 	COMP_SOUND,
@@ -48,8 +48,8 @@ class CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
-		Entity *_Ntt; // NOTE : the entity this component belongs to
-		bool _active; // NOTE : mutex this if we ever multithread onTick() calls
+		Entity *_Ntt; //    NOTE : the entity this component belongs to
+		bool    _active; // NOTE : mutex this if we ever multithread onTick() calls
 
 		inline virtual void onCpy( const CompBase &rhs ){ _active = rhs._active; } // NOTE : ovveride this in derived classes
 
@@ -67,13 +67,15 @@ class CompBase
 		inline static  comp_type_e getStaticType(){  return COMP_TYPE_BASE; }
 		inline virtual comp_type_e getType() const { return COMP_TYPE_BASE; } // NOTE : overide this in derived classes
 
+		inline virtual bool hasSisterComps() const { return hasEntity(); } // NOTE : should be ovveride in derived classes
+
 		inline bool isActive(){ return _active && hasEntity(); }
 		inline bool setActivity( bool activate ){ _active = activate; return _active; }
 
 	// ================ ENTITY METHODS
 		inline Entity *getEntity() const { return _Ntt; }
-		inline bool    setEntity( Entity *Ntt ){  _Ntt = Ntt; return true; }
 		inline bool    hasEntity() const { return _Ntt != nullptr; }
+		inline bool    setEntity( Entity *Ntt ){  _Ntt = Ntt; return true; }
 		inline bool    voidEntity(){ _Ntt = nullptr; return true; }
 
 		id_t getEntityID() const;

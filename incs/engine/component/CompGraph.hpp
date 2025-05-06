@@ -23,9 +23,9 @@ class CompGraph : public CompBase
 
 		CompGraph();
 		CompGraph( Entity *Ntt,
-			bool isActive = COMP_DEF_ACTIVITY,
-			Color col     = COMP_DEF_COLOUR,
-			float cirRad  = COMP_DEF_CIRRAD
+			bool  isActive = COMP_DEF_ACTIVITY,
+			Color col      = COMP_DEF_COLOUR,
+			float cirRad   = COMP_DEF_CIRRAD
 		);
 
 		CompGraph( const CompGraph &rhs );
@@ -33,7 +33,10 @@ class CompGraph : public CompBase
 
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getStaticType(){    return COMP_GRAPHIC; }
-		inline comp_type_e getType() const override { return COMP_GRAPHIC; } // NOTE : overide this in derived classes
+		inline comp_type_e getType() const override { return COMP_GRAPHIC; }
+
+		// NOTE : checks if the parent entity exists and has the needed components ( position )
+		bool hasSisterComps() const override;
 
 	// ================ COLOR METHODS
 		inline Color getCol(){ return _col; }

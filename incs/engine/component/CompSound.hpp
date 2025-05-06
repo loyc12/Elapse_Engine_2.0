@@ -21,7 +21,7 @@ class CompSound : public CompBase
 
 		CompSound();
 		CompSound( Entity *Ntt,
-			bool isActive    = COMP_DEF_ACTIVITY,
+			bool   isActive  = COMP_DEF_ACTIVITY,
 			string soundPath = COMP_DEF_SOUND
 		);
 
