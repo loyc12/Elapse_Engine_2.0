@@ -60,7 +60,7 @@ class Entity
 		inline bool setActivity( bool activate ){ _active = activate; return _active; }
 
 	// ================ GENERAL COMPONENT METHODS
-		inline CompArray *getCompArray(){   return &_components; }
+		inline CompArray &getCompArray(){   return _components; }
 		comp_count_t      getCompCount()    const; // NOTE : returns the number of non nullptr components
 		comp_count_t      getActCompCount() const; // NOTE : returns the number of active components
 
@@ -85,29 +85,63 @@ class Entity
 		TTC inline bool tickComponent(){ return tickComponent( CompT::getStaticType() ); }
 		bool tickComponent( comp_type_e compType );
 
-	// ================ SPECIFIC COMPONENT METHODS
-		// NOTE : CompPos
+	// ================ SPECIFIC COMPONENT METHODS ( aka, shortcuts to avoid calling getComponent() over and over again )
+		// NOTE : these should handle all failure cases gracefully ( e.g. if the component des not exist )
+
+	// ======== POSITION COMPONENT
 		Vector2 getPos() const;
 		bool setPos( Vector2 pos );
-		bool setPos( float x, float y );
+		bool changePos( Vector2 delta );
 
-		// NOTE : CompMove
+		angle_t getAngle() const;
+		bool setAngle( angle_t angle );
+		bool changeAngle( angle_t delta );
+
+		float getLineDistTo( id_t id ) const;
+		float getLineDistTo( Entity  *other ) const;
+		float getLineDistTo( CompPos *other ) const;
+		float getLineDistTo( Vector2  other ) const;
+		float getLineDistTo( float x, float y ) const;
+
+	// ======== MOVEMENT COMPONENT
 		Vector2 getVel() const;
+		float getLinearVel() const;
 		bool setVel( Vector2 vel );
-		bool setVel( float x, float y );
+		bool changeVel( Vector2 delta );
 
 		Vector2 getAcc() const;
+		float getLinearAcc() const;
 		bool setAcc( Vector2 acc );
-		bool setAcc( float x, float y );
+		bool changeAcc( Vector2 delta );
 
-		// NOTE : CompGraph
+		angle_t getRotVel() const;
+		bool setRotVel( angle_t rotVel );
+		bool changeRotVel( angle_t delta );
+
+		angle_t getRotAcc() const;
+		bool setRotAcc( angle_t rotAcc );
+		bool changeRotAcc( angle_t delta );
+
+	// ======== PHYSICS COMPONENT
+		bool isDynamic() const;
+		bool setDynamic( bool isDynamic );
+
+	// ======== COLLISION COMPONENT
+		bool isCollidable() const;
+		bool setCollidable( bool isCollide );
+
+		float getHitRad() const;
+		bool setHitRad( float hitRad );
+		bool changeHitRad( float delta );
+
+	// ======== GRAPHICS COMPONENT
 		Color getCol() const;
 		bool setCol( Color col );
-		bool setCol( byte_t r, byte_t g, byte_t b, byte_t a );
+		bool changeCol( Color delta );
 
 		float getCircleRadius() const;
 		bool setCircleRadius( float radius );
-		bool setCircleRadius( float x, float y );
+		bool changeCircleRadius( float delta );
 
 		//================================ OPERATORS
 		CompBase  *operator[]( comp_type_e compType ) const;

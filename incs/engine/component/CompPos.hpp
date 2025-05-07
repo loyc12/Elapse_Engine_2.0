@@ -5,13 +5,14 @@
 # include "../component/CompBase.hpp"
 
 # define COMP_DEF_POS { 0, 0 } // NOTE : default position for the component
+# define NULL_POS { INFINITY, INFINITY } // NOTE : means you fucked up bud
 
 class CompPos : public CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
-		Vector2 _pos; // NOTE : position of the component
-		//angle_t _angle; // NOTE : angle of the component ( not used yet )
+		Vector2 _pos; //   NOTE : position of the component
+		angle_t _angle; // NOTE : angle of the component
 
 	// ================================ CORE METHODS
 		void onCpy( const CompPos &rhs );
@@ -46,8 +47,24 @@ class CompPos : public CompBase
 		inline bool changePos( Vector2 delta ){ _pos.x += delta.x; _pos.y += delta.y; return true; }
 		inline bool changePos( float dx, float dy ){ _pos.x += dx; _pos.y += dy; return true; }
 
+	// ================ ROTATION METHODS
+		inline angle_t getAngle() const { return _angle; }
+		inline bool   voidAngle(){ _angle = 0; return true; }
+
+		inline bool setAngle( angle_t angle ){ _angle = angle; return true; }
+		inline bool changeAngle( angle_t delta ){ _angle += delta; return true; }
+
+	// ================ DISTANCE METHODS
+		// NOTE : returns the distance this would need to travel to reach the other point
+		float getLineDistTo( id_t id ) const;
+		float getLineDistTo( Entity  *other ) const;
+		float getLineDistTo( CompPos *other ) const;
+		float getLineDistTo( Vector2  other ) const;
+		float getLineDistTo( float x, float y ) const;
+
+
 	// ================================ TICK METHODS
-		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompPos
+		bool onTick() override;
 };
 
 #endif // COMP_POS_HPP

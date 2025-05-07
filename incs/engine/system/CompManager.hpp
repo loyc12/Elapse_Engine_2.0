@@ -55,7 +55,6 @@ class CompManager
 		bool dupEntity( id_t src );
 		bool dupEntity( Entity *src );
 
-
 	// ================ COMPONENT METHODS
 		comp_count_t getCompCount( id_t id ) const;
 		comp_count_t getActCompCount( id_t id ) const;
@@ -80,11 +79,17 @@ class CompManager
 		void updateCompsByType( comp_type_e compType ); // NOTE : calls the onTick() method of all components of the given type in the map
 
 	// ================ TICK METHODS
-		void tickScripts(); //   NOTE : script execution
-		void tickPhysics(); //   NOTE : eg. gravity
-		void tickCollides(); //  NOTE : collision detection
-		void tickMovements(); // NOTE : position update
-		void tickVisuals(); //   NOTE : rendering
+		//void tickPositions(); // NOTE : does nothing
+		void tickMovements(); //   NOTE : position update
+		void tickPhysics(); //     NOTE : eg. gravity
+		void tickCollides(); //    NOTE : collision detection
+
+		//void tickTexts(); //  NOTE : does nothing
+		void tickSounds(); //   NOTE : sound update
+		void tickShapes(); //   NOTE : shape update
+		void tickGraphics(); // NOTE : visual rendering
+
+		void tickScripts(); //  NOTE : script execution
 
 	// ================================ STATIC METHODS
 		// NOTE : these log errors if the check fails ( aka return false )

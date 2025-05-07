@@ -4,42 +4,54 @@
 // ===================== ENTITY TICK INJECTION FUNCTIONS
 // for when the engine calls an entity's component tick methods
 
-void OnEntityTickScript( Entity *Ntt )
-{
-	flog( Ntt->getID() );
-	if( Ntt == nullptr ){ return; }
-
-	// TODO : add game specific code here
-}
-
-void OnEntityTickPhysic( Entity *Ntt )
-{
-	flog( Ntt->getID() );
-	if( Ntt == nullptr ){ return; }
-
-	// TODO : add game specific code here
-}
-
-void OnEntityTickCollide( Entity *Ntt )
-{
-	flog( Ntt->getID() );
-	if( Ntt == nullptr ){ return; }
-
-	// TODO : add game specific code here
-}
-
 void OnEntityTickMovement( Entity *Ntt )
 {
-	flog( Ntt->getID() );
 	if( Ntt == nullptr ){ return; }
+	flog( Ntt->getID() );
+
+	// TODO : add game specific code here
+}
+void OnEntityTickPhysic( Entity *Ntt )
+{
+	if( Ntt == nullptr ){ return; }
+	flog( Ntt->getID() );
+
+	// TODO : add game specific code here
+}
+void OnEntityTickCollide( Entity *Ntt )
+{
+	if( Ntt == nullptr ){ return; }
+	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
 }
 
-void OnEntityTickVisual( Entity *Ntt )
+void OnEntityTickSound( Entity *Ntt )
 {
-	flog( Ntt->getID() );
 	if( Ntt == nullptr ){ return; }
+	flog( Ntt->getID() );
+
+	// TODO : add game specific code here
+}
+void OnEntityTickShape( Entity *Ntt )
+{
+	if( Ntt == nullptr ){ return; }
+	flog( Ntt->getID() );
+
+	// TODO : add game specific code here
+}
+void OnEntityTickGraphics( Entity *Ntt )
+{
+	if( Ntt == nullptr ){ return; }
+	flog( Ntt->getID() );
+
+	// TODO : add game specific code here
+}
+
+void OnEntityTickScript( Entity *Ntt )
+{
+	if( Ntt == nullptr ){ return; }
+	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
 }

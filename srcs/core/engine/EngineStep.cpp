@@ -3,7 +3,6 @@
 
 // ================================ STEP METHODS
 
-
 bool Engine::launchLoop()
 {
 	flog( 0 );
@@ -29,7 +28,7 @@ void Engine::runStep()
 
 	OnStartStep(); // from injectors.hpp
 
-	_DT = GetFrameTime();
+	_DT = updateDeltaTime();
 
 	_controller->refreshInputs();
 
@@ -55,7 +54,7 @@ void Engine::refreshScreen()
 		OnRenderBackground(); // from injectors.hpp
 		BeginMode2D( *_viewport2D->getCamera() );
 		{
-			_compManager->tickVisuals();
+			_compManager->tickGraphics();
 			OnRenderWorld(); // from injectors.hpp
 		}
 		EndMode2D();

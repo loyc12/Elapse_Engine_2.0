@@ -9,6 +9,8 @@
 # define COMP_DEF_COLOR { 255, 255, 255, 255 } // NOTE : default colour for the component
 # define COMP_DEF_FONT "Arial" //                 NOTE : default font name for the component
 
+# define COMP_DEF_MIN_TEXT_SIZE 1.0f //           NOTE : minimum font size for the component
+
 class CompText : public CompBase
 {
 	protected:
@@ -64,8 +66,8 @@ class CompText : public CompBase
 
 		inline float getFontSize() const { return _fontSize; }
 		inline bool voidFontSize(){ _fontSize = COMP_DEF_FONTSIZE; return true; }
-		inline bool setFontSize( float fontSize ){ _fontSize = min( 1.0f, fontSize); return true; }
-		inline bool changeFontSize( float delta ){ _fontSize = min( 1.0f, _fontSize + delta ); return true; }
+		inline bool setFontSize( float fontSize ){ _fontSize = max( COMP_DEF_MIN_TEXT_SIZE, fontSize); return true; }
+		inline bool changeFontSize( float delta ){ _fontSize = max( COMP_DEF_MIN_TEXT_SIZE, _fontSize + delta ); return true; }
 
 		inline Color getFontCol() const { return _fontCol; }
 		inline bool voidFontCol(){ _fontCol = COMP_DEF_COLOR; return true; } // NOTE : sets the Color to 0

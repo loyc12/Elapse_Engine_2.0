@@ -5,7 +5,7 @@
 # include "../component/CompBase.hpp"
 
 # define COMP_DEF_COLOUR { 0, 0, 0, 255 } // NOTE : default color for the component
-# define COMP_DEF_CIRRAD 0.0f //                NOTE : default circle radius for the component
+# define COMP_DEF_CIRRAD 0.0f //             NOTE : default circle radius for the component
 
 class CompGraph : public CompBase
 {
@@ -52,8 +52,8 @@ class CompGraph : public CompBase
 		inline float getCircleRadius() const { return _cirRad; }
 		inline bool voidCircleRadius(){ _cirRad = COMP_DEF_CIRRAD; return true; } // NOTE : sets the Circle Radius to 0
 
-		inline bool setCircleRadius(    float radius ){ _cirRad = min( COMP_DEF_CIRRAD, radius ); return true; }
-		inline bool changeCircleRadius( float delta  ){ _cirRad = min( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
+		inline bool setCircleRadius(    float radius ){ _cirRad = max( COMP_DEF_CIRRAD, radius ); return true; }
+		inline bool changeCircleRadius( float delta  ){ _cirRad = max( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
 
 	// ================================ TICK METHODS
 		bool onTick() override;

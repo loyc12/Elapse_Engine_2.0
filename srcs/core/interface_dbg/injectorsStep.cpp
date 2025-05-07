@@ -44,7 +44,9 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 
 }
 
-void OnTickScripts()
+// ==================== GLOBAL TICK INJECTION FUNCTIONS
+
+void OnTickMovements()
 {
 	flog( 0 );
 	// TODO : add game specific code here
@@ -59,12 +61,24 @@ void OnTickCollides()
 	flog( 0 );
 	// TODO : add game specific code here
 }
-void OnTickMovements()
+
+void OnTickSounds()
 {
 	flog( 0 );
 	// TODO : add game specific code here
 }
-void OnTickVisuals()
+void OnTickShapes()
+{
+	flog( 0 );
+	// TODO : add game specific code here
+}
+void OnTickGraphics()
+{
+	flog( 0 );
+	// TODO : add game specific code here
+}
+
+void OnTickScripts()
 {
 	flog( 0 );
 	// TODO : add game specific code here

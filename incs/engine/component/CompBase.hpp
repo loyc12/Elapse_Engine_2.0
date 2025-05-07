@@ -9,8 +9,8 @@ typedef enum : comp_count_t
 {
 	COMP_POSITION = 0,
 	COMP_MOVEMENT,
-	COMP_COLLIDE,
 	COMP_PHYSIC,
+	COMP_COLLIDE,
 
 	COMP_TEXT,
 	COMP_SOUND,
@@ -58,19 +58,19 @@ class CompBase
 		inline virtual ~CompBase(){};
 
 		inline CompBase() : _Ntt( nullptr ), _active( COMP_DEF_ACTIVITY ){}
-		inline CompBase( Entity *Ntt, bool isActive = COMP_DEF_ACTIVITY ) : _Ntt( Ntt ), _active( isActive ){}
+		inline CompBase( Entity *Ntt, bool isActive = COMP_DEF_ACTIVITY ): _Ntt( Ntt ), _active( isActive ){}
 
 		inline CompBase( const CompBase &rhs ) : CompBase(){ *this = rhs; }
 		inline CompBase &operator=( const CompBase &rhs ){ onCpy( rhs ); return *this; }
 
 	// ================================ ACCESSORS / MUTATORS
 		inline static  comp_type_e getStaticType(){  return COMP_TYPE_BASE; }
-		inline virtual comp_type_e getType() const { return COMP_TYPE_BASE; } // NOTE : overide this in derived classes
+		inline virtual comp_type_e getType() const { return COMP_TYPE_BASE; } // NOTE : override this in derived classes
 
-		inline virtual bool hasSisterComps() const { return hasEntity(); } // NOTE : should be ovveride in derived classes
-
-		inline bool isActive(){ return _active && hasEntity(); }
+		inline bool isActive() const { return _active; }
 		inline bool setActivity( bool activate ){ _active = activate; return _active; }
+
+		inline virtual bool hasSisterComps() const { return true; } // NOTE : override this in derived classes
 
 	// ================ ENTITY METHODS
 		inline Entity *getEntity() const { return _Ntt; }
@@ -83,10 +83,10 @@ class CompBase
 		bool setEntityActivity( bool activate );
 
 	// ================================ TICK METHODS
-	// NOTE : should return false if the component did not tick ( for example, if the "_active" flag is set to false, or if nothing changed )
+	bool canTick() const;
 	// NOTE : use CRTP if onTick() becomes a performance bottleneck
-	// NOTE : should only be called by CompManager
-	inline virtual bool onTick(){ return _active; } // NOTE : ovveride this in derived classes
+	// NOTE : should return false if the component did not tick ( for example, if the "_active" flag is set to false )
+	virtual bool onTick(); // NOTE : override this in derived classes
 };
 
 // ================================ TEMPLATES

@@ -63,17 +63,17 @@ bool CompPhys::hasSisterComps() const
 	flog( 0 );
 	if( !hasEntity() )
 	{
-		qlog( "CompPhys::hasSisterComps() : no entity found for component", ERROR, 0 );
+		qlog( "CompPhys::hasSisterComps() : no entity found for component", WARN, 0 );
 		return false;
 	}
-	if( !getEntity()->hasComponent< CompPos  >() )
+	if( !getEntity()->hasComponent< CompPos >() )
 	{
-		qlog( "CompPhys::hasSisterComps() : no position component found for entity", ERROR, 0 );
+		qlog( "CompPhys::hasSisterComps() : no position component found for entity", INFO, 0 );
 		return false;
 	}
 	if( !getEntity()->hasComponent< CompMove >() )
 	{
-		qlog( "CompPhys::hasSisterComps() : no movement component found for entity", ERROR, 0 );
+		qlog( "CompPhys::hasSisterComps() : no movement component found for entity", INFO, 0 );
 		return false;
 	}
 	return true;
@@ -87,7 +87,7 @@ Vector2 CompPhys::applyDrag()
 		-_drag * getEntity()->getVel().x / _mass,
 		-_drag * getEntity()->getVel().y / _mass
 	};
-	getEntity()->getComponent< CompMove >()->changeAcc( dAcc );
+	getEntity()->changeAcc( dAcc );
 	return dAcc;
 }
 Vector2 CompPhys::applyFriction( Vector2 surfaceNormal )
@@ -134,7 +134,7 @@ float CompPhys::getAvgRad() const
 		qlog( "CompPhys::getAvgRad() : no collision component found for entity", ERROR, 0 );
 		return 0;
 	}
-	return getEntity()->getComponent< CompCollide >()->getHitRad();
+	return getEntity()->getHitRad();
 }
 float CompPhys::getArea() const
 {
@@ -144,22 +144,22 @@ float CompPhys::getArea() const
 float CompPhys::getDensity() const
 {
 	flog( 0 );
-	return getMass() / getArea(); // NOTE : density = mass / volume
+	return _mass / getArea(); // NOTE : density = mass / volume
 }
 
 float CompPhys::getLinearMomentum() const
 {
 	flog( 0 ); // NOTE : linear momentum = mass * velocity
 	if( !hasSisterComps()){ return 0; }
-	return getMass() * getEntity()->getComponent< CompMove >()->getLinearVel();
+	return _mass * getEntity()->getLinearVel();
 }
 float CompPhys::getLinearEnergy() const
 {
 	flog( 0 ); // NOTE : linear energy = 1/2 * mass * velocity^2
 	if( !hasSisterComps()){ return 0; }
 
-	float vel = getEntity()->getComponent< CompMove >()->getLinearVel();
-	return 0.5f * getMass() * vel * vel;
+	float vel = getEntity()->getLinearVel();
+	return 0.5f * _mass * vel * vel;
 }
 
 // ================ FORCE METHODS
@@ -184,11 +184,11 @@ Vector2 CompPhys::applyForceTowards( float force, Vector2 dir )
 		return { 0, 0 };
 	}
 
-	float mag = sqrt( dir.x * dir.x + dir.y * dir.y );
+	float mag  = sqrt( dir.x * dir.x + dir.y * dir.y );
 	float accX = force * dir.x / ( mag * _mass );
 	float accY = force * dir.y / ( mag * _mass );
 
-	getEntity()->getComponent< CompMove >()->changeAcc({ accX, accY });
+	getEntity()->changeAcc({ accX, accY });
 	return { accX, accY };
 }
 
@@ -205,7 +205,7 @@ Vector2 CompPhys::applyForce( Vector2 force )
 	float accX = force.x / _mass;
 	float accY = force.y / _mass;
 
-	getEntity()->getComponent< CompMove >()->changeAcc({ accX, accY });
+	getEntity()->changeAcc({ accX, accY });
 	return { accX, accY };
 }
 Vector2 CompPhys::applyBreakForce( float breakForce )
@@ -224,11 +224,11 @@ Vector2 CompPhys::applyBreakForce( float breakForce )
 		return { 0, 0 };
 	}
 
-	float mag = sqrt( vel.x * vel.x + vel.y * vel.y );
+	float mag = sqrt(  vel.x * vel.x + vel.y * vel.y );
 	float accX = -breakForce * vel.x / ( mag * _mass );
 	float accY = -breakForce * vel.y / ( mag * _mass );
 
-	getEntity()->getComponent< CompMove >()->changeAcc({ accX, accY });
+	getEntity()->changeAcc({ accX, accY });
 	return { accX, accY };
 }
 
@@ -247,7 +247,7 @@ Vector2 CompPhys::applyBreakFactor( float breakFactor )
 	float accX = -breakFactor * acc.x;
 	float accY = -breakFactor * acc.y;
 
-	getEntity()->getComponent< CompMove >()->changeAcc({ accX, accY });
+	getEntity()->changeAcc({ accX, accY });
 	return { accX, accY };
 }
 
@@ -257,26 +257,11 @@ Vector2 CompPhys::applyBreakFactor( float breakFactor )
 bool CompPhys::onTick()
 {
 	flog( 0 );
-	if( !isActive() ){ return false; }
+	if( !canTick() ){ return false; }
+	//float dt = GDTS();
 
-	float dt = GDTS();
-	if( dt == 0 )
-	{
-		qlog( "CompPhys::onTick() : dt is 0", DEBUG, 0 );
-		return false;
-	}
-	if( !hasEntity() )
-	{
-		qlog( "CompPhys::onTick() : no entity", DEBUG, 0 );
-		return false;
-	}
-	if( !getEntity()->isActive() )
-	{
-		qlog( "CompPhys::onTick() : entity is not active", DEBUG, 0 );
-		return false;
-	}
-
-
+	// TODO : apply physics calculations here
+	// NOTE : for exemple, gravity, drag, friction, etc
 
 	return true;
 }

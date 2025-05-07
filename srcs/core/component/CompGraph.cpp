@@ -19,11 +19,14 @@ CompGraph::~CompGraph()
 	flog( 0 );
 }
 
-CompGraph::CompGraph() : CompBase(), _col( COMP_DEF_COLOUR)
+CompGraph::CompGraph() : CompBase(), _col( COMP_DEF_COLOUR), _cirRad( COMP_DEF_CIRRAD )
 {
 	flog( 0 );
 }
-CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col, float cirRad ) : CompBase( Ntt, isActive ), _col( col ), _cirRad( cirRad )
+CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col, float cirRad ):
+	CompBase( Ntt, isActive ),
+	_col( col ),
+	_cirRad( cirRad )
 {
 	flog( 0 );
 }
@@ -63,8 +66,12 @@ bool CompGraph::hasSisterComps() const
 bool CompGraph::onTick()
 {
 	flog( 0 );
-	if( !isActive() ){ return false; }
-	if( _cirRad <= 0 ){ return false; }
+	if( !canTick() ){ return false; }
+	if( _cirRad == 0 )
+	{
+		qlog( "CompGraph::onTick() : cannot draw a circle of radius 0", ERROR, getEntityID() );
+		return false;
+	}
 
 	DrawCircle(
 		_Ntt->getPos().x,

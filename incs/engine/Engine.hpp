@@ -79,6 +79,11 @@ class Engine
 	public:
 		inline engineState_e getState(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state; }
 
+		inline bool isEngineClosed(){  std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_CLOSED; }
+		inline bool isEngineReady(){   std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_INITIALIZED; }
+		inline bool isEngineStarted(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_STARTED; }
+		inline bool isEngineRunning(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_RUNNING; }
+
 		inline inputs_s    &getLatestInputs(){   return _controller->getLatestInputs(); }
 		inline inputs_s    &getPreviousInputs(){ return _controller->getPreviousInputs(); }
 		inline Controller  *getController(){     return _controller; }
@@ -89,8 +94,11 @@ class Engine
 		inline Entity      *getEntity( id_t id ){ return _compManager->getEntity( id ); }
 		inline CompManager *getCompManager(){     return _compManager; }
 
-		void  setTimeScale( float timeScale );
-		float getDeltaTime() const; // multiplied by the time scale
+		inline float updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
+		inline float getDeltaTimeScaled() const { return _DT * _TS; }
+		float setTimeScale( float timeScale );
+
+		bool canEngineTick();
 
 	// ================================ MUTEXED ACCESSORS
 	private:

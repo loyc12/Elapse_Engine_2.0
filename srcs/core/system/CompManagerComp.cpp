@@ -5,13 +5,22 @@ CompBase *CompFactory( comp_type_e compType, Entity *Ntt, bool isActive )
 	flog( 0 );
 	switch( compType )
 	{
-		case COMP_TYPE_BASE: return CompFactory< CompBase >( Ntt, isActive );
-		//case COMP_SCRIPT:    return CompFactory< CompScript >( Ntt, isActive );
-		//case COMP_PHYSIC:    return CompFactory< CompPhysic >( Ntt, isActive );
-		case COMP_MOVEMENT:  return CompFactory< CompMove >( Ntt, isActive );
-		case COMP_POSITION:  return CompFactory< CompPos >( Ntt, isActive );
-		//case COMP_COLLIDE:   return CompFactory< CompCollide >( Ntt, isActive );
-		case COMP_GRAPHIC:    return CompFactory< CompGraph >( Ntt, isActive );
+		case COMP_POSITION: return CompFactory< CompPos >(     Ntt, isActive );
+		case COMP_MOVEMENT: return CompFactory< CompMove >(    Ntt, isActive );
+		case COMP_PHYSIC:   return CompFactory< CompPhys >(    Ntt, isActive );
+		case COMP_COLLIDE:  return CompFactory< CompCollide >( Ntt, isActive );
+
+	//case COMP_TEXT:     return CompFactory< CompText >(    Ntt, isActive );
+	//case COMP_SOUND:    return CompFactory< CompSound >(   Ntt, isActive );
+	//case COMP_SHAPE:    return CompFactory< CompShape >(   Ntt, isActive );
+		case COMP_GRAPHIC:  return CompFactory< CompGraph >(   Ntt, isActive );
+
+	//case COMP_SCRIPT:   return CompFactory< CompScript >(  Ntt, isActive );
+
+		case COMP_TYPE_BASE:
+	 		qlog( "CompFactory : Generating a base component", WARN, 0 );
+			return CompFactory< CompBase >( Ntt, isActive );
+
 		default: qlog( "CompFactory : Invalid component type", ERROR, 0 );
 	}
 	return nullptr;

@@ -26,11 +26,15 @@ they are used to inject game specific code into the engine without modifying the
 
 			void OnReadInputs( inputs_s &inp, inputs_s &prev );
 
-			void OnTickScripts();
+			void OnTickMovements();
 			void OnTickPhysics();
 			void OnTickCollides();
-			void OnTickMovements();
-			void OnTickVisuals();
+
+			void OnTickSounds();
+			void OnTickShapes();
+			void OnTickGraphics();
+
+			void OnTickScripts();
 
 			void OnRenderBackground();
 			void OnRenderWorld();
@@ -43,10 +47,14 @@ they are used to inject game specific code into the engine without modifying the
 // for when the CompManager calls an entity's component tick methods
 	class Entity;
 
-	void OnEntityTickScript(   Entity *Ntt );
+	void OnEntityTickMovement( Entity *Ntt ); // TODO : implement and use us
 	void OnEntityTickPhysic(   Entity *Ntt );
 	void OnEntityTickCollide(  Entity *Ntt );
-	void OnEntityTickMovement( Entity *Ntt );
-	void OnEntityTickVisual(   Entity *Ntt );
+
+	void OnEntityTickSound(   Entity *Ntt );
+	void OnEntityTickShape(   Entity *Ntt );
+	void OnEntityTickGraphic( Entity *Ntt );
+
+	void OnEntityTickScript( Entity *Ntt );
 
 #endif // INJECTORS_HPP
