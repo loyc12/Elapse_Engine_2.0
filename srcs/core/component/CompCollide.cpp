@@ -76,7 +76,13 @@ bool CompCollide::onTick()
 {
 	flog( 0 );
 	if( !canTick() ){ return false; }
-	//float dt = GDTS();
+
+	float dt = GDTS();
+	if( dt <= 0 )
+	{
+		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );
+		return false;
+	}
 
 	// TODO : check for collisions based on other entities' pos, hitrad and statuses
 	// TODO : then, call the collision function on this entity only

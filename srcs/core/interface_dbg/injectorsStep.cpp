@@ -32,14 +32,35 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 
 	if( inp.P && !prev.P )
 	{
-		qlog( "P pressed", INFO, 0 );
 		GNG->togglePause();
 	}
-
-	if( inp.CLICK_LEFT && !prev.CLICK_LEFT )
+	if( inp.X && !prev.X )
 	{
-		qlog( "CLICK_LEFT pressed", INFO, 0 );
+		if( GVP->isTracking() ){ GVP->untrackEntity(); }
+		else { GVP->trackEntity( G_PlayerNtt ); }
+	}
 
+	if( inp.CLICK_LEFT )
+	{
+		if( G_PlayerNtt != nullptr )
+		{
+			CompPos *cmpPos = G_PlayerNtt->getComponent< CompPos >();
+			if ( cmpPos != nullptr )
+			{
+				cmpPos->setPos( GVP->getMouseWorldPos());
+			}
+		}
+	}
+	if( inp.CLICK_RIGHT )
+	{
+		if( G_EnemyNtt != nullptr )
+		{
+			CompPos *cmpPos = G_EnemyNtt->getComponent< CompPos >();
+			if ( cmpPos != nullptr )
+			{
+				cmpPos->setPos( GVP->getMouseWorldPos());
+			}
+		}
 	}
 
 }

@@ -83,7 +83,8 @@ class CompBase
 		bool setEntityActivity( bool activate );
 
 	// ================================ TICK METHODS
-	bool canTick() const;
+	bool canTick() const; // NOTE : avoid overriding this one : use follw up checks instead
+
 	// NOTE : use CRTP if onTick() becomes a performance bottleneck
 	// NOTE : should return false if the component did not tick ( for example, if the "_active" flag is set to false )
 	virtual bool onTick(); // NOTE : override this in derived classes

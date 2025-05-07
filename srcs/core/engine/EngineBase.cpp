@@ -42,14 +42,9 @@ float  Engine::setTimeScale( float timeScale )
 bool Engine::canEngineTick()
 {
 	flog( 0 );
-	if( getDeltaTimeScaled() == 0 )
+	if( getState() < ES_STARTED )
 	{
-		qlog( "canEngineTick : Delta time is 0", INFO, 0 );
-		return false;
-	}
-	if( getState() < ES_PAUSING )
-	{
-		qlog( "canEngineTick : Engine not started", WARN, 0 );
+		qlog( "canEngineTick : Engine needs to at least be started", WARN, 0 );
 		return false;
 	}
 	return true;

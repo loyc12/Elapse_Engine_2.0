@@ -67,7 +67,13 @@ bool CompMove::onTick()
 {
 	flog( 0 );
 	if( !canTick() ){ return false; }
+
 	float dt = GDTS();
+	if( dt <= 0 )
+	{
+		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );
+		return false;
+	}
 
 	// NOTE : apply acceleration to velocity
 	_vel.x  += _acc.x * dt;

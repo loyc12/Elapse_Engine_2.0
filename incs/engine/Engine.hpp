@@ -84,6 +84,8 @@ class Engine
 		inline bool isEngineStarted(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_STARTED; }
 		inline bool isEngineRunning(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_RUNNING; }
 
+		inline bool isTimePaused(){ return ( _TS == 0 ); }
+
 		inline inputs_s    &getLatestInputs(){   return _controller->getLatestInputs(); }
 		inline inputs_s    &getPreviousInputs(){ return _controller->getPreviousInputs(); }
 		inline Controller  *getController(){     return _controller; }

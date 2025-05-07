@@ -68,5 +68,6 @@ bool CompBase::onTick() // NOTE : override this in derived classes
 { //                       NOTE : onTick() should only be called by CompManager
 	flog( 0 );
 	if( !canTick() ){ return false; }
+	// NOTE : CompBase does not do anything on tick
 	return true;
 }

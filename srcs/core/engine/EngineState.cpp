@@ -78,25 +78,20 @@ bool Engine::switchState(  engineState_e targetState )
 bool Engine::togglePause()
 {
 	flog( 0 );
-	qlog( "togglePause : Current state is " + to_string( getState() ), DEBUG, 0 );
+	static float prevTS = 0.0f;
 
-	switch ( getState() )
+	if( prevTS == 0.0f )
 	{
-		case ES_RUNNING:
-			qlog( "togglePause : Pausing engine", INFO, 0 );
-			pause();
-			break;
-
-		case ES_STARTED:
-			qlog( "togglePause : Resuming engine", INFO, 0 );
-			resume();
-			break;
-
-		default:
-			qlog( "togglePause : Engine is neither resumed nor paused", ERROR, 0 );
-			return false;
+		prevTS = _TS;
+		_TS = 0.0f;
+		return true;
 	}
-	return true;
+	else
+	{
+		_TS = prevTS;
+		prevTS = 0.0f;
+		return false;
+	}
 }
 
 void Engine::init()
