@@ -132,7 +132,7 @@ void Viewport2D::close()
 	flog( 0 );
 	if( !IsWindowReady() )
 	{
-		qlog( "close : Window already closed", WARN, 0 );
+		qlog( "close : Window already closed", INFO, 0 );
 		return;
 	}
 

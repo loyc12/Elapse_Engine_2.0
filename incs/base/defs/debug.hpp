@@ -51,7 +51,7 @@ bool log( const char *msg, log_level_e lvl = DEBUG, id_t id = 0, const char *fil
 
 // divtest.hpp
 
-class FixedPoint; typedef FixedPoint fixed_t; // DUPLICATE from types.hpp
+//class FixedPoint; typedef FixedPoint fixed_t; // DUPLICATE from types.hpp
 
 bool diverror( const char *dividend, const char *divisor );
 
@@ -62,7 +62,7 @@ bool divtest( int      d );
 bool divtest( long     d );
 bool divtest( uint32_t d );
 bool divtest( uint64_t d );
-bool divtest( fixed_t  d );
+//bool divtest( fixed_t  d );
 
 bool divtest( float       d );
 bool divtest( double      d );

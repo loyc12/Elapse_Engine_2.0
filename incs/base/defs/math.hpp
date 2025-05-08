@@ -132,11 +132,12 @@ inline float  normTo01(  float x, float a, float b )  { return norm( x, a, b,  0
 inline float  normTo11( float x, float a, float b )   { return norm( x, a, b, -1, 1 ); }
 //inline double normTo11( double x, double a, double b ){ return norm( x, a, b, -1, 1 ); }
 
+// linter prevents overloading of operators for floats or doubles
 
-//float  operator%( float a, float b )  { return fmod( a, b ); }
-//double operator%( double a, double b ){ return fmod( a, b ); }
+//inline float  operator%( float a, float b )  { return fmod( a, b ); }
+//inline double operator%( double a, double b ){ return fmod( a, b ); }
 
-// float  &operator%=( float &a, float b )  { a = fmod( a, b ); return a; }
-// double &operator%=( double &a, double b ){ a = fmod( a, b ); return a; }
+//inline float  &operator%=( float &a, float b )  { a = fmod( a, b ); return a; }
+//inline double &operator%=( double &a, double b ){ a = fmod( a, b ); return a; }
 
 #endif // MATH_HPP
