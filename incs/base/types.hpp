@@ -7,7 +7,7 @@
 //# include "./types/Bitarrays.hpp" //  NOTE : wrapper for std::bitset, to allow it to be used as an uint_N_t
 # include "./types/FixedPoint.hpp" // NOTE : fixed point number implementation, to allow more precision than float
 
-//# include "./types/Vectors.hpp" // NOTE : vector class
+# include "./types/Pos2.hpp" //    NOTE : vector-like class
 //# include "./types/Matrix.hpp" //  NOTE : matrix class ( multidimensional vector array )
 
 //# include Shape2D.hpp

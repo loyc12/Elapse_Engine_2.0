@@ -52,8 +52,8 @@ class CompGraph : public CompBase
 		inline float getCircleRadius() const { return _cirRad; }
 		inline bool voidCircleRadius(){ _cirRad = COMP_DEF_CIRRAD; return true; } // NOTE : sets the Circle Radius to 0
 
-		inline bool setCircleRadius(    float radius ){ _cirRad = max( COMP_DEF_CIRRAD, radius ); return true; }
-		inline bool changeCircleRadius( float delta  ){ _cirRad = max( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
+		inline bool setCircleRadius(    float radius ){ _cirRad = fmax( COMP_DEF_CIRRAD, radius ); return true; }
+		inline bool changeCircleRadius( float delta  ){ _cirRad = fmax( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
 
 	// ================================ TICK METHODS
 		bool onTick() override;

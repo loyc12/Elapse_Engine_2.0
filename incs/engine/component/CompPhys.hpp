@@ -58,30 +58,30 @@ class CompPhys : public CompBase
 	// ================ MASS METHODS
 		inline float getMass() const { return _mass; }
 		inline bool voidMass(){ _mass = COMP_MIN_MASS; return true; }
-		inline bool setMass(    float mass  ){ _mass = max( COMP_MIN_MASS, mass ); return true; }
-		inline bool changeMass( float delta ){ _mass = max( COMP_MIN_MASS, _mass + delta); return true; }
+		inline bool setMass(    float mass  ){ _mass = fmax( COMP_MIN_MASS, mass ); return true; }
+		inline bool changeMass( float delta ){ _mass = fmax( COMP_MIN_MASS, _mass + delta); return true; }
 
 	// ================ DRAG METHODS
 		inline float getDrag() const { return _drag; }
 		inline bool voidDrag(){ _drag = COMP_MIN_DRAG; return true; }
-		inline bool setDrag(    float drag  ){ _drag = max( COMP_MIN_DRAG, drag); return true; }
-		inline bool changeDrag( float delta ){ _drag = max( COMP_MIN_DRAG, _drag + delta); return true; }
+		inline bool setDrag(    float drag  ){ _drag = fmax( COMP_MIN_DRAG, drag); return true; }
+		inline bool changeDrag( float delta ){ _drag = fmax( COMP_MIN_DRAG, _drag + delta); return true; }
 
 		Vector2 applyDrag(); // NOTE : applies a force in the opposite direction of the velocity ( acc -= drag * velocity / mass )
 
 	// ================ FRICTION METHODS
 		inline float getFric() const { return _fric; }
 		inline bool voidFric(){ _fric = COMP_MIN_FRIC; return true; }
-		inline bool setFric(    float fric  ){ _fric = max( COMP_MIN_FRIC, fric); return true; }
-		inline bool changeFric( float delta ){ _fric = max( COMP_MIN_FRIC, _fric + delta); return true; }
+		inline bool setFric(    float fric  ){ _fric = fmax( COMP_MIN_FRIC, fric); return true; }
+		inline bool changeFric( float delta ){ _fric = fmax( COMP_MIN_FRIC, _fric + delta); return true; }
 
 		Vector2 applyFriction( Vector2 surfaceNormal ); // NOTE : applies a force perpendicular to the normal of the surface ( acc -= friction * normal / mass )
 
 	// ================ ELASTICITY METHODS
 		inline float getElas() const { return _elas; }
 		inline bool voidElas(){ _elas = COMP_MIN_ELAS; return true; }
-		inline bool setElas(    float elas  ){ _elas = max( COMP_MIN_ELAS, elas); return true; }
-		inline bool changeElas( float delta ){ _elas = max( COMP_MIN_ELAS, _elas + delta); return true; }
+		inline bool setElas(    float elas  ){ _elas = fmax( COMP_MIN_ELAS, elas); return true; }
+		inline bool changeElas( float delta ){ _elas = fmax( COMP_MIN_ELAS, _elas + delta); return true; }
 
 		Vector2 applyBounce( Vector2 surfaceNormal ); //  NOTE : applies a force along the normal of the surface (
 

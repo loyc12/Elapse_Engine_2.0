@@ -3,13 +3,10 @@
 
 # include "../core.hpp"
 
-// TODO : make sure this handles negative values properly
+// TODO : make sure this handles negative vals properly
 // TODO : make sure this handles under/overflows properly
 // TODO : make sure this handles rounding properly
 // TODO : use template for int and floats instead of hardcoding them
-// TODO : review which modulus fonction to use ( how should negativs behave ? )
-
-# define FP_MODULUS( a, b ) fmod( a, b ) // NOTE : this is not the same as the % operator)
 
 # include <concepts>
 
@@ -19,42 +16,43 @@ class FixedPoint
 	static_assert( D < sizeof( T ), "FixedPoint : Template error : D >= T" );
 
 	protected:
-		T _rawValue; //                     NOTE : can be negative, depending on the template type
-		static const byte_t _Digits = D; // NOTE : number of decimal digits
-		static const T _Scale = pow( 10, _Digits ); // NOTE : scale factor
+		T _rawValue; //                                    NOTE : can be negative, depending on the template type
+		static const byte_t _Digits = D; //                NOTE : number of decimal digits
+		static constexpr T _Scale = pow( 10, _Digits ); // NOTE : scale factor
 
-		inline void setRawValue( T value ){ _rawValue = value; }
+		inline void setRawValue( T val ){ _rawValue = val; }
 
 	// ============================ CONSTRUCTORS / DESTRUCTORS
 	public:
 		inline ~FixedPoint(){};    inline FixedPoint() : _rawValue( 0 ){}
 
-		inline FixedPoint( const FixedPoint &a ){ _rawValue = a._rawValue; }
-		inline FixedPoint operator=( const FixedPoint &a ){ _rawValue = a._rawValue; return *this; }
+		inline FixedPoint(           const FixedPoint &fix ){ _rawValue = fix._rawValue; }
+		inline FixedPoint operator=( const FixedPoint &fix ){ _rawValue = fix._rawValue; return *this; }
 
-		inline FixedPoint( double value ){ _rawValue = (T) ( value * _Scale ); }
-		inline FixedPoint( float  value ){ _rawValue = (T) ( value * _Scale ); }
-		inline FixedPoint( long   value ){ _rawValue = (T) ( value * _Scale ); }
-		inline FixedPoint( int    value ){ _rawValue = (T) ( value * _Scale ); }
+		inline FixedPoint( double val ){ _rawValue = T( val * _Scale ); }
+		inline FixedPoint( float  val ){ _rawValue = T( val * _Scale ); }
+		inline FixedPoint( long   val ){ _rawValue = T( val * _Scale ); }
+		inline FixedPoint( int    val ){ _rawValue = T( val * _Scale ); }
 
-		inline FixedPoint operator=( double value ){ _rawValue = (T) ( value * _Scale ); return *this; }
-		inline FixedPoint operator=( float  value ){ _rawValue = (T) ( value * _Scale ); return *this; }
-		inline FixedPoint operator=( long   value ){ _rawValue = (T) ( value * _Scale ); return *this; }
-		inline FixedPoint operator=( int    value ){ _rawValue = (T) ( value * _Scale ); return *this; }
+		inline FixedPoint operator=( double val ){ _rawValue = T( val * _Scale ); return *this; }
+		inline FixedPoint operator=( float  val ){ _rawValue = T( val * _Scale ); return *this; }
+		inline FixedPoint operator=( long   val ){ _rawValue = T( val * _Scale ); return *this; }
+		inline FixedPoint operator=( int    val ){ _rawValue = T( val * _Scale ); return *this; }
 
 	// ============================ ACCESSORS / MUTATORS
 
-		inline T getRawValue() const { return _rawValue; } // returns the raw value
-		inline T getValue()    const { return (T) (_rawValue / _Scale ); } // returns the value
+		inline T getRawValue() const { return    _rawValue; } // returns the raw value
+		inline T getValue()    const { return T( _rawValue / _Scale ); }
 
-		inline void setValue( T value ){ _rawValue = (T) ( value * _Scale ); } // sets the value
+		inline void setValue( T val ){ _rawValue = T( val * _Scale ); }
 
 	// ============================ CASTING METHODS
 
-		explicit inline operator double()  const { return (double)( _rawValue >> _Digits ); }
-		explicit inline operator float()   const { return (float )( _rawValue >> _Digits ); }
-		explicit inline operator long()    const { return (long  )( _rawValue >> _Digits ); }
-		explicit inline operator int()     const { return (int   )( _rawValue >> _Digits ); }
+		explicit inline operator double() const { return double( _rawValue >> _Digits ); }
+		explicit inline operator float()  const { return  float( _rawValue >> _Digits ); }
+		explicit inline operator long()   const { return   long( _rawValue >> _Digits ); }
+		explicit inline operator int()    const { return    int( _rawValue >> _Digits ); }
+		explicit inline operator T()      const { return         _rawValue >> _Digits;   }
 
 	// ============================ IN-CLASS OPERATORS
 
@@ -67,113 +65,66 @@ class FixedPoint
 		inline FixedPoint operator++( int ){ FixedPoint tmp( _rawValue ); _rawValue++; return tmp; }
 		inline FixedPoint operator--( int ){ FixedPoint tmp( _rawValue ); _rawValue--; return tmp; }
 
-		inline FixedPoint operator+( const FixedPoint &a ) const { return FixedPoint( _rawValue + a._rawValue ); }
-		inline FixedPoint operator-( const FixedPoint &a ) const { return FixedPoint( _rawValue - a._rawValue ); }
-		inline FixedPoint operator*( const FixedPoint &a ) const { return FixedPoint( _rawValue * a._rawValue ); }
-		inline FixedPoint operator/( const FixedPoint &a ) const { return FixedPoint( _rawValue / a._rawValue ); }
-		inline FixedPoint operator%( const FixedPoint &a ) const { return FixedPoint( FP_MODULUS( _rawValue, a._rawValue )); }
+		inline FixedPoint operator+( const FixedPoint &fix ) const { return FixedPoint( _rawValue + fix._rawValue ); }
+		inline FixedPoint operator-( const FixedPoint &fix ) const { return FixedPoint( _rawValue - fix._rawValue ); }
+		inline FixedPoint operator*( const FixedPoint &fix ) const { return FixedPoint( _rawValue * fix._rawValue ); }
+		inline FixedPoint operator/( const FixedPoint &fix ) const { return FixedPoint( _rawValue / fix._rawValue ); }
+		inline FixedPoint operator%( const FixedPoint &fix ) const { return FixedPoint( fmod( _rawValue, fix._rawValue )); }
 
-		inline FixedPoint operator+=( const FixedPoint &a ) { _rawValue += a._rawValue; return FixedPoint( _rawValue ); }
-		inline FixedPoint operator-=( const FixedPoint &a ) { _rawValue -= a._rawValue; return FixedPoint( _rawValue ); }
-		inline FixedPoint operator*=( const FixedPoint &a ) { _rawValue *= a._rawValue; return FixedPoint( _rawValue ); }
-		inline FixedPoint operator/=( const FixedPoint &a ) { _rawValue /= a._rawValue; return FixedPoint( _rawValue ); }
-		inline FixedPoint operator%=( const FixedPoint &a ) { _rawValue = FP_MODULUS( _rawValue, a._rawValue ); return FixedPoint( _rawValue ); }
+		inline FixedPoint operator+=( const FixedPoint &fix ) { _rawValue += fix._rawValue; return FixedPoint( _rawValue ); }
+		inline FixedPoint operator-=( const FixedPoint &fix ) { _rawValue -= fix._rawValue; return FixedPoint( _rawValue ); }
+		inline FixedPoint operator*=( const FixedPoint &fix ) { _rawValue *= fix._rawValue; return FixedPoint( _rawValue ); }
+		inline FixedPoint operator/=( const FixedPoint &fix ) { _rawValue /= fix._rawValue; return FixedPoint( _rawValue ); }
+		inline FixedPoint operator%=( const FixedPoint &fix ) { _rawValue = fmod( _rawValue, fix._rawValue ); return FixedPoint( _rawValue ); }
 
-		inline bool operator==( const FixedPoint &a ) const { return _rawValue == a._rawValue; }
-		inline bool operator!=( const FixedPoint &a ) const { return _rawValue != a._rawValue; }
-		inline bool operator<=( const FixedPoint &a ) const { return _rawValue <= a._rawValue; }
-		inline bool operator>=( const FixedPoint &a ) const { return _rawValue >= a._rawValue; }
-		inline bool operator<(  const FixedPoint &a ) const { return _rawValue <  a._rawValue; }
-		inline bool operator>(  const FixedPoint &a ) const { return _rawValue >  a._rawValue; }
+		inline bool operator==( const FixedPoint &fix ) const { return _rawValue == fix._rawValue; }
+		inline bool operator!=( const FixedPoint &fix ) const { return _rawValue != fix._rawValue; }
+		inline bool operator<=( const FixedPoint &fix ) const { return _rawValue <= fix._rawValue; }
+		inline bool operator>=( const FixedPoint &fix ) const { return _rawValue >= fix._rawValue; }
+		inline bool operator<(  const FixedPoint &fix ) const { return _rawValue <  fix._rawValue; }
+		inline bool operator>(  const FixedPoint &fix ) const { return _rawValue >  fix._rawValue; }
 
-		// ============================ INT OPERATORS
+		// ============================ TYPENAME OPERATORS
 
-		inline FixedPoint operator+( const int &a ) const { return FixedPoint( _rawValue + ( a * _Scale )); }
-		inline FixedPoint operator-( const int &a ) const { return FixedPoint( _rawValue - ( a * _Scale )); }
-		inline FixedPoint operator*( const int &a ) const { return FixedPoint( _rawValue * ( a * _Scale )); }
-		inline FixedPoint operator/( const int &a ) const { return FixedPoint( _rawValue / ( a * _Scale )); }
-		inline FixedPoint operator%( const int &a ) const { return FixedPoint( FP_MODULUS( _rawValue, a * _Scale )); }
+		# define TU template < typename U >
 
-		inline FixedPoint operator+=( const int &a ){ _rawValue += ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator-=( const int &a ){ _rawValue -= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator*=( const int &a ){ _rawValue *= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator/=( const int &a ){ _rawValue /= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator%=( const int &a ){ _rawValue = FP_MODULUS( _rawValue, a * _Scale ); return FixedPoint( _rawValue ); }
+		TU inline FixedPoint operator+( const U &val ) const { return FixedPoint( Operate< T, U >::add( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
+		TU inline FixedPoint operator-( const U &val ) const { return FixedPoint( Operate< T, U >::sub( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
+		TU inline FixedPoint operator*( const U &val ) const { return FixedPoint( Operate< T, U >::mul( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
+		TU inline FixedPoint operator/( const U &val ) const { return FixedPoint( Operate< T, U >::div( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
+		TU inline FixedPoint operator%( const U &val ) const { return FixedPoint( Operate< T, U >::mod( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
 
-		inline bool operator==( const int &a ) const { return _rawValue == ( a * _Scale ); }
-		inline bool operator!=( const int &a ) const { return _rawValue != ( a * _Scale ); }
-		inline bool operator<=( const int &a ) const { return _rawValue <= ( a * _Scale ); }
-		inline bool operator>=( const int &a ) const { return _rawValue >= ( a * _Scale ); }
-		inline bool operator<(  const int &a ) const { return _rawValue <  ( a * _Scale ); }
-		inline bool operator>(  const int &a ) const { return _rawValue >  ( a * _Scale ); }
+		TU inline FixedPoint operator+=( const U &val ){ _rawValue = Operate< T, U >::add( _rawValue, Operate< U, T >::mul( val, _Scale )); return FixedPoint( _rawValue ); }
+		TU inline FixedPoint operator-=( const U &val ){ _rawValue = Operate< T, U >::sub( _rawValue, Operate< U, T >::mul( val, _Scale )); return FixedPoint( _rawValue ); }
+		TU inline FixedPoint operator*=( const U &val ){ _rawValue = Operate< T, U >::mul( _rawValue, Operate< U, T >::mul( val, _Scale )); return FixedPoint( _rawValue ); }
+		TU inline FixedPoint operator/=( const U &val ){ _rawValue = Operate< T, U >::div( _rawValue, Operate< U, T >::mul( val, _Scale )); return FixedPoint( _rawValue ); }
+		TU inline FixedPoint operator%=( const U &val ){ _rawValue = Operate< T, U >::mod( _rawValue, Operate< U, T >::mul( val, _Scale )); return FixedPoint( _rawValue ); }
 
-		// ============================ LONG OPERATORS
-
-		inline FixedPoint operator+( const long &a ) const { return FixedPoint( _rawValue + ( a * _Scale )); }
-		inline FixedPoint operator-( const long &a ) const { return FixedPoint( _rawValue - ( a * _Scale )); }
-		inline FixedPoint operator*( const long &a ) const { return FixedPoint( _rawValue * ( a * _Scale )); }
-		inline FixedPoint operator/( const long &a ) const { return FixedPoint( _rawValue / ( a * _Scale )); }
-		inline FixedPoint operator%( const long &a ) const { return FixedPoint( FP_MODULUS( _rawValue, a * _Scale )); }
-
-		inline FixedPoint operator+=( const long &a ){ _rawValue += ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator-=( const long &a ){ _rawValue -= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator*=( const long &a ){ _rawValue *= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator/=( const long &a ){ _rawValue /= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator%=( const long &a ){ _rawValue = FP_MODULUS( _rawValue, a * _Scale); return FixedPoint( _rawValue ); }
-
-		inline bool operator==( const long &a ) const { return _rawValue == ( a * _Scale ); }
-		inline bool operator!=( const long &a ) const { return _rawValue != ( a * _Scale ); }
-		inline bool operator<=( const long &a ) const { return _rawValue <= ( a * _Scale ); }
-		inline bool operator>=( const long &a ) const { return _rawValue >= ( a * _Scale ); }
-		inline bool operator<(  const long &a ) const { return _rawValue <  ( a * _Scale ); }
-		inline bool operator>(  const long &a ) const { return _rawValue >  ( a * _Scale ); }
-
-		// ============================ FLOAT OPERATORS // NOTE : this will lead to precision loss
-
-		inline FixedPoint operator+( const float &a ) const { return FixedPoint( _rawValue + ( a * _Scale )); }
-		inline FixedPoint operator-( const float &a ) const { return FixedPoint( _rawValue - ( a * _Scale )); }
-		inline FixedPoint operator*( const float &a ) const { return FixedPoint( _rawValue * ( a * _Scale )); }
-		inline FixedPoint operator/( const float &a ) const { return FixedPoint( _rawValue / ( a * _Scale )); }
-		inline FixedPoint operator%( const float &a ) const { return FixedPoint( FP_MODULUS( _rawValue, a * _Scale )); }
-
-		inline FixedPoint operator+=( const float &a ){ _rawValue += ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator-=( const float &a ){ _rawValue -= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator*=( const float &a ){ _rawValue *= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator/=( const float &a ){ _rawValue /= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator%=( const float &a ){ _rawValue = FP_MODULUS( _rawValue, a * _Scale ); return FixedPoint( _rawValue ); }
-
-		inline bool operator==( const float &a ) const { return _rawValue == ( a * _Scale ); }
-		inline bool operator!=( const float &a ) const { return _rawValue != ( a * _Scale ); }
-		inline bool operator<=( const float &a ) const { return _rawValue <= ( a * _Scale ); }
-		inline bool operator>=( const float &a ) const { return _rawValue >= ( a * _Scale ); }
-		inline bool operator<(  const float &a ) const { return _rawValue <  ( a * _Scale ); }
-		inline bool operator>(  const float &a ) const { return _rawValue >  ( a * _Scale ); }
-
-		// ============================ DOUBLE OPERATORS // NOTE : this will lead to precision loss
-
-		inline FixedPoint operator+( const double &a ) const { return FixedPoint( _rawValue + ( a * _Scale )); }
-		inline FixedPoint operator-( const double &a ) const { return FixedPoint( _rawValue - ( a * _Scale )); }
-		inline FixedPoint operator*( const double &a ) const { return FixedPoint( _rawValue * ( a * _Scale )); }
-		inline FixedPoint operator/( const double &a ) const { return FixedPoint( _rawValue / ( a * _Scale )); }
-		inline FixedPoint operator%( const double &a ) const { return FixedPoint( FP_MODULUS( _rawValue, a * _Scale )); }
-
-		inline FixedPoint operator+=( const double &a ){ _rawValue += ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator-=( const double &a ){ _rawValue -= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator*=( const double &a ){ _rawValue *= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator/=( const double &a ){ _rawValue /= ( a * _Scale ); return FixedPoint( _rawValue ); }
-		inline FixedPoint operator%=( const double &a ){ _rawValue = FP_MODULUS( _rawValue, a * _Scale ); return FixedPoint( _rawValue ); }
-
-		inline bool operator==( const double &a ) const { return _rawValue == ( a * _Scale ); }
-		inline bool operator!=( const double &a ) const { return _rawValue != ( a * _Scale ); }
-		inline bool operator<=( const double &a ) const { return _rawValue <= ( a * _Scale ); }
-		inline bool operator>=( const double &a ) const { return _rawValue >= ( a * _Scale ); }
-		inline bool operator<(  const double &a ) const { return _rawValue <  ( a * _Scale ); }
-		inline bool operator>(  const double &a ) const { return _rawValue >  ( a * _Scale ); }
+		TU inline bool operator==( const U &val ) const { return _rawValue == Operate< T, U >::mul( _Scale, val ); }
+		TU inline bool operator!=( const U &val ) const { return _rawValue != Operate< T, U >::mul( _Scale, val ); }
+		TU inline bool operator<=( const U &val ) const { return _rawValue <= Operate< T, U >::mul( _Scale, val ); }
+		TU inline bool operator>=( const U &val ) const { return _rawValue >= Operate< T, U >::mul( _Scale, val ); }
+		TU inline bool operator<(  const U &val ) const { return _rawValue <  Operate< T, U >::mul( _Scale, val ); }
+		TU inline bool operator>(  const U &val ) const { return _rawValue >  Operate< T, U >::mul( _Scale, val ); }
 
 		// ============================ FRIEND METHODS
 
-		inline friend std::ostream &operator<<( std::ostream &os, const FixedPoint &a ){ os << (double)a; return os; }
+		inline friend std::ostream &operator<<( std::ostream &os, const FixedPoint &fix ){ os << double( fix ); return os; }
+
+		// Specialize std::is_integral for MyNumber
+
 	};
+
+	// ============================ MARKING POS2 AS VALID INTEGRAL / FLOATING POINT TYPE
+
+	namespace std
+	{
+		template < std::integral T, byte_t D >
+		struct is_integral< FixedPoint< T, D >> : std::true_type {};
+
+		template < std::integral T, byte_t D >
+		struct is_floating_point< FixedPoint< T, D >> : std::true_type {};
+	}
 
 // ============================ SIGNED FIXED POINT TYPES
 
@@ -215,7 +166,7 @@ typedef FixedPoint< uint64_t, 48 > ufx_64x48_t;
 
 // ============================ DEFAULT FIXED POINT TYPE
 
-typedef fxt_64x32_t fixed_t; // default fixed point type
+typedef fxt_64x32_t fixed_t; // NOTE : default fixed point type
 
 
 #endif // FIXED_POINT_HPP

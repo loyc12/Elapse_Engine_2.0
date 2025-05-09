@@ -66,8 +66,8 @@ class CompText : public CompBase
 
 		inline float getFontSize() const { return _fontSize; }
 		inline bool voidFontSize(){ _fontSize = COMP_DEF_FONTSIZE; return true; }
-		inline bool setFontSize( float fontSize ){ _fontSize = max( COMP_DEF_MIN_TEXT_SIZE, fontSize); return true; }
-		inline bool changeFontSize( float delta ){ _fontSize = max( COMP_DEF_MIN_TEXT_SIZE, _fontSize + delta ); return true; }
+		inline bool setFontSize( float fontSize ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, fontSize); return true; }
+		inline bool changeFontSize( float delta ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, _fontSize + delta ); return true; }
 
 		inline Color getFontCol() const { return _fontCol; }
 		inline bool voidFontCol(){ _fontCol = COMP_DEF_COLOR; return true; } // NOTE : sets the Color to 0

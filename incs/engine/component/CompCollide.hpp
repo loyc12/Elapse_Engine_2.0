@@ -45,8 +45,8 @@ class CompCollide : public CompBase
 		inline float getHitRad() const { return _hitRad; }
 		inline bool voidHitRad(){ _hitRad = COMP_DEF_HITRAD; return true; }
 
-		inline bool setHitRad(    float hitRad ){ _hitRad = max( 0.0f, hitRad); return true; }
-		inline bool changeHitRad( float delta  ){ _hitRad = max( 0.0f, _hitRad + delta); return true; }
+		inline bool setHitRad(    float hitRad ){ _hitRad = fmax( 0.0f, hitRad); return true; }
+		inline bool changeHitRad( float delta  ){ _hitRad = fmax( 0.0f, _hitRad + delta); return true; }
 
 	// ================================ COLLISION METHODS
 		// NOTE : checks if the component is colliding with a point ( with or without its own collision radius )

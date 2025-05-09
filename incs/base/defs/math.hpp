@@ -3,141 +3,182 @@
 
 # include "./_libs.hpp"
 
-#define EUL	2.71828182845904523536f
-#define TAU	6.28318530717958647692f
-#define PHI	1.61803398874989484820f
-#define PI	3.14159265358979323846f
-#define EPS 0.0000000000000001f
+# define EUL	2.71828182845904523536f
+# define TAU	6.28318530717958647692f
+# define PHI	1.61803398874989484820f
+# define PI	3.14159265358979323846f
+# define EPS 0.0000000000000001f
 
-#define RtoD ( 180.0f / PI )
-#define DtoR ( PI / 180.0f )
+# define RtoD ( 180.0f / PI )
+# define DtoR ( PI / 180.0f )
 
-// fabs( ), pow( ) and sqrt( ) are already defined in cmath
-// floor( ), ceil( ) and round( )( ? ) are already defined in cmath
+# define sqrf( a ) ( a * a )
+# define cubf( a ) ( a * a * a )
 
-inline int    abs(  int a )   { return a < 0 ? -a : a; }
-//inline long   abs(  long a )  { return a < 0 ? -a : a; }
-inline float  abs(  float a ){ return a < 0 ? -a : a; }
-//inline double abs(  double a ){ return a < 0 ? -a : a; }
+# define powf(  a, b ) std::pow( a, b ) //      NOTE : this is a workaround for the pow function in the Operate class
+# define rootf( a, b ) std::pow( a, 1.0f/b ) // NOTE : this is a workaround for the pow function in the Operate class
 
-inline int    sign( int a )   { return a < 0 ? -1 : a > 0 ? 1 : 0; }
-//inline long   sign( long a )  { return a < 0 ? -1 : a > 0 ? 1 : 0; }
-inline float  sign( float a ){ return a < 0 ? -1 : a > 0 ? 1 : 0; }
-//inline double sign( double a ){ return a < 0 ? -1 : a > 0 ? 1 : 0; }
+// NOTE : return value is always of type T
+template < typename T, typename U = T, typename V = T >
+struct Operate
+{
+	static_assert(std::integral<T> || std::floating_point<T>, "Operate: T must be a numeric type");
+	static_assert(std::integral<U> || std::floating_point<U>, "Operate: U must be a numeric type");
+	static_assert(std::integral<V> || std::floating_point<V>, "Operate: V must be a numeric type");
 
-inline int    sqr(  int a )   { return a * a; }
-//inline long   sqr(  long a )  { return a * a; }
-inline float  sqr(  float a ){ return a * a; }
-//inline double sqr(  double a ){ return a * a; }
+	// ============================ MONADIC FUNCTIONS
 
-inline int    cub(  int a )   { return a * a * a; }
-//inline long   cub(  long a )  { return a * a * a; }
-inline float  cub(  float a ){ return a * a * a; }
-//inline double cub(  double a ){ return a * a * a; }
+	inline static T abs(  const T &a ) { return T( a < 0 ? -a : a ); } //   Absolute value
+	inline static T sign( const T &a ) { return T( a < 0 ? -1 : a > 0 ? 1 : 0 ); } // Sign
 
-inline float  cbrt( float a ){ return pow( a, 1.0f/3.0f ); }
-//inline double cbrt( double a ){ return pow( a, 1.0/3.0 ); }
+	inline static T sqr(  const T &a ) { return T( a * a ); } //         Square
+	inline static T sqrt( const T &a ) { return T( std::sqrt( a )); } // Square root
 
-inline float  root( float a, float n )  { return pow( a, 1.0f/n ); }
-//inline double root( double a, double n ){ return pow( a, 1.0/n ); }
+	inline static T cub(  const T &a ) { return T( a * a * a ); } //                Cube
+	inline static T cbrt( const T &a ) { return T( std::cbrt( a, 1.0f/3.0f )); } // Cube root
+
+	inline static T d2r(  const T &a ) { return T( a * DtoR ); } // Degrees to radians
+	inline static T r2d(  const T &a ) { return T( a * RtoD ); } // Radians to degrees
+
+	inline static T sin(  const T &a ) { return T( sinf( a )); } // Sine
+	inline static T cos(  const T &a ) { return T( cosf( a )); } // Cosine
+	inline static T tan(  const T &a ) { return T( tanf( a )); } // Tangent
+
+	inline static T sec(  const T &a ) { return T( 1.0f / cosf( a )); } // Secant
+	inline static T csc(  const T &a ) { return T( 1.0f / sinf( a )); } // Cosecant
+	inline static T cot(  const T &a ) { return T( 1.0f / tanf( a )); } // Cotangent
+
+	inline static T asin( const T &a ) { return T( asinf( a )); } // Inverse sine
+	inline static T acos( const T &a ) { return T( acosf( a )); } // Inverse cosine
+	inline static T atan( const T &a ) { return T( atanf( a )); } // Inverse tangent
+
+	// ============================ DIADIC FUNCTIONS
+
+	inline static T atan2( const T &a, const U &b ) { return T( atan2f( a, b )); } //        Inverse tangent of y/x
+
+	inline static T add(  const T &a, const U &b ) { return T( a + b ); } // Addition
+	inline static T sub(  const T &a, const U &b ) { return T( a - b ); } // Subtraction
+	inline static T mul(  const T &a, const U &b ) { return T( a * b ); } // Multiplication
+	inline static T div(  const T &a, const U &b )
+	{
+		if( b == 0 ) // Ensures this is 0-div safe
+		{
+			// TODO : add a warning here
+			return T( 0 ); // Avoid division by zero
+		}
+		return T( a / b );
+	} // Division
+
+	inline static T pow(  const T &a, const U &b ) { return T( powf(  double( a ), double( b ))); } // Power
+	inline static T root( const T &a, const U &b ) { return T( rootf( double( a ), double( b ))); } // Root
+
+	inline static T avg(  const T &a, const U &b ) { return T( ( a + b ) / 2 ); } // Average
+	inline static T min(  const T &a, const U &b ) { return T( a < b ? a : b ); } // Minimum
+	inline static T max(  const T &a, const U &b ) { return T( a > b ? a : b ); } // Maximum
+	inline static T span( const T &a, const U &b ) { return T( Operate::abs( a - b )); } // Absolute span
+
+	inline static T mod(  const T &a, const U &b ) // Sign variable modulus ( will ltake the sign of a )
+	{
+		if( b == 0 ) // Ensures this is 0-div safe
+		{
+			// TODO : add a warning here
+			return T( 0 ); // Avoid division by zero
+		}
+		return T( fmod( double( a ), double( b )));
+	}
+	inline static T pmod( const T &a, const U &b ) // Strickly positive modulus
+	{
+		T res = Operate::mod( a, b );
+		if( res < 0 ) res += Operate::abs( b ); // Ensures the result is positive
+		return res;
+	}
+	inline static T nmod ( const T &a, const U &b ) // Strickly negative modulus
+	{
+		T res = Operate::mod( a, b );
+		if( res > 0 ) res -= Operate::abs( b ); // Ensures the result is negative
+		return res;
+	}
+
+	// ============================ TRIDIC FUNCTIONS
+
+	inline static T avg(  const T &a, const U &b, const V &c ) { return T( ( a + b + c ) / 3 ); } //                      Average of 3
+	inline static T min(  const T &a, const U &b, const V &c ) { return T( Operate::min( Operate::min( a, b ), c )); } // Minimum of 3
+	inline static T max(  const T &a, const U &b, const V &c ) { return T( Operate::max( Operate::max( a, b ), c )); } // Maximum of 3
+
+	inline static T med(  const T &a, const U &b, const V &c ) { return T( a + b + c - Operate::min( a, b, c ) - Operate::max( a, b, c )); } // Median of 3
+	inline static T clmp( const T &m, const T &a, const T &M ) { return T( Operate::min( Operate::max( m, a ), M )); } //         Clamping between m and M
+
+	inline static T lerp( const T &a, const T &b, const T &t ) { return T( a + ( t * ( b - a ))); } //  Linear interpolation between a and b base on factor t
+	inline static T norm( const T &a, const T &b, const T &v )// Clamps between [0,1] according to v's relative position between a and b
+	{
+		if(   v <= Operate::min( a, b ))   return T( 0 );
+		elif( v >= Operate::max( a, b ))   return T( 1 );
+		elif( a == b ) // Ensures this is 0-div safe
+		{
+			// TODO : add a warning
+			return T( 0 );
+		}
+		else return T( ( v - Operate::min( a, b )) / Operate::span( a, b )); // Normalizating v between a and b
+	}
+
+	// ============================ SHORTHAND FUNCTIONS
+
+	#define TW template < typename W >
+
+	TW inline static W abs(  const W &a ) { return Operate::abs(  a ); } // Absolute value
+	TW inline static W sign( const W &a ) { return Operate::sign( a ); } // Sign
+
+	TW inline static W sqr(  const W &a ) { return Operate::sqr(  a ); } // Square
+	TW inline static W sqrt( const W &a ) { return Operate::sqrt( a ); } // Square root
+
+	TW inline static W cub(  const W &a ) { return Operate::cub(  a ); } // Cube
+	TW inline static W cbrt( const W &a ) { return Operate::cbrt( a ); } // Cube root
+
+	TW inline static W d2r(  const W &a ) { return Operate::d2r( a ); } // Degrees to radians
+	TW inline static W r2d(  const W &a ) { return Operate::r2d( a ); } // Radians to degrees
+
+	TW inline static W sin(  const W &a ) { return Operate::sin(  a ); } // Sine
+	TW inline static W cos(  const W &a ) { return Operate::cos(  a ); } // Cosine
+	TW inline static W tan(  const W &a ) { return Operate::tan(  a ); } // Tangent
+
+	TW inline static W sec(  const W &a ) { return Operate::sec(  a ); } // Secant
+	TW inline static W csc(  const W &a ) { return Operate::csc(  a ); } // Cosecant
+	TW inline static W cot(  const W &a ) { return Operate::cot(  a ); } // Cotangent
+
+	TW inline static W asin( const W &a ) { return Operate::asin( a ); } // Inverse sine
+	TW inline static W acos( const W &a ) { return Operate::acos( a ); } // Inverse cosine
+	TW inline static W atan( const W &a ) { return Operate::atan( a ); } // Inverse tangent
+
+	TW inline static W atan2( const W &a, const W &b ) { return Operate::atan2( a, b ); } // Inverse tangent of y/x
+
+	TW inline static W add(  const W &a, const W &b ) { return Operate::add(  a, b ); } // Addition
+	TW inline static W sub(  const W &a, const W &b ) { return Operate::sub(  a, b ); } // Subtraction
+	TW inline static W mul(  const W &a, const W &b ) { return Operate::mul(  a, b ); } // Multiplication
+	TW inline static W div(  const W &a, const W &b ) { return Operate::div(  a, b ); } // Division
+
+	TW inline static W pow(  const W &a, const W &b ) { return Operate::pow(  a, b ); } // Power
+	TW inline static W root( const W &a, const W &b ) { return Operate::root( a, b ); } // Root
+
+	TW inline static W min(  const W &a, const W &b ) { return Operate::min(  a, b ); } // Minimum
+	TW inline static W avg(  const W &a, const W &b ) { return Operate::avg(  a, b ); } // Average
+	TW inline static W max(  const W &a, const W &b ) { return Operate::max(  a, b ); } // Maximum
+	TW inline static W span( const W &a, const W &b ) { return Operate::span( a, b ); } // Absolute span
+
+	TW inline static W mod(  const W &a, const W &b ) { return Operate::mod(  a, b ); } // Sign variable modulus
+	TW inline static W pmod( const W &a, const W &b ) { return Operate::pmod( a, b ); } // Strickly positive modulus
+	TW inline static W nmod( const W &a, const W &b ) { return Operate::nmod( a, b ); } // Strickly negative modulus
+
+	TW inline static W min(  const W &a, const W &b, const W &c ) { return Operate::min(  a, b, c ); } // Minimum of 3
+	TW inline static W avg(  const W &a, const W &b, const W &c ) { return Operate::avg(  a, b, c ); } // Average of 3
+	TW inline static W max(  const W &a, const W &b, const W &c ) { return Operate::max(  a, b, c ); } // Maximum of 3
+	TW inline static W med(  const W &a, const W &b, const W &c ) { return Operate::med(  a, b, c ); } // Median of 3
+
+	TW inline static W clmp( const W &m, const W &a, const W &M ) { return Operate::clmp( m, a, M ); } // Clamping between m and M
+	TW inline static W lerp( const W &a, const W &b, const W &t ) { return Operate::lerp( a, b, t ); } // Linear interpolation between a and b base on factor t
+	TW inline static W norm( const W &a, const W &b, const W &v ) { return Operate::norm( a, b, v ); } // Clamps between [0,1] according to v's relative position between a and b
 
 
 
-inline int    min( int a, int b )       { return a < b ? a : b; }
-//inline long   min( long a, long b )     { return a < b ? a : b; }
-inline float  min( float a, float b )   { return a < b ? a : b; }
-//inline double min( double a, double b ){ return a < b ? a : b; }
-
-inline int    avg( int a, int b )       { return ( a + b ) / 2; }
-//inline long   avg( long a, long b )     { return ( a + b ) / 2; }
-inline float  avg( float a, float b )   { return ( a + b ) / 2; }
-//inline double avg( double a, double b ){ return ( a + b ) / 2; }
-
-inline int    max( int a, int b )       { return a > b ? a : b; }
-//inline long   max( long a, long b )     { return a > b ? a : b; }
-inline float  max( float a, float b )   { return a > b ? a : b; }
-//inline double max( double a, double b ){ return a > b ? a : b; }
-
-inline int    span( int a, int b )      { return abs( a - b ); }
-//inline long   span( long a, long b )    { return abs( a - b ); }
-inline float  span( float a, float b )  { return abs( a - b ); }
-//inline double span( double a, double b ){ return abs( a - b ); }
-
-
-
-inline int    min3( int a, int b, int c )         { return min( min( a, b ), c ); }
-//inline long   min3( long a, long b, long c )      { return min( min( a, b ), c ); }
-inline float  min3( float a, float b, float c )   { return min( min( a, b ), c ); }
-//inline double min3( double a, double b, double c ){ return min( min( a, b ), c ); }
-
-inline int    avg3( int a, int b, int c )         { return ( a + b + c ) / 3; }
-//inline long   avg3( long a, long b, long c )      { return ( a + b + c ) / 3; }
-inline float  avg3( float a, float b, float c )   { return ( a + b + c ) / 3; }
-//inline double avg3( double a, double b, double c ){ return ( a + b + c ) / 3; }
-
-inline int    max3( int a, int b, int c )         { return max( max( a, b ), c ); }
-//inline long   max3( long a, long b, long c )      { return max( max( a, b ), c ); }
-inline float  max3( float a, float b, float c )   { return max( max( a, b ), c ); }
-//inline double max3( double a, double b, double c ){ return max( max( a, b ), c ); }
-
-inline int    clamp( int mn, int a, int mx )         { return min( max( mn, a ), mx ); }
-//inline long   clamp( long mn, long a, long mx )      { return min( max( mn, a ), mx ); }
-inline float  clamp( float mn, float a, float mx )   { return min( max( mn, a ), mx ); }
-//inline double clamp( double mn, double a, double mx ){ return min( max( mn, a ), mx ); }
-
-
-
-inline int    max4( int a, int b, int c, int d )            { return max( max( a, b ), max( c, d )); }
-//inline long   max4( long a, long b, long c, long d )        { return max( max( a, b ), max( c, d )); }
-inline float  max4( float a, float b, float c, float d )    { return max( max( a, b ), max( c, d )); }
-//inline double max4( double a, double b, double c, double d ){ return max( max( a, b ), max( c, d )); }
-
-inline int    avg4( int a, int b, int c, int d )            { return ( a + b + c + d ) / 4; }
-//inline long   avg4( long a, long b, long c, long d )        { return ( a + b + c + d ) / 4; }
-inline float  avg4( float a, float b, float c, float d )    { return ( a + b + c + d ) / 4; }
-//inline double avg4( double a, double b, double c, double d ){ return ( a + b + c + d ) / 4; }
-
-inline int    min4( int a, int b, int c, int d )            { return min( min( a, b ), min( c, d )); }
-//inline long   min4( long a, long b, long c, long d )        { return min( min( a, b ), min( c, d )); }
-inline float  min4( float a, float b, float c, float d )    { return min( min( a, b ), min( c, d )); }
-//inline double min4( double a, double b, double c, double d ){ return min( min( a, b ), min( c, d )); }
-
-inline int    pmod( int a, int b )      { int    r = a % b;        if( r < 0 ) r += b; return r; }
-//inline long   pmod( long a, long b )    { long   r = a % b;        if( r < 0 ) r += b; return r; }
-inline float  pmod( float a, float b )  { float  r = fmod( a, b ); if( r < 0 ) r += b; return r; }
-//inline double pmod( double a, double b ){ double r = fmod( a, b ); if( r < 0 ) r += b; return r; }
-
-inline float  deg2rad( float d ){ return d * DtoR; }
-//inline double deg2rad( double d ){ return d * DtoR; }
-
-inline float  rad2deg( float r ){ return r * RtoD; }
-//inline double rad2deg( double r ){ return r * RtoD; }
-
-
-inline float  lerp( float a, float b, float t )   { return a + ( t * ( b - a )); }
-//inline double lerp( double a, double b, double t ){ return a + ( t * ( b - a )); }
-
-inline float  norm( float x, float a, float b, float c, float d )     { return lerp( c, d, ( x - a ) / ( b - a )); }
-//inline double norm( double x, double a, double b, double c, double d ){ return lerp( c, d, ( x - a ) / ( b - a )); }
-
-inline float  normFrom01( float x, float a, float b )   { return norm( x,  0, 1, a, b ); }
-//inline double normFrom01( double x, double a, double b ){ return norm( x,  0, 1, a, b ); }
-
-inline float  normFrom11( float x, float a, float b )   { return norm( x, -1, 1, a, b ); }
-//inline double normFrom11( double x, double a, double b ){ return norm( x, -1, 1, a, b ); }
-
-inline float  normTo01(  float x, float a, float b )  { return norm( x, a, b,  0, 1 ); }
-//inline double normTo01( double x, double a, double b ){ return norm( x, a, b,  0, 1 ); }
-
-inline float  normTo11( float x, float a, float b )   { return norm( x, a, b, -1, 1 ); }
-//inline double normTo11( double x, double a, double b ){ return norm( x, a, b, -1, 1 ); }
-
-// linter prevents overloading of operators for floats or doubles
-
-//inline float  operator%( float a, float b )  { return fmod( a, b ); }
-//inline double operator%( double a, double b ){ return fmod( a, b ); }
-
-//inline float  &operator%=( float &a, float b )  { a = fmod( a, b ); return a; }
-//inline double &operator%=( double &a, double b ){ a = fmod( a, b ); return a; }
+};
 
 #endif // MATH_HPP

@@ -36,10 +36,10 @@ CompPhys::CompPhys() : CompBase(),
 
 CompPhys::CompPhys( Entity *Ntt, bool isActive, bool isDynamic, float mass, float drag, float fric, float elas ) : CompBase( Ntt, isActive ),
 	_dynamic( isDynamic ),
-	_mass( min( COMP_MIN_MASS, mass )),
-	_drag( min( COMP_MIN_DRAG, drag )),
-	_fric( min( COMP_MIN_FRIC, fric )),
-	_elas( min( COMP_MIN_ELAS, elas ))
+	_mass( fmin( COMP_MIN_MASS, mass )),
+	_drag( fmin( COMP_MIN_DRAG, drag )),
+	_fric( fmin( COMP_MIN_FRIC, fric )),
+	_elas( fmin( COMP_MIN_ELAS, elas ))
 {
 	flog( 0 );
 }

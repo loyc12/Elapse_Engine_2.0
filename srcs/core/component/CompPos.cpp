@@ -81,7 +81,7 @@ float CompPos::getLineDistTo( Vector2 other ) const
 float CompPos::getLineDistTo( float x, float y ) const
 {
 	flog( 0 );
-	return sqrt( sqr( x - _pos.x ) + sqr( y - _pos.y ));
+	return sqrt( sqrf( x - _pos.x ) + sqrf( y - _pos.y ));
 }
 
 
