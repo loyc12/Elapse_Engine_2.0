@@ -62,7 +62,6 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 			}
 		}
 	}
-
 }
 
 // ==================== GLOBAL TICK INJECTION FUNCTIONS

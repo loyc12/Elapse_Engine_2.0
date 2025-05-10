@@ -77,8 +77,6 @@ class Engine
 
 	// ================================ ACCESSORS / MUTATORS
 	public:
-		inline engineState_e getState(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state; }
-
 		inline bool isEngineClosed(){  std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_CLOSED; }
 		inline bool isEngineReady(){   std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_INITIALIZED; }
 		inline bool isEngineStarted(){ std::lock_guard< std::mutex > lock( mtx_state ); return _state == ES_STARTED; }
@@ -98,12 +96,13 @@ class Engine
 
 		inline fixed_t updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
 		inline fixed_t getDeltaTimeScaled() const { return _DT * _TS; }
+
 		fixed_t setTimeScale( fixed_t timeScale );
+		bool    canEngineTick();
 
-		bool canEngineTick();
-
-	// ================================ MUTEXED ACCESSORS
+	// ================================ MUTEXED ACCESSORS / MUTATORS
 	private:
+		inline engineState_e getState(){                std::lock_guard< std::mutex > lock( mtx_state ); return _state; }
 		inline void setState( engineState_e newState ){ std::lock_guard< std::mutex > lock( mtx_state ); _state = newState; }
 
 };

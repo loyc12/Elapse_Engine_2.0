@@ -26,6 +26,7 @@ CompPhys::~CompPhys()
 
 CompPhys::CompPhys() : CompBase(),
 	_dynamic( COMP_DEF_DYNAMIC ),
+
 	_mass( COMP_MIN_MASS ),
 	_drag( COMP_MIN_DRAG ),
 	_fric( COMP_MIN_FRIC ),
@@ -34,8 +35,10 @@ CompPhys::CompPhys() : CompBase(),
 	flog( 0 );
 }
 
-CompPhys::CompPhys( Entity *Ntt, bool isActive, bool isDynamic, fixed_t mass, fixed_t drag, fixed_t fric, fixed_t elas ) : CompBase( Ntt, isActive ),
+CompPhys::CompPhys( Entity *Ntt, bool isActive, bool isDynamic, fixed_t mass, fixed_t drag, fixed_t fric, fixed_t elas ) :
+	CompBase( Ntt, isActive ),
 	_dynamic( isDynamic ),
+
 	_mass( fmin( COMP_MIN_MASS, mass )),
 	_drag( fmin( COMP_MIN_DRAG, drag )),
 	_fric( fmin( COMP_MIN_FRIC, fric )),
@@ -224,7 +227,11 @@ vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 		return { 0, 0 };
 	}
 
-	fixed_t mag = Operate< fixed_t >::sqrt(  vel.x * vel.x + vel.y * vel.y );
+	// TODO : Check if this is correct
+	// TODO : handle when the velocity is 0
+	// Accelerates by breakForce in the opposite direction of the velocity
+
+	fixed_t mag  = Operate< fixed_t >::sqrt( vel.x * vel.x + vel.y * vel.y );
 	fixed_t accX = -breakForce * vel.x / ( mag * _mass );
 	fixed_t accY = -breakForce * vel.y / ( mag * _mass );
 
@@ -234,7 +241,7 @@ vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 
 vec2_t CompPhys::applyBreakFactor( fixed_t breakFactor )
 {
-	flog( 0 ); // NOTE : multiplies the acceleration by a given factor ( acc *= breakFactor )
+	flog( 0 );
 	if( !hasSisterComps() ){ return { 0, 0 }; }
 
 	vec2_t acc = getEntity()->getAcc();

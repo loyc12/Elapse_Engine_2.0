@@ -41,13 +41,13 @@ class CompPos : public CompBase
 		inline vec2_t getPos() const { return _pos; }
 		inline bool   voidPos(){ _pos = COMP_DEF_POS; return true; }
 
-		inline bool setPos( vec2_t pos ){ _pos = pos; return true; }
+		inline bool setPos( vec2_t pos ){ _pos = pos;                       return true; }
 		inline bool setPos( fixed_t x, fixed_t y ){ _pos.x = x; _pos.y = y; return true; }
 
 		inline bool movePos( vec2_t delta ){ _pos.x += delta.x; _pos.y += delta.y; return true; }
 		inline bool movePos( fixed_t dx, fixed_t dy ){ _pos.x += dx; _pos.y += dy; return true; }
 
-		inline bool scalePos( fixed_t scale ){    _pos.x *= scale; _pos.y *= scale; return true; }
+		inline bool scalePos( fixed_t scale ){ _pos.x *= scale; _pos.y *= scale;    return true; }
 		inline bool scalePos( fixed_t sx, fixed_t sy ){ _pos.x *= sx; _pos.y *= sy; return true; }
 
 	// ================ ROTATION METHODS

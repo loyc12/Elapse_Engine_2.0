@@ -29,7 +29,7 @@ class CompManager
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		inline CompManager(){ _maxID = 0; };
+		inline  CompManager(){ _maxID = 0; };
 		inline ~CompManager(){ deleteAllEntities(); };
 
 	// ================================ ACCESSORS / MUTATORS
@@ -52,24 +52,23 @@ class CompManager
 		bool defragEntityMap(); // NOTE : removes nullptr entities from the map and recalculates the max ID
 
 		// NOTE : add + copy entity and its components
-		bool dupEntity( id_t src );
+		bool dupEntity( id_t    src );
 		bool dupEntity( Entity *src );
 
 	// ================ COMPONENT METHODS
 		comp_count_t getCompCount( id_t id ) const;
 		comp_count_t getActCompCount( id_t id ) const;
 
+		bool hasComponent( id_t id, comp_type_e compType ) const;
+		bool addComponent( id_t id, comp_type_e compType );
+		bool delComponent( id_t id, comp_type_e compType, bool freeMem = true );
+
 		TTC inline CompT *getComponent( id_t id, comp_type_e compType ) const { ( void )compType; return getComponent< CompT >( id ); };
 		TTC CompT *getComponent( id_t id ) const;
 
 		TTC inline bool hasComponent( id_t id ) const { return hasComponent( id, CompT::getStaticType() ); };
-		bool hasComponent( id_t id, comp_type_e compType ) const;
-
-		TTC inline bool addComponent( id_t id ){ return addComponent( id, CompT::getStaticType() ); };
-		bool addComponent( id_t id, comp_type_e compType );
-
+		TTC inline bool addComponent( id_t id ){        return addComponent( id, CompT::getStaticType() ); };
 		TTC inline bool delComponent( id_t id, bool freeMem = true ){ return delComponent( id, CompT::getStaticType(), freeMem ); };
-		bool delComponent( id_t id, comp_type_e compType, bool freeMem = true );
 
 	// ================================ UPDATE METHODS
 		void updateAllEntities(); //   NOTE : calls the onTick() method of all components in the map ( one entity at a time )
@@ -93,7 +92,7 @@ class CompManager
 
 	// ================================ STATIC METHODS
 		// NOTE : these log errors if the check fails ( aka return false )
-		static bool isValidID(   id_t id     ); // NOTE : Checks if the ID is above the current ID use range ( _maxID )
+		static bool isValidID( id_t id ); // NOTE : Checks if the ID is above the current ID use range ( _maxID )
 
 	// ================================ FACTORY METHODS
 		// NOTE : if ID is 0, the entity is not supposed to be in CompManager's map

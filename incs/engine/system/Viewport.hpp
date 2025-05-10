@@ -42,19 +42,20 @@ class Viewport2D
 		~Viewport2D();
 
 	// ================================ ACCESSORS
-		fixed_t getWidth()      const;
-		fixed_t getHeight()     const;
-		fixed_t getZmdWidth()   const;
-		fixed_t getZmdHeight()  const;
+		fixed_t getWidth()     const;
+		fixed_t getHeight()    const;
+		fixed_t getZmdWidth()  const;
+		fixed_t getZmdHeight() const;
 
-		vec2_t getSize()     const;
-		vec2_t getOrigin()   const;
-		vec2_t getCenter()   const;
+		vec2_t getSize()   const;
+		vec2_t getOrigin() const;
+		vec2_t getCenter() const;
 
-		vec2_t getTop()      const;
-		vec2_t getBot()      const;
-		vec2_t getLeft()     const;
-		vec2_t getRight()    const;
+		vec2_t getTop()   const;
+		vec2_t getBot()   const;
+		vec2_t getLeft()  const;
+		vec2_t getRight() const;
+
 		vec2_t getTopLeft()  const;
 		vec2_t getTopRight() const;
 		vec2_t getBotLeft()  const;
@@ -70,12 +71,12 @@ class Viewport2D
 		void    setTarget(  vec2_t target, bool overrideTracking = false );
 		void    moveTarget( vec2_t offset );
 
-		fixed_t   getZoom();
+		fixed_t getZoom();
 		void    setZoom(   fixed_t zoom );
 		void    scaleZoom( fixed_t factor );
 
-		fixed_t   getRotation();
-		void    setRotation(    fixed_t rotation );
+		fixed_t getRotation();
+		void    setRotation(  fixed_t rotation );
 		void    moveRotation( fixed_t delta );
 
 		vec2_t getOffset() const;

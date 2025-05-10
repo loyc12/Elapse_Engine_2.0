@@ -51,10 +51,10 @@ vec2_t Viewport2D::getTopRight() const { return GetScreenToWorld2D( { getZmdWidt
 vec2_t Viewport2D::getBotLeft()  const { return GetScreenToWorld2D( { 0,                getZmdHeight()   }, _camera ); }
 vec2_t Viewport2D::getBotRight() const { return GetScreenToWorld2D( { getZmdWidth(),    getZmdHeight()   }, _camera ); }
 
-vec2_t Viewport2D::getTop()      const { return GetScreenToWorld2D( { _camera.target.x, 0 },                _camera ); }
-vec2_t Viewport2D::getBot()      const { return GetScreenToWorld2D( { _camera.target.x, getZmdHeight()   }, _camera ); }
-vec2_t Viewport2D::getLeft()     const { return GetScreenToWorld2D( { 0,                _camera.target.y }, _camera ); }
-vec2_t Viewport2D::getRight()    const { return GetScreenToWorld2D( { getZmdWidth(),    _camera.target.y }, _camera ); }
+vec2_t Viewport2D::getTop()   const { return GetScreenToWorld2D( { _camera.target.x, 0 },                _camera ); }
+vec2_t Viewport2D::getBot()   const { return GetScreenToWorld2D( { _camera.target.x, getZmdHeight()   }, _camera ); }
+vec2_t Viewport2D::getLeft()  const { return GetScreenToWorld2D( { 0,                _camera.target.y }, _camera ); }
+vec2_t Viewport2D::getRight() const { return GetScreenToWorld2D( { getZmdWidth(),    _camera.target.y }, _camera ); }
 
 vec2_t Viewport2D::getMousePos()      const { return _mousePos; }
 vec2_t Viewport2D::getMouseWorldPos() const { return _mouseWorldPos; }
@@ -87,16 +87,16 @@ void Viewport2D::setTarget( vec2_t target, bool overrideTracking )
 }
 
 fixed_t Viewport2D::getZoom(){ return _camera.zoom; }
-void  Viewport2D::setZoom(   fixed_t zoom ){   _camera.zoom = zoom; }
+void    Viewport2D::setZoom( fixed_t   zoom ){ _camera.zoom = zoom; }
 void  Viewport2D::scaleZoom( fixed_t factor ){ _camera.zoom *= float( factor ); }
 
 fixed_t Viewport2D::getRotation(){ return _camera.rotation; }
-//void Viewport2D::setRotation( fixed_t rotation ){ _camera.rotation = rotation; }
-//void Viewport2D::moveRotation( fixed_t delta ){ _camera.rotation += delta; }
+//void Viewport2D::setRotation(  fixed_t rotation ){ _camera.rotation = rotation; }
+//void Viewport2D::moveRotation( fixed_t    delta ){ _camera.rotation += delta; }
 
 vec2_t Viewport2D::getOffset() const { return _camera.offset; }
 /*
-void Viewport2D::setOffset( vec2_t &offset ){ _camera.offset = offset; }
+void Viewport2D::setOffset(  vec2_t &offset ){ _camera.offset = offset; }
 void Viewport2D::moveOffset( vec2_t &delta )
 {
 	_camera.offset.x += offset.x;

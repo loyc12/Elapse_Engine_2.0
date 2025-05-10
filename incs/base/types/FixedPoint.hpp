@@ -60,6 +60,8 @@ class FixedPoint
 			if constexpr ( std::is_integral_v< U > ){ _scaledValue = T( double( val ) * _Scale ); } // NOTE : this is to avoid overflows
 			else /* std::is_floating_point_v< U > */{ _scaledValue = T( double( val ) * _Scale ); } // NOTE : this is to avoid overflows
 		}
+
+		inline bool isZero() const { return _scaledValue == 0; }
 	// ============================ CASTING METHODS
 
 		TU inline operator U() const { return castValue< U >(); }
@@ -92,9 +94,28 @@ class FixedPoint
 
 		inline FixedPoint operator+=( const FixedPoint &fix ){ _scaledValue += fix._scaledValue;          return FixedPoint( *this ); }
 		inline FixedPoint operator-=( const FixedPoint &fix ){ _scaledValue -= fix._scaledValue;          return FixedPoint( *this ); }
-		inline FixedPoint operator*=( const FixedPoint &fix ){ _scaledValue *= fix.castValue< double >(); return FixedPoint( *this ); } // NOTE : doing it like this avoids overflows
-		inline FixedPoint operator/=( const FixedPoint &fix ){ _scaledValue /= fix.castValue< double >(); return FixedPoint( *this ); } // NOTE : doing it like this avoids overflows
-		inline FixedPoint operator%=( const FixedPoint &fix ){ _scaledValue %= fix.castValue< double >(); return FixedPoint( *this ); } // NOTE : doing it like this avoids overflows
+		inline FixedPoint operator*=( const FixedPoint &fix ){ _scaledValue *= fix.castValue< double >(); return FixedPoint( *this ); }
+
+		inline FixedPoint operator/=( const FixedPoint &fix )
+		{
+			if ( fix.isZero() )
+			{
+				qlog( "FixedPoint : Division by zero : voiding value", ERROR, 0 );
+				_scaledValue = 0;
+			}
+			else { _scaledValue /= fix.castValue< double >(); }
+			return FixedPoint( *this );
+		}
+		inline FixedPoint operator%=( const FixedPoint &fix )
+		{
+			if ( fix.isZero() )
+			{
+				qlog( "FixedPoint : Modulo by zero : voiding value", ERROR, 0 );
+				_scaledValue = 0;
+			}
+			else { _scaledValue %= fix.castValue< double >(); }
+			return FixedPoint( *this );
+		}
 
 	// ============== COMPARISON OPERATORS
 
@@ -133,9 +154,27 @@ class FixedPoint
 
 		TU inline FixedPoint operator+=( const U &val ){ _scaledValue += T( val * _Scale ); return FixedPoint( *this ); }
 		TU inline FixedPoint operator-=( const U &val ){ _scaledValue -= T( val * _Scale ); return FixedPoint( *this ); }
-		TU inline FixedPoint operator*=( const U &val ){ _scaledValue *= double( val * _Scale ); return FixedPoint( *this ); }
-		TU inline FixedPoint operator/=( const U &val ){ _scaledValue /= double( val * _Scale ); return FixedPoint( *this ); }
-		TU inline FixedPoint operator%=( const U &val ){ _scaledValue %= double( val * _Scale ); return FixedPoint( *this ); }
+		TU inline FixedPoint operator*=( const U &val ){ _scaledValue *= double( val );     return FixedPoint( *this ); }
+		TU inline FixedPoint operator/=( const U &val )
+		{
+			if ( val == 0 )
+			{
+				qlog( "FixedPoint : Division by zero : voiding value", ERROR, 0 );
+				_scaledValue = 0;
+			}
+			else { _scaledValue /= double( val ); }
+			return FixedPoint( *this );
+		}
+		TU inline FixedPoint operator%=( const U &val )
+		{
+			if ( val == 0 )
+			{
+				qlog( "FixedPoint : Modulo by zero : voiding value", ERROR, 0 );
+				_scaledValue = 0;
+			}
+			else { _scaledValue %= double( val ); }
+			return FixedPoint( *this );
+		}
 
 	// ============== COMPARISON OPERATORS
 

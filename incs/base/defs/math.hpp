@@ -2,6 +2,7 @@
 # define MATH_HPP
 
 # include "./_libs.hpp"
+# include "./debug.hpp"
 
 # define EUL	2.71828182845904523536f
 # define TAU	6.28318530717958647692f
@@ -63,7 +64,7 @@ struct Operate
 	{
 		if( b == 0 ) // Ensures this is 0-div safe
 		{
-			// TODO : add a warning here
+			qlog( "Operate : Division by zero : voiding value", ERROR, 0 );
 			return T( 0 ); // Avoid division by zero
 		}
 		return T( a / b );
@@ -81,7 +82,7 @@ struct Operate
 	{
 		if( b == 0 ) // Ensures this is 0-div safe
 		{
-			// TODO : add a warning here
+			qlog( "Operate : Modulo by zero : voiding value", ERROR, 0 );
 			return T( 0 ); // Avoid division by zero
 		}
 		return T( fmod( double( a ), double( b )));
@@ -111,11 +112,11 @@ struct Operate
 	inline static T lerp( const T &a, const T &b, const T &t ){ return T( a + ( t * ( b - a ))); } //  Linear interpolation between a and b base on factor t
 	inline static T norm( const T &a, const T &b, const T &v )// Clamps between [0,1] according to v's relative position between a and b
 	{
-		if(   v <= Operate::min( a, b ))   return T( 0 );
-		elif( v >= Operate::max( a, b ))   return T( 1 );
+		if(   v <= Operate::min( a, b )) return T( 0 );
+		elif( v >= Operate::max( a, b )) return T( 1 );
 		elif( a == b ) // Ensures this is 0-div safe
 		{
-			// TODO : add a warning
+			qlog( "Operate : normalizing to zero-span : voiding value", ERROR, 0 );
 			return T( 0 );
 		}
 		else return T( ( v - Operate::min( a, b )) / Operate::span( a, b )); // Normalizating v between a and b

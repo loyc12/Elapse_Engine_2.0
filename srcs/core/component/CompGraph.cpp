@@ -25,8 +25,7 @@ CompGraph::CompGraph() : CompBase(), _col( COMP_DEF_COLOUR), _cirRad( COMP_DEF_C
 }
 CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col, fixed_t cirRad ):
 	CompBase( Ntt, isActive ),
-	_col( col ),
-	_cirRad( cirRad )
+	_col( col ), _cirRad( cirRad )
 {
 	flog( 0 );
 }

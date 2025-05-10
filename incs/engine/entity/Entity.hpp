@@ -67,40 +67,38 @@ class Entity
 		TTC inline CompT *getComponent( comp_type_e compType ) const { ( void )compType; return getComponent< CompT >(); } // NOTE " temporary workaround"
 		TTC CompT *getComponent() const;
 
-		TTC inline bool isCompActive() const { return isCompActive( CompT::getStaticType() ); }
-		bool isCompActive( comp_type_e compType ) const;
-
-		TTC inline bool isCompActive( bool activate ){ return isCompActive( CompT::getStaticType(), activate ); }
 		bool isCompActive( comp_type_e compType, bool activate );
-
-		TTC inline bool hasComponent() const { return hasComponent( CompT::getStaticType() ); }
+		bool isCompActive( comp_type_e compType ) const;
 		bool hasComponent( comp_type_e compType ) const;
 
-		TTC inline bool addComponent(){ return addComponent( CompT::getStaticType() ); }
-		bool addComponent( comp_type_e compType );
-
-		TTC inline bool delComponent(){ return delComponent( CompT::getStaticType() ); }
-		bool delComponent( comp_type_e compType, bool freeMem = true );
-
-		TTC inline bool tickComponent(){ return tickComponent( CompT::getStaticType() ); }
+		bool addComponent(  comp_type_e compType );
+		bool delComponent(  comp_type_e compType, bool freeMem = true );
 		bool tickComponent( comp_type_e compType );
+
+		TTC inline bool isCompActive( bool activate ){ return isCompActive( CompT::getStaticType(), activate ); }
+		TTC inline bool isCompActive() const { return isCompActive( CompT::getStaticType() ); }
+		TTC inline bool hasComponent() const { return hasComponent( CompT::getStaticType() );
+		}
+		TTC inline bool addComponent(){  return addComponent(  CompT::getStaticType() ); }
+		TTC inline bool delComponent(){  return delComponent(  CompT::getStaticType() ); }
+		TTC inline bool tickComponent(){ return tickComponent( CompT::getStaticType() ); }
 
 	// ================ SPECIFIC COMPONENT METHODS ( aka, shortcuts to avoid calling getComponent() over and over again )
 		// NOTE : these should handle all failure cases gracefully ( e.g. if the component des not exist )
 
 	// ======== POSITION COMPONENT
 		vec2_t getPos() const;
-		bool setPos( vec2_t pos );
+		bool setPos(  vec2_t pos );
 		bool movePos( vec2_t delta );
 
 		angle_t getAngle() const;
-		bool setAngle( angle_t angle );
+		bool setAngle(  angle_t angle );
 		bool moveAngle( angle_t delta );
 
 		fixed_t getLineDistTo( id_t id ) const;
 		fixed_t getLineDistTo( Entity  *other ) const;
 		fixed_t getLineDistTo( CompPos *other ) const;
-		fixed_t getLineDistTo( vec2_t  other ) const;
+		fixed_t getLineDistTo( vec2_t   other ) const;
 		fixed_t getLineDistTo( fixed_t x, fixed_t y ) const;
 
 	// ======== MOVEMENT COMPONENT
@@ -115,12 +113,12 @@ class Entity
 		bool moveAcc( vec2_t delta );
 
 		angle_t getRotVel() const;
-		bool setRotVel( angle_t rotVel );
-		bool moveRotVel( angle_t delta );
+		bool setRotVel(  angle_t rotVel );
+		bool moveRotVel( angle_t  delta );
 
 		angle_t getRotAcc() const;
-		bool setRotAcc( angle_t rotAcc );
-		bool moveRotAcc( angle_t delta );
+		bool setRotAcc(  angle_t rotAcc );
+		bool moveRotAcc( angle_t  delta );
 
 	// ======== PHYSICS COMPONENT
 		bool isDynamic() const;
@@ -131,8 +129,8 @@ class Entity
 		bool setCollidable( bool isCollide );
 
 		fixed_t getHitRad() const;
-		bool setHitRad( fixed_t hitRad );
-		bool moveHitRad( fixed_t delta );
+		bool setHitRad(  fixed_t hitRad );
+		bool moveHitRad( fixed_t  delta );
 
 	// ======== GRAPHICS COMPONENT
 		Color getCol() const;
@@ -140,11 +138,11 @@ class Entity
 		bool moveCol( Color delta );
 
 		fixed_t getCircleRadius() const;
-		bool setCircleRadius( fixed_t radius );
-		bool moveCircleRadius( fixed_t delta );
+		bool setCircleRadius(  fixed_t radius );
+		bool moveCircleRadius( fixed_t  delta );
 
 		//================================ OPERATORS
-		CompBase  *operator[]( comp_type_e compType ) const;
+		CompBase *operator[]( comp_type_e compType ) const;
 };
 
 typedef vector< Entity > NttVec;
