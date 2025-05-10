@@ -70,23 +70,23 @@ bool Entity::tickComponent( comp_type_e compType )
 
 // ======== POSITION COMPONENT
 
-Vector2 Entity::getPos() const
+vec2_t Entity::getPos() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_POSITION )){ return NULL_POS; }
 	return getComponent< CompPos >()->getPos();
 }
-bool Entity::setPos( Vector2 pos )
+bool Entity::setPos( vec2_t pos )
 {
 	flog( _id );
 	if( !hasComponent( COMP_POSITION )){ return false; }
 	return getComponent< CompPos >()->setPos( pos );
 }
-bool Entity::changePos( Vector2 delta )
+bool Entity::movePos( vec2_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_POSITION )){ return false; }
-	return getComponent< CompPos >()->changePos( delta );
+	return getComponent< CompPos >()->movePos( delta );
 }
 
 angle_t Entity::getAngle() const
@@ -101,36 +101,36 @@ bool Entity::setAngle( angle_t angle )
 	if( !hasComponent( COMP_POSITION )){ return false; }
 	return getComponent< CompPos >()->setAngle( angle );
 }
-bool Entity::changeAngle( angle_t delta )
+bool Entity::moveAngle( angle_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_POSITION )){ return false; }
-	return getComponent< CompPos >()->changeAngle( delta );
+	return getComponent< CompPos >()->moveAngle( delta );
 }
 
-float Entity::getLineDistTo( id_t id ) const
+fixed_t Entity::getLineDistTo( id_t id ) const
 {
 	flog( _id );
 	return getLineDistTo( GCM->getEntity( id ) );
 }
-float Entity::getLineDistTo( Entity *other ) const
+fixed_t Entity::getLineDistTo( Entity *other ) const
 {
 	flog( _id );
 	if( other == nullptr ){ return INFINITY; }
 	return getLineDistTo( other->getComponent< CompPos >() );
 }
-float Entity::getLineDistTo( CompPos *other ) const
+fixed_t Entity::getLineDistTo( CompPos *other ) const
 {
 	flog( _id );
 	if( other == nullptr ){ return INFINITY; }
 	return getLineDistTo( other->getPos() );
 }
-float Entity::getLineDistTo( Vector2 other ) const
+fixed_t Entity::getLineDistTo( vec2_t other ) const
 {
 	flog( _id );
 	return getLineDistTo( other.x, other.y );
 }
-float Entity::getLineDistTo( float x, float y ) const
+fixed_t Entity::getLineDistTo( fixed_t x, fixed_t y ) const
 {
 	flog( _id ); // NOTE : transfers to component side methodes from here
 	if( !hasComponent( COMP_POSITION )){ return INFINITY; }
@@ -139,54 +139,54 @@ float Entity::getLineDistTo( float x, float y ) const
 
 // ======== MOVEMENT COMPONENT
 
-Vector2 Entity::getVel() const
+vec2_t Entity::getVel() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return { 0, 0 }; }
 	return getComponent< CompMove >()->getVel();
 }
-float Entity::getLinearVel() const
+fixed_t Entity::getLinearVel() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return 0; }
 	return getComponent< CompMove >()->getLinearVel();
 }
-bool Entity::setVel( Vector2 vel )
+bool Entity::setVel( vec2_t vel )
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
 	return getComponent< CompMove >()->setVel( vel );
 }
-bool Entity::changeVel( Vector2 delta )
+bool Entity::moveVel( vec2_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
-	return getComponent< CompMove >()->changeVel( delta );
+	return getComponent< CompMove >()->moveVel( delta );
 }
 
-Vector2 Entity::getAcc() const
+vec2_t Entity::getAcc() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return { 0, 0 }; }
 	return getComponent< CompMove >()->getAcc();
 }
-float Entity::getLinearAcc() const
+fixed_t Entity::getLinearAcc() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return 0; }
 	return getComponent< CompMove >()->getLinearAcc();
 }
-bool Entity::setAcc( Vector2 acc )
+bool Entity::setAcc( vec2_t acc )
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
 	return getComponent< CompMove >()->setAcc( acc );
 }
-bool Entity::changeAcc( Vector2 delta )
+bool Entity::moveAcc( vec2_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
-	return getComponent< CompMove >()->changeAcc( delta );
+	return getComponent< CompMove >()->moveAcc( delta );
 }
 
 angle_t Entity::getRotVel() const
@@ -201,11 +201,11 @@ bool Entity::setRotVel( angle_t rotVel )
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
 	return getComponent< CompMove >()->setRotVel( rotVel );
 }
-bool Entity::changeRotVel( angle_t delta )
+bool Entity::moveRotVel( angle_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
-	return getComponent< CompMove >()->changeRotVel( delta );
+	return getComponent< CompMove >()->moveRotVel( delta );
 }
 
 angle_t Entity::getRotAcc() const
@@ -220,11 +220,11 @@ bool Entity::setRotAcc( angle_t rotAcc )
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
 	return getComponent< CompMove >()->setRotAcc( rotAcc );
 }
-bool Entity::changeRotAcc( angle_t delta )
+bool Entity::moveRotAcc( angle_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_MOVEMENT )){ return false; }
-	return getComponent< CompMove >()->changeRotAcc( delta );
+	return getComponent< CompMove >()->moveRotAcc( delta );
 }
 
 // ======== PHYSICS COMPONENT
@@ -257,23 +257,23 @@ bool Entity::setCollidable( bool isCollide )
 	return getComponent< CompCollide >()->setCollidable( isCollide );
 }
 
-float Entity::getHitRad() const
+fixed_t Entity::getHitRad() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_COLLIDE )){ return 0; }
 	return getComponent< CompCollide >()->getHitRad();
 }
-bool Entity::setHitRad( float hitRad )
+bool Entity::setHitRad( fixed_t hitRad )
 {
 	flog( _id );
 	if( !hasComponent( COMP_COLLIDE )){ return false; }
 	return getComponent< CompCollide >()->setHitRad( hitRad );
 }
-bool Entity::changeHitRad( float delta )
+bool Entity::moveHitRad( fixed_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_COLLIDE )){ return false; }
-	return getComponent< CompCollide >()->changeHitRad( delta );
+	return getComponent< CompCollide >()->moveHitRad( delta );
 }
 
 // ======== GRAPHIC COMPONENT
@@ -290,28 +290,28 @@ bool Entity::setCol( Color col )
 	if( !hasComponent( COMP_GRAPHIC )){ return false; }
 	return getComponent< CompGraph >()->setCol( col );
 }
-bool Entity::changeCol( Color delta )
+bool Entity::moveCol( Color delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_GRAPHIC )){ return false; }
-	return getComponent< CompGraph >()->changeCol( delta );
+	return getComponent< CompGraph >()->moveCol( delta );
 }
 
-float Entity::getCircleRadius() const
+fixed_t Entity::getCircleRadius() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_GRAPHIC )){ return 0; }
 	return getComponent< CompGraph >()->getCircleRadius();
 }
-bool Entity::setCircleRadius( float radius )
+bool Entity::setCircleRadius( fixed_t radius )
 {
 	flog( _id );
 	if( !hasComponent( COMP_GRAPHIC )){ return false; }
 	return getComponent< CompGraph >()->setCircleRadius( radius );
 }
-bool Entity::changeCircleRadius( float delta )
+bool Entity::moveCircleRadius( fixed_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_GRAPHIC )){ return false; }
-	return getComponent< CompGraph >()->changeCircleRadius( delta );
+	return getComponent< CompGraph >()->moveCircleRadius( delta );
 }

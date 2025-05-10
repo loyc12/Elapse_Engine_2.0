@@ -36,7 +36,7 @@ class CompShape : public CompBase
 		inline Shape2D getShape() const { return _shape; }
 		inline bool voidShape(){ _shape = 0; return true; }
 		inline bool setShape(    Shape2D shape ){ _shape  = shape; return true; }
-		inline bool changeShape( Shape2D delta ){ _shape += delta; return true; }
+		inline bool moveShape( Shape2D delta ){ _shape += delta; return true; }
 
 	// ================================ TICK METHODS
 		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompShape

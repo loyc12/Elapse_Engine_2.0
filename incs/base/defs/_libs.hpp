@@ -29,6 +29,9 @@
 # include <unistd.h>
 # include <string.h>
 
+# include <concepts>
+# include <type_traits>
+
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -63,6 +66,9 @@ using std::bitset;
 # define ostrs ostringstream
 
 # define tostr( x ) to_string( x )
+
+# define NOT_OF_THE_4_MAIN_TYPES( T ) \
+		( !std::same_as< T, double > && !std::same_as< T, float > && !std::same_as< T, long > && !std::same_as< T, int > )
 
 typedef bool        bit_t; //  NOTE : implement using bitarray class instead
 typedef bitset< 4 > word_t; // NOTE : implement using bitarray class instead

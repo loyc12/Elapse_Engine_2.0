@@ -12,7 +12,7 @@ class CompGraph : public CompBase
 	protected:
 	// ================================ ATTRIBUTES
 		Color _col;
-		float _cirRad; // NOTE : radius of the circle to draw ( debug graphics only )
+		fixed_t _cirRad; // NOTE : radius of the circle to draw ( debug graphics only )
 
 	// ================================ CORE METHODS
 		void onCpy( const CompGraph &rhs );
@@ -25,7 +25,7 @@ class CompGraph : public CompBase
 		CompGraph( Entity *Ntt,
 			bool  isActive = COMP_DEF_ACTIVITY,
 			Color col      = COMP_DEF_COLOUR,
-			float cirRad   = COMP_DEF_CIRRAD
+			fixed_t cirRad   = COMP_DEF_CIRRAD
 		);
 
 		CompGraph( const CompGraph &rhs );
@@ -45,15 +45,15 @@ class CompGraph : public CompBase
 		inline bool setCol( const Color &Col ){ _col = Col; return true; }
 		inline bool setCol( byte_t r, byte_t g, byte_t b, byte_t a ){ _col.r = r; _col.g = g; _col.b = b; _col.a = a; return true; }
 
-		inline bool changeCol( const Color &delta ){ _col.r += delta.r; _col.g += delta.g; _col.b += delta.b; _col.a += delta.a; return true; }
-		inline bool changeCol( byte_t dr, byte_t dg, byte_t db, byte_t da ){ _col.r += dr; _col.g += dg; _col.b += db; _col.a += da; return true; }
+		inline bool moveCol( const Color &delta ){ _col.r += delta.r; _col.g += delta.g; _col.b += delta.b; _col.a += delta.a; return true; }
+		inline bool moveCol( byte_t dr, byte_t dg, byte_t db, byte_t da ){ _col.r += dr; _col.g += dg; _col.b += db; _col.a += da; return true; }
 
 	// ================ CIRCLE RADIUS METHODS
-		inline float getCircleRadius() const { return _cirRad; }
+		inline fixed_t getCircleRadius() const { return _cirRad; }
 		inline bool voidCircleRadius(){ _cirRad = COMP_DEF_CIRRAD; return true; } // NOTE : sets the Circle Radius to 0
 
-		inline bool setCircleRadius(    float radius ){ _cirRad = fmax( COMP_DEF_CIRRAD, radius ); return true; }
-		inline bool changeCircleRadius( float delta  ){ _cirRad = fmax( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
+		inline bool setCircleRadius(    fixed_t radius ){ _cirRad = fmax( COMP_DEF_CIRRAD, radius ); return true; }
+		inline bool moveCircleRadius( fixed_t delta  ){ _cirRad = fmax( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
 
 	// ================================ TICK METHODS
 		bool onTick() override;

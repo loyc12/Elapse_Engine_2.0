@@ -22,7 +22,7 @@ CompPos::CompPos() : CompBase(), _pos({ 0, 0 })
 {
 	flog( 0 );
 }
-CompPos::CompPos( Entity *Ntt, bool isActive, Vector2 pos ):
+CompPos::CompPos( Entity *Ntt, bool isActive, vec2_t pos ):
 	CompBase( Ntt, isActive ),
 	_pos( pos )
 {
@@ -43,7 +43,7 @@ CompPos &CompPos::operator=( const CompPos &rhs )
 
 // ================================ ACCESSORS / MUTATORS
 // ================== DISTANCE METHODS
-float CompPos::getLineDistTo( id_t id ) const
+fixed_t CompPos::getLineDistTo( id_t id ) const
 {
 	flog( 0 );
 	if( id == 0 )
@@ -53,7 +53,7 @@ float CompPos::getLineDistTo( id_t id ) const
 	}
 	return getLineDistTo( GCM->getEntity( id ) );
 }
-float CompPos::getLineDistTo( Entity *other ) const
+fixed_t CompPos::getLineDistTo( Entity *other ) const
 {
 	flog( 0 );
 	if( other == nullptr )
@@ -63,7 +63,7 @@ float CompPos::getLineDistTo( Entity *other ) const
 	}
 	return getLineDistTo( other->getComponent< CompPos >() );
 }
-float CompPos::getLineDistTo( CompPos *other ) const
+fixed_t CompPos::getLineDistTo( CompPos *other ) const
 {
 	flog( 0 );
 	if( other == nullptr )
@@ -73,12 +73,12 @@ float CompPos::getLineDistTo( CompPos *other ) const
 	}
 	return getLineDistTo( other->getPos() );
 }
-float CompPos::getLineDistTo( Vector2 other ) const
+fixed_t CompPos::getLineDistTo( vec2_t other ) const
 {
 	flog( 0 );
 	return getLineDistTo( other.x, other.y );
 }
-float CompPos::getLineDistTo( float x, float y ) const
+fixed_t CompPos::getLineDistTo( fixed_t x, fixed_t y ) const
 {
 	flog( 0 );
 	return sqrt( sqrf( x - _pos.x ) + sqrf( y - _pos.y ));

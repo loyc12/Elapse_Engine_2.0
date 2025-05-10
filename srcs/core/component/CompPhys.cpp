@@ -34,7 +34,7 @@ CompPhys::CompPhys() : CompBase(),
 	flog( 0 );
 }
 
-CompPhys::CompPhys( Entity *Ntt, bool isActive, bool isDynamic, float mass, float drag, float fric, float elas ) : CompBase( Ntt, isActive ),
+CompPhys::CompPhys( Entity *Ntt, bool isActive, bool isDynamic, fixed_t mass, fixed_t drag, fixed_t fric, fixed_t elas ) : CompBase( Ntt, isActive ),
 	_dynamic( isDynamic ),
 	_mass( fmin( COMP_MIN_MASS, mass )),
 	_drag( fmin( COMP_MIN_DRAG, drag )),
@@ -79,18 +79,18 @@ bool CompPhys::hasSisterComps() const
 	return true;
 }
 
-Vector2 CompPhys::applyDrag()
+vec2_t CompPhys::applyDrag()
 {
 	flog( 0 );
 	if( !hasSisterComps() ){ return { 0, 0 }; }
-	Vector2 dAcc = {
+	vec2_t dAcc = {
 		-_drag * getEntity()->getVel().x / _mass,
 		-_drag * getEntity()->getVel().y / _mass
 	};
-	getEntity()->changeAcc( dAcc );
+	getEntity()->moveAcc( dAcc );
 	return dAcc;
 }
-Vector2 CompPhys::applyFriction( Vector2 surfaceNormal )
+vec2_t CompPhys::applyFriction( vec2_t surfaceNormal )
 {
 	flog( 0 );
 	if( !hasSisterComps() ){ return { 0, 0 }; }
@@ -104,7 +104,7 @@ Vector2 CompPhys::applyFriction( Vector2 surfaceNormal )
 	// TODO : replace this with a real friction calculation
 	return { TEMP_VALUE, TEMP_VALUE };
 }
-Vector2 CompPhys::applyBounce( Vector2 surfaceNormal )
+vec2_t CompPhys::applyBounce( vec2_t surfaceNormal )
 {
 	flog( 0 );
 	if( !hasSisterComps() ){ return { 0, 0 }; }
@@ -121,7 +121,7 @@ Vector2 CompPhys::applyBounce( Vector2 surfaceNormal )
 
 // ================ CALCULATED PROPERTIES METHODS
 
-float CompPhys::getAvgRad() const
+fixed_t CompPhys::getAvgRad() const
 {
 	flog( 0 );
 	if( !hasEntity() )
@@ -136,35 +136,35 @@ float CompPhys::getAvgRad() const
 	}
 	return getEntity()->getHitRad();
 }
-float CompPhys::getArea() const
+fixed_t CompPhys::getArea() const
 {
 	flog( 0 );
 	return getAvgRad() * getAvgRad() * PI; // NOTE : area of a circle
 }
-float CompPhys::getDensity() const
+fixed_t CompPhys::getDensity() const
 {
 	flog( 0 );
 	return _mass / getArea(); // NOTE : density = mass / volume
 }
 
-float CompPhys::getLinearMomentum() const
+fixed_t CompPhys::getLinearMomentum() const
 {
 	flog( 0 ); // NOTE : linear momentum = mass * velocity
 	if( !hasSisterComps()){ return 0; }
 	return _mass * getEntity()->getLinearVel();
 }
-float CompPhys::getLinearEnergy() const
+fixed_t CompPhys::getLinearEnergy() const
 {
 	flog( 0 ); // NOTE : linear energy = 1/2 * mass * velocity^2
 	if( !hasSisterComps()){ return 0; }
 
-	float vel = getEntity()->getLinearVel();
+	fixed_t vel = getEntity()->getLinearVel();
 	return 0.5f * _mass * vel * vel;
 }
 
 // ================ FORCE METHODS
 
-Vector2 CompPhys::getGravAccAt( Vector2 pos ) const
+vec2_t CompPhys::getGravAccAt( vec2_t pos ) const
 {
 	flog( 0 ); // NOTE : gravity acceleration = mass * gravity / distance^2
 	if( !hasSisterComps() ){ return { 0, 0 }; }
@@ -173,7 +173,7 @@ Vector2 CompPhys::getGravAccAt( Vector2 pos ) const
 	// TODO : replace this with a real gravity calculation
 	return { TEMP_VALUE, TEMP_VALUE };
 }
-Vector2 CompPhys::applyForceTowards( float force, Vector2 dir )
+vec2_t CompPhys::applyForceTowards( fixed_t force, vec2_t dir )
 {
 	flog( 0 ); // NOTE : applies a force to the object in a given direction ( acc += force * dir / mass )
 	if( !hasSisterComps() ){ return { 0, 0 }; }
@@ -184,15 +184,15 @@ Vector2 CompPhys::applyForceTowards( float force, Vector2 dir )
 		return { 0, 0 };
 	}
 
-	float mag  = sqrt( dir.x * dir.x + dir.y * dir.y );
-	float accX = force * dir.x / ( mag * _mass );
-	float accY = force * dir.y / ( mag * _mass );
+	fixed_t mag  = Operate::sqrt( dir.x * dir.x + dir.y * dir.y );
+	fixed_t accX = force * dir.x / ( mag * _mass );
+	fixed_t accY = force * dir.y / ( mag * _mass );
 
-	getEntity()->changeAcc({ accX, accY });
+	getEntity()->moveAcc({ accX, accY });
 	return { accX, accY };
 }
 
-Vector2 CompPhys::applyForce( Vector2 force )
+vec2_t CompPhys::applyForce( vec2_t force )
 {
 	flog( 0 ); // NOTE : applies a force to the object ( acc += force / mass )
 	if( !hasSisterComps() ){ return { 0, 0 }; }
@@ -202,13 +202,13 @@ Vector2 CompPhys::applyForce( Vector2 force )
 		return { 0, 0 };
 	}
 
-	float accX = force.x / _mass;
-	float accY = force.y / _mass;
+	fixed_t accX = force.x / _mass;
+	fixed_t accY = force.y / _mass;
 
-	getEntity()->changeAcc({ accX, accY });
+	getEntity()->moveAcc({ accX, accY });
 	return { accX, accY };
 }
-Vector2 CompPhys::applyBreakForce( float breakForce )
+vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 {
 	flog( 0 ); // NOTE : applies a force in the opposite direction of the velocity ( acc -= breakForce * velocity / mass )
 	if( !hasSisterComps() ){ return { 0, 0 }; }
@@ -217,37 +217,37 @@ Vector2 CompPhys::applyBreakForce( float breakForce )
 		qlog( "CompPhys::applyBreakForce() : break force is 0", DEBUG, 0 );
 		return { 0, 0 };
 	}
-	Vector2 vel = getEntity()->getVel();
+	vec2_t vel = getEntity()->getVel();
 	if( vel.x == 0 && vel.y == 0 )
 	{
 		qlog( "CompPhys::applyBreakForce() : velocity is 0", DEBUG, 0 );
 		return { 0, 0 };
 	}
 
-	float mag = sqrt(  vel.x * vel.x + vel.y * vel.y );
-	float accX = -breakForce * vel.x / ( mag * _mass );
-	float accY = -breakForce * vel.y / ( mag * _mass );
+	fixed_t mag = Operate::sqrt(  vel.x * vel.x + vel.y * vel.y );
+	fixed_t accX = -breakForce * vel.x / ( mag * _mass );
+	fixed_t accY = -breakForce * vel.y / ( mag * _mass );
 
-	getEntity()->changeAcc({ accX, accY });
+	getEntity()->moveAcc({ accX, accY });
 	return { accX, accY };
 }
 
-Vector2 CompPhys::applyBreakFactor( float breakFactor )
+vec2_t CompPhys::applyBreakFactor( fixed_t breakFactor )
 {
 	flog( 0 ); // NOTE : multiplies the acceleration by a given factor ( acc *= breakFactor )
 	if( !hasSisterComps() ){ return { 0, 0 }; }
 
-	Vector2 acc = getEntity()->getAcc();
+	vec2_t acc = getEntity()->getAcc();
 	if( acc.x == 0 && acc.y == 0 )
 	{
 		qlog( "CompPhys::applyBreakFactor() : acceleration is 0", DEBUG, 0 );
 		return { 0, 0 };
 	}
 
-	float accX = -breakFactor * acc.x;
-	float accY = -breakFactor * acc.y;
+	fixed_t accX = -breakFactor * acc.x;
+	fixed_t accY = -breakFactor * acc.y;
 
-	getEntity()->changeAcc({ accX, accY });
+	getEntity()->moveAcc({ accX, accY });
 	return { accX, accY };
 }
 
@@ -259,7 +259,7 @@ bool CompPhys::onTick()
 	flog( 0 );
 	if( !canTick() ){ return false; }
 
-	float dt = GDTS();
+	fixed_t dt = GDTS();
 	if( dt <= 0 )
 	{
 		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );

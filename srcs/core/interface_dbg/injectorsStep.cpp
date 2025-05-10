@@ -147,8 +147,8 @@ void OnRenderUI()
 		return;
 	}
 
-	Vector2 playerWorldPos = G_PlayerNtt->getPos();
-	Vector2 playerScreenPos = GetWorldToScreen2D( playerWorldPos, *GVP->getCamera() );
+	vec2_t playerWorldPos = G_PlayerNtt->getPos();
+	vec2_t playerScreenPos = GetWorldToScreen2D( playerWorldPos, *GVP->getCamera() );
 
 	string plInfo = "G_Player  : " + to_string( ( int )playerScreenPos.x ) + ":" + to_string( ( int )playerScreenPos.y ) + " | " + to_string( ( int )playerWorldPos.x ) + ":" + to_string( ( int )playerWorldPos.y );
 	qlog( plInfo, INFO, 0 );

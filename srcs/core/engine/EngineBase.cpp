@@ -26,7 +26,7 @@ Engine *Engine::getEngine() // NOTE : static class method ( singleton )
 
 // ================================ ACCESSORS / MUTATORS
 
-float  Engine::setTimeScale( float timeScale )
+fixed_t  Engine::setTimeScale( fixed_t timeScale )
 {
 	flog( 0 );
 	if( timeScale < 0 )
@@ -58,5 +58,5 @@ Controller  *GCN = GNG->getController();
 Viewport2D  *GVP = GNG->getViewport();
 CompManager *GCM = GNG->getCompManager();
 
-float    GDTS(){ return GNG->getDeltaTimeScaled(); }
+fixed_t    GDTS(){ return GNG->getDeltaTimeScaled(); }
 inputs_s &GIN(){ return GNG->getLatestInputs(); }

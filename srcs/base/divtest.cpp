@@ -11,12 +11,12 @@ bool divtest( uint32_t d ){ if( d == 0 ){ return diverror( "a uint32_t", "zero" 
 bool divtest( uint64_t d ){ if( d == 0 ){ return diverror( "a uint64_t", "zero" ); } return true; }
 //bool divtest( fixed_t d  ){ if( d == 0 ){ return diverror( "a fixed_t",  "zero" ); } return true; }
 
-bool divtest( float d )
+bool divtest( fixed_t d )
 {
-	if( d == 0.0f ){ diverror( "a float", "zero" ); return false; }
-	if( d == NAN  ){ diverror( "a float", "NAN" );  return false; }
-	if( d == INFINITY  ){ diverror( "a float", "INFINITY" );  return false; }
-	if( d == -INFINITY ){ diverror( "a float", "-INFINITY" ); return false; }
+	if( d == 0.0f ){ diverror( "a fixed_t", "zero" ); return false; }
+	if( d == NAN  ){ diverror( "a fixed_t", "NAN" );  return false; }
+	if( d == INFINITY  ){ diverror( "a fixed_t", "INFINITY" );  return false; }
+	if( d == -INFINITY ){ diverror( "a fixed_t", "-INFINITY" ); return false; }
 	return true;
 }
 

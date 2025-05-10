@@ -8,17 +8,19 @@
 // TODO : make sure this handles rounding properly
 // TODO : use template for int and floats instead of hardcoding them
 
-# include <concepts>
-
 template< std::integral T, byte_t D >
 class FixedPoint
 {
-	static_assert( D < sizeof( T ), "FixedPoint : Template error : D >= T" );
+	static_assert( D >= sizeof( T ), "FixedPoint : Template error : D >= T" );
+	static_assert( std::integral< T > || std::floating_point< T >, "FixedPoint : Template error : T is not a number" );
+	static_assert( std::is_same< T, FixedPoint >::value == false, "FixedPoint : Template error : T is a FixedPoint" );
+
+	#define TU template < typename U >
 
 	protected:
-		T _rawValue; //                                    NOTE : can be negative, depending on the template type
-		static const byte_t _Digits = D; //                NOTE : number of decimal digits
-		static constexpr T _Scale = pow( 10, _Digits ); // NOTE : scale factor
+		T _rawValue; //                                   NOTE : can be negative, depending on the template type
+		static const byte_t _Digits = D; //               NOTE : number of decimal digits
+		static constexpr T _Scale = pow( 2, _Digits ); // NOTE : scale factor
 
 		inline void setRawValue( T val ){ _rawValue = val; }
 
@@ -29,15 +31,8 @@ class FixedPoint
 		inline FixedPoint(           const FixedPoint &fix ){ _rawValue = fix._rawValue; }
 		inline FixedPoint operator=( const FixedPoint &fix ){ _rawValue = fix._rawValue; return *this; }
 
-		inline FixedPoint( double val ){ _rawValue = T( val * _Scale ); }
-		inline FixedPoint( float  val ){ _rawValue = T( val * _Scale ); }
-		inline FixedPoint( long   val ){ _rawValue = T( val * _Scale ); }
-		inline FixedPoint( int    val ){ _rawValue = T( val * _Scale ); }
-
-		inline FixedPoint operator=( double val ){ _rawValue = T( val * _Scale ); return *this; }
-		inline FixedPoint operator=( float  val ){ _rawValue = T( val * _Scale ); return *this; }
-		inline FixedPoint operator=( long   val ){ _rawValue = T( val * _Scale ); return *this; }
-		inline FixedPoint operator=( int    val ){ _rawValue = T( val * _Scale ); return *this; }
+		inline FixedPoint(           const T &val ){ _rawValue = T( val * _Scale ); }
+		inline FixedPoint operator=( const T &val ){ _rawValue = T( val * _Scale ); return *this; }
 
 	// ============================ ACCESSORS / MUTATORS
 
@@ -48,11 +43,7 @@ class FixedPoint
 
 	// ============================ CASTING METHODS
 
-		explicit inline operator double() const { return double( _rawValue >> _Digits ); }
-		explicit inline operator float()  const { return  float( _rawValue >> _Digits ); }
-		explicit inline operator long()   const { return   long( _rawValue >> _Digits ); }
-		explicit inline operator int()    const { return    int( _rawValue >> _Digits ); }
-		explicit inline operator T()      const { return         _rawValue >> _Digits;   }
+		explicit inline operator T() const { return _rawValue / _Digits; }
 
 	// ============================ IN-CLASS OPERATORS
 
@@ -86,8 +77,6 @@ class FixedPoint
 
 		// ============================ TYPENAME OPERATORS
 
-		# define TU template < typename U >
-
 		TU inline FixedPoint operator+( const U &val ) const { return FixedPoint( Operate< T, U >::add( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
 		TU inline FixedPoint operator-( const U &val ) const { return FixedPoint( Operate< T, U >::sub( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
 		TU inline FixedPoint operator*( const U &val ) const { return FixedPoint( Operate< T, U >::mul( _rawValue, Operate< T, U >::mul( _Scale, val ))); }
@@ -111,7 +100,7 @@ class FixedPoint
 
 		inline friend std::ostream &operator<<( std::ostream &os, const FixedPoint &fix ){ os << double( fix ); return os; }
 
-		// Specialize std::is_integral for MyNumber
+		#undef TU
 
 	};
 

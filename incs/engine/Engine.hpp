@@ -31,8 +31,8 @@ class Engine
 {
 	// ================================ ATTRIBUTES
 	private:
-		float _DT; // delta time
-		float _TS; // time scale
+		fixed_t _DT; // delta time
+		fixed_t _TS; // time scale
 
 		Viewport2D  *_viewport2D;
 		Controller  *_controller;
@@ -96,9 +96,9 @@ class Engine
 		inline Entity      *getEntity( id_t id ){ return _compManager->getEntity( id ); }
 		inline CompManager *getCompManager(){     return _compManager; }
 
-		inline float updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
-		inline float getDeltaTimeScaled() const { return _DT * _TS; }
-		float setTimeScale( float timeScale );
+		inline fixed_t updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
+		inline fixed_t getDeltaTimeScaled() const { return _DT * _TS; }
+		fixed_t setTimeScale( fixed_t timeScale );
 
 		bool canEngineTick();
 
@@ -116,7 +116,7 @@ extern Viewport2D  *GVP;
 extern Controller  *GCN;
 extern CompManager *GCM;
 
-extern float    GDTS();
+extern fixed_t    GDTS();
 extern inputs_s &GIN();
 
 #endif // ENGINE_HPP

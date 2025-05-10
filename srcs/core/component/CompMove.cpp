@@ -19,11 +19,11 @@ CompMove::~CompMove()
 	flog( 0 );
 }
 
-CompMove::CompMove() : CompBase(), _vel({ 0, 0 }), _acc({ 0, 0 })
+CompMove::CompMove() : CompBase(), _vel(), _acc()
 {
 	flog( 0 );
 }
-CompMove::CompMove( Entity *Ntt, bool isActive, Vector2 vel, Vector2 acc ):
+CompMove::CompMove( Entity *Ntt, bool isActive, vec2_t vel, vec2_t acc ):
 	CompBase( Ntt, isActive ),
 	_vel( vel ),
 	_acc( acc )
@@ -68,7 +68,7 @@ bool CompMove::onTick()
 	flog( 0 );
 	if( !canTick() ){ return false; }
 
-	float dt = GDTS();
+	fixed_t dt = GDTS();
 	if( dt <= 0 )
 	{
 		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );
@@ -78,7 +78,7 @@ bool CompMove::onTick()
 	// NOTE : apply acceleration to velocity
 	_vel.x  += _acc.x * dt;
 	_vel.y  += _acc.y * dt;
-	_rotVel += float( _rotAcc ) * dt;
+	_rotVel += _rotAcc * dt;
 
 	 // NOTE : reseting acceleration after applying it, meaning it needs to be reset every tick for continual acceleration
 	_acc = COMP_DEF_ACC;
@@ -92,8 +92,8 @@ bool CompMove::onTick()
 	}
 
 	// TODO : move this logic to physic component
-	cmp->changePos( _vel.x * dt, _vel.y * dt );
-	cmp->changeAngle( float( _rotVel ) * dt );
+	cmp->movePos( _vel.x * dt, _vel.y * dt );
+	cmp->moveAngle( Operate< angle_t, fixed_t >::mul( _rotVel, dt ));
 
 	return true;
 }

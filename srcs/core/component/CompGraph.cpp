@@ -23,7 +23,7 @@ CompGraph::CompGraph() : CompBase(), _col( COMP_DEF_COLOUR), _cirRad( COMP_DEF_C
 {
 	flog( 0 );
 }
-CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col, float cirRad ):
+CompGraph::CompGraph( Entity *Ntt, bool isActive, Color col, fixed_t cirRad ):
 	CompBase( Ntt, isActive ),
 	_col( col ),
 	_cirRad( cirRad )
@@ -74,10 +74,9 @@ bool CompGraph::onTick()
 	}
 
 	DrawCircle(
-		_Ntt->getPos().x,
-		_Ntt->getPos().y,
-		_cirRad,
-		_col
+		( int )_Ntt->getPos().x,
+		( int )_Ntt->getPos().y,
+		( int )_cirRad, _col
 	);
 
 	return true;

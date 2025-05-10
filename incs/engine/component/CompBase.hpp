@@ -92,8 +92,7 @@ class CompBase
 
 // ================================ TEMPLATES
 
-#include <concepts>
-#include <type_traits>
+
 
 template <typename CompT>
 concept IsCompBase = std::is_base_of<CompBase, CompT>::value; // NOTE : this is a concept to check if a type is derived from CompBase

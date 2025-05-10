@@ -10,8 +10,8 @@ class CompMove : public CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
-		Vector2 _vel;
-		Vector2 _acc;
+		vec2_t _vel;
+		vec2_t _acc;
 
 		angle_t _rotVel; // NOTE : rotation velocity
 		angle_t _rotAcc; // NOTE : rotation acceleration
@@ -26,8 +26,8 @@ class CompMove : public CompBase
 		CompMove();
 		CompMove( Entity *Ntt,
 			bool isActive = COMP_DEF_ACTIVITY,
-			Vector2 vel   = { 0, 0 },
-			Vector2 acc   = COMP_DEF_ACC
+			vec2_t vel   = { 0, 0 },
+			vec2_t acc   = COMP_DEF_ACC
 		);
 
 		CompMove( const CompMove &rhs );
@@ -42,26 +42,26 @@ class CompMove : public CompBase
 
 	// ================ POSITION METHODS
 	// ======== VELOCITY METHODS
-		inline Vector2 getVel() const { return _vel; }
-		inline float getLinearVel() const { return sqrt(( _vel.x * _vel.x ) + ( _vel.y * _vel.y )); }
+		inline vec2_t getVel() const { return _vel; }
+		inline fixed_t getLinearVel() const { return Operate< fixed_t >::sqrt(( _vel.x * _vel.x ) + ( _vel.y * _vel.y )); }
 		inline bool voidVel(){ _vel = { 0, 0 }; return true; }
 
-		inline bool setVel( Vector2 vel ){ _vel = vel; return true; }
-		inline bool setVel( float x, float y ){ _vel.x = x; _vel.y = y; return true; }
+		inline bool setVel( vec2_t vel ){ _vel = vel; return true; }
+		inline bool setVel( fixed_t x, fixed_t y ){ _vel.x = x; _vel.y = y; return true; }
 
-		inline bool changeVel( Vector2 delta ){ _vel.x += delta.x; _vel.y += delta.y; return true; }
-		inline bool changeVel( float dx, float dy ){ _vel.x += dx; _vel.y += dy; return true; }
+		inline bool moveVel( vec2_t delta ){ _vel.x += delta.x; _vel.y += delta.y; return true; }
+		inline bool moveVel( fixed_t dx, fixed_t dy ){ _vel.x += dx; _vel.y += dy; return true; }
 
 	// ======== ACCELERATION METHODS
-		inline Vector2 getAcc() const { return _acc; }
-		inline float getLinearAcc() const { return sqrt(( _acc.x * _acc.x ) + ( _acc.y * _acc.y )); }
+		inline vec2_t getAcc() const { return _acc; }
+		inline fixed_t getLinearAcc() const { return Operate< fixed_t >::sqrt(( _acc.x * _acc.x ) + ( _acc.y * _acc.y )); }
 		inline bool voidAcc(){ _acc = COMP_DEF_ACC; return true; }
 
-		inline bool setAcc( Vector2 acc ){ _acc = acc; return true; }
-		inline bool setAcc( float x, float y ){ _acc.x = x; _acc.y = y; return true; }
+		inline bool setAcc( vec2_t acc ){ _acc = acc; return true; }
+		inline bool setAcc( fixed_t x, fixed_t y ){ _acc.x = x; _acc.y = y; return true; }
 
-		inline bool changeAcc( Vector2 delta ){ _acc.x += delta.x; _acc.y += delta.y; return true; }
-		inline bool changeAcc( float dx, float dy ){ _acc.x += dx; _acc.y += dy; return true; }
+		inline bool moveAcc( vec2_t delta ){ _acc.x += delta.x; _acc.y += delta.y; return true; }
+		inline bool moveAcc( fixed_t dx, fixed_t dy ){ _acc.x += dx; _acc.y += dy; return true; }
 
 	// ================ ROTATION METHODS
 	// ======== VELOCITY METHODS
@@ -69,14 +69,14 @@ class CompMove : public CompBase
 		inline bool voidRotVel(){ _rotVel = 0; return true; }
 
 		inline bool setRotVel( angle_t rotVel ){ _rotVel = rotVel; return true; }
-		inline bool changeRotVel( angle_t delta ){ _rotVel += delta; return true; }
+		inline bool moveRotVel( angle_t delta ){ _rotVel += delta; return true; }
 
 	// ======== ACCELERATION METHODS
 		inline angle_t getRotAcc() const { return _rotAcc; }
 		inline bool voidRotAcc(){ _rotAcc = 0; return true; }
 
 		inline bool setRotAcc( angle_t rotAcc ){ _rotAcc = rotAcc; return true; }
-		inline bool changeRotAcc( angle_t delta ){ _rotAcc += delta; return true; }
+		inline bool moveRotAcc( angle_t delta ){ _rotAcc += delta; return true; }
 
 	// ================================ TICK METHODS
 		bool onTick() override;

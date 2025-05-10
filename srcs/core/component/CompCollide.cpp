@@ -22,7 +22,7 @@ CompCollide::CompCollide() : CompBase(), _collidable( COMP_DEF_COLLIDE ), _hitRa
 {
 	flog( 0 );
 }
-CompCollide::CompCollide( Entity *Ntt, bool isActive, bool isCollidable, float hitRad ):
+CompCollide::CompCollide( Entity *Ntt, bool isActive, bool isCollidable, fixed_t hitRad ):
 	CompBase(   Ntt, isActive ),
 	_collidable( isCollidable ),
 	_hitRad(    hitRad )
@@ -77,7 +77,7 @@ bool CompCollide::onTick()
 	flog( 0 );
 	if( !canTick() ){ return false; }
 
-	float dt = GDTS();
+	fixed_t dt = GDTS();
 	if( dt <= 0 )
 	{
 		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );

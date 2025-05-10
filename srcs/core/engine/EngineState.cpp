@@ -78,7 +78,7 @@ bool Engine::switchState(  engineState_e targetState )
 bool Engine::togglePause()
 {
 	flog( 0 );
-	static float prevTS = 0.0f;
+	static fixed_t prevTS = 0.0f;
 
 	if( prevTS == 0.0f )
 	{

@@ -18,7 +18,7 @@ class CompText : public CompBase
 		string _title;
 		string _content;
 		string _fontName; // NOTE : name of the font to draw
-		float  _fontSize; // NOTE : size of the font to draw
+		fixed_t  _fontSize; // NOTE : size of the font to draw
 		Color  _fontCol; //  NOTE : colour of the text to draw
 
 	// ================================ CORE METHODS
@@ -33,7 +33,7 @@ class CompText : public CompBase
 			bool   isActive = COMP_DEF_ACTIVITY,
 			string title    = COMP_DEF_TEXT,
 			string content  = COMP_DEF_TEXT,
-			float  fontSize = COMP_DEF_FONTSIZE,
+			fixed_t  fontSize = COMP_DEF_FONTSIZE,
 			Color  fontCol  = COMP_DEF_COLOR
 		);
 
@@ -64,10 +64,10 @@ class CompText : public CompBase
 		inline bool setFontName(   string fontName ){ _fontName  = fontName; return true; }
 		inline bool addToFontName( string fontName ){ _fontName += fontName; return true; }
 
-		inline float getFontSize() const { return _fontSize; }
+		inline fixed_t getFontSize() const { return _fontSize; }
 		inline bool voidFontSize(){ _fontSize = COMP_DEF_FONTSIZE; return true; }
-		inline bool setFontSize( float fontSize ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, fontSize); return true; }
-		inline bool changeFontSize( float delta ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, _fontSize + delta ); return true; }
+		inline bool setFontSize( fixed_t fontSize ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, fontSize); return true; }
+		inline bool moveFontSize( fixed_t delta ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, _fontSize + delta ); return true; }
 
 		inline Color getFontCol() const { return _fontCol; }
 		inline bool voidFontCol(){ _fontCol = COMP_DEF_COLOR; return true; } // NOTE : sets the Color to 0
@@ -75,8 +75,8 @@ class CompText : public CompBase
 		inline bool setFontCol( const Color &Col ){ _fontCol = Col; return true; }
 		inline bool setFontCol( byte_t r, byte_t g, byte_t b, byte_t a ){ _fontCol.r = r; _fontCol.g = g; _fontCol.b = b; _fontCol.a = a; return true; }
 
-		inline bool changeFontCol( const Color &delta ){ _fontCol.r += delta.r; _fontCol.g += delta.g; _fontCol.b += delta.b; _fontCol.a += delta.a; return true; }
-		inline bool changeFontCol( byte_t dr, byte_t dg, byte_t db, byte_t da ){ _fontCol.r += dr; _fontCol.g += dg; _fontCol.b += db; _fontCol.a += da; return true; }
+		inline bool moveFontCol( const Color &delta ){ _fontCol.r += delta.r; _fontCol.g += delta.g; _fontCol.b += delta.b; _fontCol.a += delta.a; return true; }
+		inline bool moveFontCol( byte_t dr, byte_t dg, byte_t db, byte_t da ){ _fontCol.r += dr; _fontCol.g += dg; _fontCol.b += db; _fontCol.a += da; return true; }
 
 	// ================================ TICK METHODS
 		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompText

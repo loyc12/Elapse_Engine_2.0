@@ -89,38 +89,38 @@ class Entity
 		// NOTE : these should handle all failure cases gracefully ( e.g. if the component des not exist )
 
 	// ======== POSITION COMPONENT
-		Vector2 getPos() const;
-		bool setPos( Vector2 pos );
-		bool changePos( Vector2 delta );
+		vec2_t getPos() const;
+		bool setPos( vec2_t pos );
+		bool movePos( vec2_t delta );
 
 		angle_t getAngle() const;
 		bool setAngle( angle_t angle );
-		bool changeAngle( angle_t delta );
+		bool moveAngle( angle_t delta );
 
-		float getLineDistTo( id_t id ) const;
-		float getLineDistTo( Entity  *other ) const;
-		float getLineDistTo( CompPos *other ) const;
-		float getLineDistTo( Vector2  other ) const;
-		float getLineDistTo( float x, float y ) const;
+		fixed_t getLineDistTo( id_t id ) const;
+		fixed_t getLineDistTo( Entity  *other ) const;
+		fixed_t getLineDistTo( CompPos *other ) const;
+		fixed_t getLineDistTo( vec2_t  other ) const;
+		fixed_t getLineDistTo( fixed_t x, fixed_t y ) const;
 
 	// ======== MOVEMENT COMPONENT
-		Vector2 getVel() const;
-		float getLinearVel() const;
-		bool setVel( Vector2 vel );
-		bool changeVel( Vector2 delta );
+		vec2_t getVel() const;
+		fixed_t getLinearVel() const;
+		bool setVel( vec2_t vel );
+		bool moveVel( vec2_t delta );
 
-		Vector2 getAcc() const;
-		float getLinearAcc() const;
-		bool setAcc( Vector2 acc );
-		bool changeAcc( Vector2 delta );
+		vec2_t getAcc() const;
+		fixed_t getLinearAcc() const;
+		bool setAcc( vec2_t acc );
+		bool moveAcc( vec2_t delta );
 
 		angle_t getRotVel() const;
 		bool setRotVel( angle_t rotVel );
-		bool changeRotVel( angle_t delta );
+		bool moveRotVel( angle_t delta );
 
 		angle_t getRotAcc() const;
 		bool setRotAcc( angle_t rotAcc );
-		bool changeRotAcc( angle_t delta );
+		bool moveRotAcc( angle_t delta );
 
 	// ======== PHYSICS COMPONENT
 		bool isDynamic() const;
@@ -130,18 +130,18 @@ class Entity
 		bool isCollidable() const;
 		bool setCollidable( bool isCollide );
 
-		float getHitRad() const;
-		bool setHitRad( float hitRad );
-		bool changeHitRad( float delta );
+		fixed_t getHitRad() const;
+		bool setHitRad( fixed_t hitRad );
+		bool moveHitRad( fixed_t delta );
 
 	// ======== GRAPHICS COMPONENT
 		Color getCol() const;
 		bool setCol( Color col );
-		bool changeCol( Color delta );
+		bool moveCol( Color delta );
 
-		float getCircleRadius() const;
-		bool setCircleRadius( float radius );
-		bool changeCircleRadius( float delta );
+		fixed_t getCircleRadius() const;
+		bool setCircleRadius( fixed_t radius );
+		bool moveCircleRadius( fixed_t delta );
 
 		//================================ OPERATORS
 		CompBase  *operator[]( comp_type_e compType ) const;
