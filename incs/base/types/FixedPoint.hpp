@@ -8,14 +8,27 @@
 // TODO : make sure this handles rounding properly
 // TODO : use template for int and floats instead of hardcoding them
 
+#ifndef ANGLE_HPP_FORWARD // forward declaration
+# define ANGLE_HPP_FORWARD
+
+	class Angle;
+
+	namespace std
+	{
+		template <> struct is_integral<       Angle > : std::true_type {};
+		template <> struct is_floating_point< Angle > : std::true_type {};
+	}
+
+#endif // ANGLE_HPP
+
 template< std::integral T, byte_t D >
 class FixedPoint
 {
-	static_assert( D >= sizeof( T ), "FixedPoint : Template error : D >= T" );
-	static_assert( std::integral< T > || std::floating_point< T >, "FixedPoint : Template error : T is not a number" );
-	static_assert( std::is_same< T, FixedPoint >::value == false,  "FixedPoint : Template error : T is a FixedPoint" );
+	static_assert( D >= sizeof( T ),                                         "FixedPoint : Template error : D is greater than T" );
+	static_assert( std::is_integral_v< T > || std::is_floating_point_v< T >, "FixedPoint : Template error : T is not a number" );
+	static_assert( std::is_same_v< T, FixedPoint > == false,                 "FixedPoint : Template error : T is a FixedPoint" );
 
-	#define TU template < typename U, typename = std::enable_if_t<( !std::is_same< U, FixedPoint >::value && ( std::is_integral< U >::value || std::is_floating_point< U >::value ))>>
+	#define TU template < typename U, typename = std::enable_if_t<( !std::is_same_v< U, FixedPoint > && ( std::is_integral_v< U > || std::is_floating_point_v< U > ))>>
 
 	protected:
 		T _scaledValue; //                          NOTE : real value multiplied by _Scale
@@ -30,7 +43,10 @@ class FixedPoint
 		inline FixedPoint(           const FixedPoint &fix ){ _scaledValue = fix._scaledValue; }
 		inline FixedPoint operator=( const FixedPoint &fix ){ _scaledValue = fix._scaledValue; return *this; }
 
-		inline FixedPoint(           const T &val ){ _scaledValue = static_cast< T >( val * _Scale ); }
+		inline FixedPoint(           const T &val )
+		{
+			_scaledValue = static_cast< T >( val * _Scale );
+		}
 		inline FixedPoint operator=( const T &val ){ _scaledValue = static_cast< T >( val * _Scale ); return *this; }
 
 	// ============================ ACCESSORS / MUTATORS
@@ -154,11 +170,8 @@ class FixedPoint
 
 	namespace std
 	{
-		template < std::integral T, byte_t D >
-		struct is_integral< FixedPoint< T, D >>       : std::true_type {};
-
-		template < std::integral T, byte_t D >
-		struct is_floating_point< FixedPoint< T, D >> : std::true_type {};
+		template < std::integral T, byte_t D > struct is_integral<       FixedPoint< T, D >> : std::true_type {};
+		template < std::integral T, byte_t D > struct is_floating_point< FixedPoint< T, D >> : std::true_type {};
 	}
 
 // ============================ SIGNED FIXED POINT TYPES

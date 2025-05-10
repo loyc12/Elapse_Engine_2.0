@@ -92,6 +92,7 @@ bool CompMove::onTick()
 	}
 
 	// TODO : move this logic to physic component
+	qlog( "MOVING BY : " + to_string( _vel * dt ), INFO, getEntityID() );
 	cmp->movePos( _vel.x * dt, _vel.y * dt );
 	cmp->moveAngle( _rotVel * dt );
 

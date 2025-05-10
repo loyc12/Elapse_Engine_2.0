@@ -43,10 +43,11 @@ class CompCollide : public CompBase
 
 	// ================ RADIUS METHODS
 		inline fixed_t getHitRad() const { return _hitRad; }
-		inline bool voidHitRad(){ _hitRad = COMP_DEF_HITRAD; return true; }
+		inline bool   voidHitRad(){ _hitRad = COMP_DEF_HITRAD; return true; }
 
-		inline bool setHitRad(  fixed_t hitRad ){ _hitRad = fmax( 0.0f, hitRad); return true; }
-		inline bool moveHitRad( fixed_t delta  ){ _hitRad = fmax( 0.0f, _hitRad + delta); return true; }
+		inline bool setHitRad(   fixed_t hitRad ){ _hitRad = fmax( 0.0f,  hitRad) ; return true; }
+		inline bool moveHitRad(  fixed_t delta  ){ _hitRad = fmax( 0.0f, _hitRad + delta); return true; }
+		inline bool scaleHitRad( fixed_t scale  ){ _hitRad = fmax( 0.0f, _hitRad * scale); return true; }
 
 	// ================================ COLLISION METHODS
 		// NOTE : checks if the component is colliding with a point ( with or without its own collision radius )

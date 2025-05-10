@@ -11,7 +11,7 @@ class CompGraph : public CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
-		Color _col;
+		Color   _col;
 		fixed_t _cirRad; // NOTE : radius of the circle to draw ( debug graphics only )
 
 	// ================================ CORE METHODS
@@ -24,8 +24,8 @@ class CompGraph : public CompBase
 		CompGraph();
 		CompGraph( Entity *Ntt,
 			bool  isActive = COMP_DEF_ACTIVITY,
-			Color col      = COMP_DEF_COLOUR,
-			fixed_t cirRad   = COMP_DEF_CIRRAD
+			Color      col = COMP_DEF_COLOUR,
+			fixed_t cirRad = COMP_DEF_CIRRAD
 		);
 
 		CompGraph( const CompGraph &rhs );
@@ -50,10 +50,11 @@ class CompGraph : public CompBase
 
 	// ================ CIRCLE RADIUS METHODS
 		inline fixed_t getCircleRadius() const { return _cirRad; }
-		inline bool voidCircleRadius(){ _cirRad = COMP_DEF_CIRRAD; return true; } // NOTE : sets the Circle Radius to 0
+		inline bool   voidCircleRadius(){ _cirRad = COMP_DEF_CIRRAD; return true; } // NOTE : sets the Circle Radius to 0
 
-		inline bool setCircleRadius(    fixed_t radius ){ _cirRad = fmax( COMP_DEF_CIRRAD, radius ); return true; }
-		inline bool moveCircleRadius( fixed_t delta  ){ _cirRad = fmax( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
+		inline bool setCircleRadius(   fixed_t radius ){ _cirRad = fmax( COMP_DEF_CIRRAD,  radius );        return true; }
+		inline bool moveCircleRadius(  fixed_t delta  ){ _cirRad = fmax( COMP_DEF_CIRRAD, _cirRad + delta); return true; }
+		inline bool scaleCircleRadius( fixed_t scale  ){ _cirRad = fmax( COMP_DEF_CIRRAD, _cirRad * scale); return true; }
 
 	// ================================ TICK METHODS
 		bool onTick() override;

@@ -9,7 +9,7 @@ class Pos2
 {
 	static_assert( std::integral< T > || std::floating_point< T >, "Pos2 : Template error : T is not a number" );
 
-	#define TU template < typename U, typename = std::enable_if_t< std::is_integral< U >::value || std::is_floating_point< U >::value >>
+	#define TU template < typename U, typename = std::enable_if_t< std::is_integral_v< U > || std::is_floating_point_v< U > >>
 
 	public:
 		T x;

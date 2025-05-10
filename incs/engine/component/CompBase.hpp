@@ -95,7 +95,7 @@ class CompBase
 
 
 template <typename CompT>
-concept IsCompBase = std::is_base_of<CompBase, CompT>::value; // NOTE : this is a concept to check if a type is derived from CompBase
+concept IsCompBase = std::is_base_of_v<CompBase, CompT>; // NOTE : this is a concept to check if a type is derived from CompBase
 
 // NOTE : this is shorthand to define a template that requires the type to be derived from CompBase
 # define TTC template <typename CompT> requires IsCompBase< CompT >

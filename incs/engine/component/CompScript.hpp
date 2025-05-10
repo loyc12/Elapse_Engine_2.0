@@ -21,7 +21,7 @@ class CompScript : public CompBase
 
 		CompScript();
 		CompScript( Entity *Ntt,
-			bool   isActive   = COMP_DEF_ACTIVITY,
+			bool     isActive = COMP_DEF_ACTIVITY,
 			string scriptPath = COMP_DEF_SCRIPT
 		);
 
@@ -35,6 +35,7 @@ class CompScript : public CompBase
 	// ================ SOUND METHODS
 		inline string getScriptPath() const { return _scriptPath; }
 		inline bool voidScriptPath(){ _scriptPath = COMP_DEF_SCRIPT; return true; }
+
 		inline bool setScriptPath(   string scriptPath ){ _scriptPath  = scriptPath; return true; }
 		inline bool addToScriptPath( string scriptPath ){ _scriptPath += scriptPath; return true; }
 

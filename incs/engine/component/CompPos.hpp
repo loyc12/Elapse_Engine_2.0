@@ -23,8 +23,8 @@ class CompPos : public CompBase
 
 		CompPos();
 		CompPos( Entity *Ntt,
-			bool    isActive = COMP_DEF_ACTIVITY,
-			vec2_t pos      = COMP_DEF_POS
+			bool isActive = COMP_DEF_ACTIVITY,
+			vec2_t    pos = COMP_DEF_POS
 		);
 
 		CompPos( const CompPos &rhs );
@@ -47,12 +47,16 @@ class CompPos : public CompBase
 		inline bool movePos( vec2_t delta ){ _pos.x += delta.x; _pos.y += delta.y; return true; }
 		inline bool movePos( fixed_t dx, fixed_t dy ){ _pos.x += dx; _pos.y += dy; return true; }
 
+		inline bool scalePos( fixed_t scale ){    _pos.x *= scale; _pos.y *= scale; return true; }
+		inline bool scalePos( fixed_t sx, fixed_t sy ){ _pos.x *= sx; _pos.y *= sy; return true; }
+
 	// ================ ROTATION METHODS
 		inline angle_t getAngle() const { return _angle; }
 		inline bool   voidAngle(){ _angle = 0; return true; }
 
-		inline bool setAngle( angle_t angle ){ _angle = angle; return true; }
-		inline bool moveAngle( angle_t delta ){ _angle += delta; return true; }
+		inline bool setAngle(   angle_t angle ){ _angle  = angle; return true; }
+		inline bool moveAngle(  angle_t delta ){ _angle += delta; return true; }
+		inline bool scaleAngle( fixed_t scale ){ _angle *= scale; return true; }
 
 	// ================ DISTANCE METHODS
 		// NOTE : returns the distance this would need to travel to reach the other point

@@ -21,8 +21,8 @@ class CompShape : public CompBase
 
 		CompShape();
 		CompShape( Entity *Ntt,
-			bool    isActive = COMP_DEF_ACTIVITY,
-			Shape2D shape    = 0
+			bool isActive = COMP_DEF_ACTIVITY,
+			Shape2D shape = 0
 		);
 
 		CompShape( const CompShape &rhs );
@@ -34,9 +34,11 @@ class CompShape : public CompBase
 
 	// ================ POSITION METHODS
 		inline Shape2D getShape() const { return _shape; }
-		inline bool voidShape(){ _shape = 0; return true; }
-		inline bool setShape(    Shape2D shape ){ _shape  = shape; return true; }
-		inline bool moveShape( Shape2D delta ){ _shape += delta; return true; }
+		inline bool  voidShape(){ _shape = 0; return true; }
+
+		inline bool setShape(   Shape2D shape ){ _shape  = shape; return true; }
+		inline bool moveShape(  Shape2D delta ){ _shape += delta; return true; }
+		inline bool scaleShape( Shape2D scale ){ _shape *= scale; return true; }
 
 	// ================================ TICK METHODS
 		inline bool onTick() override { return _active; } // NOTE : No additional behavior for CompShape
