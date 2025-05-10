@@ -159,7 +159,7 @@ fixed_t CompPhys::getLinearEnergy() const
 	if( !hasSisterComps()){ return 0; }
 
 	fixed_t vel = getEntity()->getLinearVel();
-	return 0.5f * _mass * vel * vel;
+	return _mass * vel * vel * 0.5f;
 }
 
 // ================ FORCE METHODS
@@ -184,7 +184,7 @@ vec2_t CompPhys::applyForceTowards( fixed_t force, vec2_t dir )
 		return { 0, 0 };
 	}
 
-	fixed_t mag  = Operate::sqrt( dir.x * dir.x + dir.y * dir.y );
+	fixed_t mag  = Operate< fixed_t >::sqrt( dir.x * dir.x + dir.y * dir.y );
 	fixed_t accX = force * dir.x / ( mag * _mass );
 	fixed_t accY = force * dir.y / ( mag * _mass );
 
@@ -224,7 +224,7 @@ vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 		return { 0, 0 };
 	}
 
-	fixed_t mag = Operate::sqrt(  vel.x * vel.x + vel.y * vel.y );
+	fixed_t mag = Operate< fixed_t >::sqrt(  vel.x * vel.x + vel.y * vel.y );
 	fixed_t accX = -breakForce * vel.x / ( mag * _mass );
 	fixed_t accY = -breakForce * vel.y / ( mag * _mass );
 

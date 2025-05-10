@@ -58,30 +58,30 @@ class CompPhys : public CompBase
 	// ================ MASS METHODS
 		inline fixed_t getMass() const { return _mass; }
 		inline bool voidMass(){ _mass = COMP_MIN_MASS; return true; }
-		inline bool setMass(  fixed_t mass  ){ _mass = Operate< fixed_t, float >::max( mass, COMP_MIN_MASS ); return true; }
-		inline bool moveMass( fixed_t delta ){ _mass = Operate< fixed_t, float >::max( _mass + delta, COMP_MIN_MASS ); return true; }
+		inline bool setMass(  fixed_t mass  ){ _mass = Operate< fixed_t >::max( mass, COMP_MIN_MASS ); return true; }
+		inline bool moveMass( fixed_t delta ){ _mass = Operate< fixed_t >::max( _mass + delta, COMP_MIN_MASS ); return true; }
 
 	// ================ DRAG METHODS
 		inline fixed_t getDrag() const { return _drag; }
 		inline bool voidDrag(){ _drag = COMP_MIN_DRAG; return true; }
-		inline bool setDrag(  fixed_t drag  ){ _drag = Operate< fixed_t, float >::max( drag, COMP_MIN_DRAG ); return true; }
-		inline bool moveDrag( fixed_t delta ){ _drag = Operate< fixed_t, float >::max( _drag + delta, COMP_MIN_DRAG ); return true; }
+		inline bool setDrag(  fixed_t drag  ){ _drag = Operate< fixed_t >::max( drag, COMP_MIN_DRAG ); return true; }
+		inline bool moveDrag( fixed_t delta ){ _drag = Operate< fixed_t >::max( _drag + delta, COMP_MIN_DRAG ); return true; }
 
 		vec2_t applyDrag(); // NOTE : applies a force in the opposite direction of the velocity ( acc -= drag * velocity / mass )
 
 	// ================ FRICTION METHODS
 		inline fixed_t getFric() const { return _fric; }
 		inline bool voidFric(){ _fric = COMP_MIN_FRIC; return true; }
-		inline bool setFric(  fixed_t fric  ){ _fric = Operate< fixed_t, float >::max( fric, COMP_MIN_FRIC ); return true; }
-		inline bool moveFric( fixed_t delta ){ _fric = Operate< fixed_t, float >::max( _fric + delta, COMP_MIN_FRIC ); return true; }
+		inline bool setFric(  fixed_t fric  ){ _fric = Operate< fixed_t >::max( fric, COMP_MIN_FRIC ); return true; }
+		inline bool moveFric( fixed_t delta ){ _fric = Operate< fixed_t >::max( _fric + delta, COMP_MIN_FRIC ); return true; }
 
 		vec2_t applyFriction( vec2_t surfaceNormal ); // NOTE : applies a force perpendicular to the normal of the surface ( acc -= friction * normal / mass )
 
 	// ================ ELASTICITY METHODS
 		inline fixed_t getElas() const { return _elas; }
 		inline bool voidElas(){ _elas = COMP_MIN_ELAS; return true; }
-		inline bool setElas(  fixed_t elas  ){ _elas = Operate< fixed_t, float >::max( elas, COMP_MIN_ELAS ); return true; }
-		inline bool moveElas( fixed_t delta ){ _elas = Operate< fixed_t, float >::max( _elas + delta, COMP_MIN_ELAS ); return true; }
+		inline bool setElas(  fixed_t elas  ){ _elas = Operate< fixed_t >::max( elas, COMP_MIN_ELAS ); return true; }
+		inline bool moveElas( fixed_t delta ){ _elas = Operate< fixed_t >::max( _elas + delta, COMP_MIN_ELAS ); return true; }
 
 		vec2_t applyBounce( vec2_t surfaceNormal ); //  NOTE : applies a force along the normal of the surface (
 

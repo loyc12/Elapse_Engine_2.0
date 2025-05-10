@@ -15,8 +15,8 @@ bool divtest( fixed_t d )
 {
 	if( d == 0.0f ){ diverror( "a fixed_t", "zero" ); return false; }
 	if( d == NAN  ){ diverror( "a fixed_t", "NAN" );  return false; }
-	if( d == INFINITY  ){ diverror( "a fixed_t", "INFINITY" );  return false; }
-	if( d == -INFINITY ){ diverror( "a fixed_t", "-INFINITY" ); return false; }
+	if( d == LONG_MAX  ){ diverror( "a fixed_t", "LONG_MAX" );  return false; }
+	if( d == -LONG_MAX ){ diverror( "a fixed_t", "-LONG_MAX" ); return false; }
 	return true;
 }
 
@@ -24,8 +24,8 @@ bool divtest( double d )
 {
 	if( d == 0.0 ){ diverror( "a double", "zero" ); return false; }
 	if( d == NAN ){ diverror( "a double", "NAN" );  return false; }
-	if( d == INFINITY  ){ diverror( "a double", "INFINITY" );  return false; }
-	if( d == -INFINITY ){ diverror( "a double", "-INFINITY" ); return false; }
+	if( d == LONG_MAX  ){ diverror( "a double", "LONG_MAX" );  return false; }
+	if( d == -LONG_MAX ){ diverror( "a double", "-LONG_MAX" ); return false; }
 	return true;
 }
 
@@ -33,7 +33,7 @@ bool divtest( long double d )
 {
 	if( d == 0.0 ){ diverror( "a long double", "zero" ); return false; }
 	if( d == NAN ){ diverror( "a long double", "NAN" );  return false; }
-	if( d == INFINITY  ){ diverror( "a long double", "INFINITY" );  return false; }
-	if( d == -INFINITY ){ diverror( "a long double", "-INFINITY" ); return false; }
+	if( d == LONG_MAX  ){ diverror( "a long double", "LONG_MAX" );  return false; }
+	if( d == -LONG_MAX ){ diverror( "a long double", "-LONG_MAX" ); return false; }
 	return true;
 }

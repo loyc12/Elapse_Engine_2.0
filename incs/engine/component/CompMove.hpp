@@ -4,7 +4,7 @@
 # include <raylib.h>
 # include "../component/CompBase.hpp"
 
-# define COMP_DEF_ACC { 0, 0 } // NOTE : default acceleration for the component ( for simple gravity effect )
+# define COMP_DEF_ACC vec2_t() // NOTE : default acceleration for the component ( for simple gravity effect )
 
 class CompMove : public CompBase
 {
@@ -26,8 +26,8 @@ class CompMove : public CompBase
 		CompMove();
 		CompMove( Entity *Ntt,
 			bool isActive = COMP_DEF_ACTIVITY,
-			vec2_t vel   = { 0, 0 },
-			vec2_t acc   = COMP_DEF_ACC
+			vec2_t vel    = vec2_t(),
+			vec2_t acc    = COMP_DEF_ACC
 		);
 
 		CompMove( const CompMove &rhs );
@@ -44,7 +44,7 @@ class CompMove : public CompBase
 	// ======== VELOCITY METHODS
 		inline vec2_t getVel() const { return _vel; }
 		inline fixed_t getLinearVel() const { return Operate< fixed_t >::sqrt(( _vel.x * _vel.x ) + ( _vel.y * _vel.y )); }
-		inline bool voidVel(){ _vel = { 0, 0 }; return true; }
+		inline bool voidVel(){ _vel = vec2_t() ; return true; }
 
 		inline bool setVel( vec2_t vel ){ _vel = vel; return true; }
 		inline bool setVel( fixed_t x, fixed_t y ){ _vel.x = x; _vel.y = y; return true; }

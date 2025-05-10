@@ -93,7 +93,7 @@ bool CompMove::onTick()
 
 	// TODO : move this logic to physic component
 	cmp->movePos( _vel.x * dt, _vel.y * dt );
-	cmp->moveAngle( Operate< angle_t, fixed_t >::mul( _rotVel, dt ));
+	cmp->moveAngle( _rotVel * dt );
 
 	return true;
 }

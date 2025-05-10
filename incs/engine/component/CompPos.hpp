@@ -4,8 +4,8 @@
 # include <raylib.h>
 # include "../component/CompBase.hpp"
 
-# define COMP_DEF_POS { 0, 0 } // NOTE : default position for the component
-# define NULL_POS { INFINITY, INFINITY } // NOTE : means you fucked up bud
+# define COMP_DEF_POS vec2_t() // NOTE : { 0, 0 } default position for the component
+# define NULL_POS { LONG_MAX, LONG_MAX } // NOTE : means you fucked up bud
 
 class CompPos : public CompBase
 {

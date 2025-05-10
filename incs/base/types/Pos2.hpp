@@ -9,6 +9,8 @@ class Pos2
 {
 	static_assert( std::integral< T > || std::floating_point< T >, "Pos2 : Template error : T is not a number" );
 
+	#define TU template < typename U, typename = std::enable_if_t< std::is_integral< U >::value || std::is_floating_point< U >::value >>
+
 	public:
 		T x;
 		T y;
@@ -16,24 +18,25 @@ class Pos2
 	// ============================ CONSTRUCTORS / DESTRUCTORS
 		inline ~Pos2(){};
 
-		inline Pos2()                : x(  0  ), y(  0  ){} // defaults to a position of ( 0, 0 )
-		inline Pos2( T x_, T y_ )    : x(  x_ ), y(  y_ ){}
-		inline Pos2( const Pos2 &p ) : x( p.x ), y( p.y ){}
-		inline Pos2 operator=( const Pos2 &p ){ x = p.x; y = p.y; return *this; }
+		inline Pos2()                              : x(  0  ), y(  0  ){} // defaults to a position of ( 0, 0 )
+		TU inline Pos2( const U &v )               : x(  v  ), y(  v  ){} // defaults to a position of ( val, val )
+		TU inline Pos2( const U &x_, const U &y_ ) : x(  x_ ), y(  y_ ){}
+		inline Pos2( const Pos2    &p )            : x( p.x ), y( p.y ){}
+		inline Pos2( const Vector2 &v )            : x( v.x ), y( v.y ){}
 
-		inline Pos2( const Vector2    &v )  : x(   v.x  ), y(   v.y  ){}
-		inline Pos2( double x_, double y_ ) : x( T( x_ )), y( T( y_ )){}
-		inline Pos2( float  x_, float  y_ ) : x( T( x_ )), y( T( y_ )){}
-		inline Pos2( long   x_, long   y_ ) : x( T( x_ )), y( T( y_ )){}
-		inline Pos2( int    x_, int    y_ ) : x( T( x_ )), y( T( y_ )){}
+		inline Pos2 operator=( const Pos2    &p ){ x = p.x; y = p.y; return *this; }
+		inline Pos2 operator=( const Vector2 &v ){ x = v.x; y = v.y; return *this; } // angle as a vector
 
 	// ============================ ACCESSORS / MUTATORS
 		inline void setX( T x_ ){ x = x_; }
 		inline void setY( T y_ ){ y = y_; }
 
-		inline void setPos( T x_, T y_ ){       x = x_;  y = y_;  }
-		inline void setPos( const Pos2 &p ){    x = p.x; y = p.y; }
-		inline void setPos( const Vector2 &v ){ x = v.x; y = v.y; }
+		inline void setPos( const T &x_, const T &y_ ){    x = x_;  y = y_;  }
+		inline void setPos( const Vector2 &v ){            x = v.x; y = v.y; }
+		inline void setPos( const Pos2 &p ){               x = p.x; y = p.y; }
+
+		TU inline void setPos( const U &x_, const U &y_ ){ x = x_;  y = y_; }
+		TU inline void setPos( const U &v ){               x = v;   y = v;  }
 
 		inline T getX() const { return x; }
 		inline T getY() const { return y; }
@@ -66,12 +69,9 @@ class Pos2
 
 	// ============================ CASTING METHODS
 
-		explicit inline operator Vector2() const { return Vector2{ float( x ), float( y )}; } // returns the vector as a Vector2
-		explicit inline operator double()  const { return double( len() ); } // returns the vector's lenght
-		explicit inline operator float()   const { return  float( len() ); } // returns the vector's lenght
-		explicit inline operator long()    const { return   long( len() ); } // returns the vector's lenght
-		explicit inline operator int()     const { return    int( len() ); } // returns the vector's lenght
-		explicit inline operator T()       const { return      T( len() ); } // returns the vector's lenght
+		inline operator Vector2() const { return Vector2{ float( x ), float( y )}; } // returns the vector as a Vector2
+
+		TU inline operator U() const { return U( len() ); } // returns the vector's lenght
 
 	// ============================ IN-CLASS OPERATORS
 
@@ -128,8 +128,6 @@ class Pos2
 
 	// ============================ TYPENAME OPERATORS
 
-		#define TU template < typename U >
-
 		TU inline Pos2 operator+( const U &val ) const { return Pos2( Operate< T, U >::add( x, val), Operate< T, U >::add( y, val)); }
 		TU inline Pos2 operator-( const U &val ) const { return Pos2( Operate< T, U >::sub( x, val), Operate< T, U >::sub( y, val)); }
 		TU inline Pos2 operator*( const U &val ) const { return Pos2( Operate< T, U >::mul( x, val), Operate< T, U >::mul( y, val)); }
@@ -154,7 +152,8 @@ class Pos2
 
 	// ============================ FRIEND METHODS
 
-		inline friend std::ostream &operator<<( std::ostream &os, const Pos2 &p ){ os << "(" << p.x << ", " << p.y << ")"; return os; }
+		inline friend std::ostream &operator<<( std::ostream &os, const Pos2 &p ){ os << "[" << p.x << ":" << p.y << "]"; return os; }
+		inline friend std::string to_string( const Pos2 &p ){ return "[" + to_string( p.x ) + ":" + to_string( p.y ) + "]"; }
 };
 
 // ============================ DEFAULT POS2 TYPES

@@ -116,13 +116,13 @@ fixed_t Entity::getLineDistTo( id_t id ) const
 fixed_t Entity::getLineDistTo( Entity *other ) const
 {
 	flog( _id );
-	if( other == nullptr ){ return INFINITY; }
+	if( other == nullptr ){ return LONG_MAX; }
 	return getLineDistTo( other->getComponent< CompPos >() );
 }
 fixed_t Entity::getLineDistTo( CompPos *other ) const
 {
 	flog( _id );
-	if( other == nullptr ){ return INFINITY; }
+	if( other == nullptr ){ return LONG_MAX; }
 	return getLineDistTo( other->getPos() );
 }
 fixed_t Entity::getLineDistTo( vec2_t other ) const
@@ -133,7 +133,7 @@ fixed_t Entity::getLineDistTo( vec2_t other ) const
 fixed_t Entity::getLineDistTo( fixed_t x, fixed_t y ) const
 {
 	flog( _id ); // NOTE : transfers to component side methodes from here
-	if( !hasComponent( COMP_POSITION )){ return INFINITY; }
+	if( !hasComponent( COMP_POSITION )){ return LONG_MAX; }
 	return getComponent< CompPos >()->getLineDistTo( x, y );
 }
 

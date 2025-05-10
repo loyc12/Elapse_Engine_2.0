@@ -8,9 +8,9 @@ void Viewport2D::init()
 	flog( 0 );
 	_targetFPS = WINDOW_DEFAULT_FPS;
 
-	_windowSize    = { SCREEN_DEFAULT_WIDTH, SCREEN_DEFAULT_HEIGHT };
-	_mousePos      = { 0, 0 };
-	_mouseWorldPos = { 0, 0 };
+	_windowSize    = vec2_t( SCREEN_DEFAULT_WIDTH, SCREEN_DEFAULT_HEIGHT );
+	_mousePos      = vec2_t( 0 );
+	_mouseWorldPos = vec2_t( 0 );
 
 	_camera.target   = { 0.0f, 0.0f };
 	_camera.zoom     = DEFAULT_ZOOM;
@@ -66,8 +66,8 @@ Camera2D *Viewport2D::getCamera(){ return &_camera; }
 vec2_t Viewport2D::getTarget() const { return _camera.target; }
 void Viewport2D::moveTarget( vec2_t offset )
 {
-	_camera.target.x += offset.x;
-	_camera.target.y += offset.y;
+	_camera.target.x += float( offset.x );
+	_camera.target.y += float( offset.y );
 }
 void Viewport2D::setTarget( vec2_t target, bool overrideTracking )
 {
@@ -88,7 +88,7 @@ void Viewport2D::setTarget( vec2_t target, bool overrideTracking )
 
 fixed_t Viewport2D::getZoom(){ return _camera.zoom; }
 void  Viewport2D::setZoom(   fixed_t zoom ){   _camera.zoom = zoom; }
-void  Viewport2D::scaleZoom( fixed_t factor ){ _camera.zoom *= factor; }
+void  Viewport2D::scaleZoom( fixed_t factor ){ _camera.zoom *= float( factor ); }
 
 fixed_t Viewport2D::getRotation(){ return _camera.rotation; }
 //void Viewport2D::setRotation( fixed_t rotation ){ _camera.rotation = rotation; }

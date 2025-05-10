@@ -18,7 +18,7 @@ CompPos::~CompPos()
 	flog( 0 );
 }
 
-CompPos::CompPos() : CompBase(), _pos({ 0, 0 })
+CompPos::CompPos() : CompBase(), _pos()
 {
 	flog( 0 );
 }
