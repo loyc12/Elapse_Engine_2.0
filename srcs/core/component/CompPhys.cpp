@@ -85,7 +85,7 @@ bool CompPhys::hasSisterComps() const
 vec2_t CompPhys::applyDrag()
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return { 0, 0 }; }
+	if( !hasSisterComps() ){ return vec2_t(); }
 	vec2_t dAcc = {
 		-_drag * getEntity()->getVel().x / _mass,
 		-_drag * getEntity()->getVel().y / _mass
@@ -96,11 +96,11 @@ vec2_t CompPhys::applyDrag()
 vec2_t CompPhys::applyFriction( vec2_t surfaceNormal )
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return { 0, 0 }; }
-	if( surfaceNormal.x == 0 && surfaceNormal.y == 0 )
+	if( !hasSisterComps() ){ return vec2_t(); }
+	if( surfaceNormal == 0 )
 	{
 		qlog( "CompPhys::applyFriction() : surface normal is 0", DEBUG, 0 );
-		return { 0, 0 };
+		return vec2_t();
 	}
 
 	( void )surfaceNormal;
@@ -110,11 +110,11 @@ vec2_t CompPhys::applyFriction( vec2_t surfaceNormal )
 vec2_t CompPhys::applyBounce( vec2_t surfaceNormal )
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return { 0, 0 }; }
-	if( surfaceNormal.x == 0 && surfaceNormal.y == 0 )
+	if( !hasSisterComps() ){ return vec2_t(); }
+	if( surfaceNormal == 0 )
 	{
 		qlog( "CompPhys::applyBounce() : surface normal is 0", DEBUG, 0 );
-		return { 0, 0 };
+		return vec2_t();
 	}
 
 	( void )surfaceNormal;
@@ -170,92 +170,111 @@ fixed_t CompPhys::getLinearEnergy() const
 vec2_t CompPhys::getGravAccAt( vec2_t pos ) const
 {
 	flog( 0 ); // NOTE : gravity acceleration = mass * gravity / distance^2
-	if( !hasSisterComps() ){ return { 0, 0 }; }
+	if( !hasSisterComps() ){ return vec2_t(); }
 
 	( void )pos;
 	// TODO : replace this with a real gravity calculation
 	return { TEMP_VALUE, TEMP_VALUE };
 }
+
 vec2_t CompPhys::applyForceTowards( fixed_t force, vec2_t dir )
 {
 	flog( 0 ); // NOTE : applies a force to the object in a given direction ( acc += force * dir / mass )
-	if( !hasSisterComps() ){ return { 0, 0 }; }
-	if( force == 0 ){ return { 0, 0 }; }
-	if( dir.x == 0 && dir.y == 0 )
+	if( !hasSisterComps() ){ return vec2_t(); }
+	if( force == 0 ){ return vec2_t(); }
+	if( dir == 0 )
 	{
 		qlog( "CompPhys::applyForceFrom() : direction is 0", DEBUG, 0 );
-		return { 0, 0 };
+		return vec2_t();
 	}
+	dir.normalize();
 
 	fixed_t mag  = Operate< fixed_t >::sqrt( dir.x * dir.x + dir.y * dir.y );
-	fixed_t accX = force * dir.x / ( mag * _mass );
-	fixed_t accY = force * dir.y / ( mag * _mass );
+	fixed_t ax = force * dir.x / ( mag * _mass );
+	fixed_t ay = force * dir.y / ( mag * _mass );
 
-	getEntity()->moveAcc({ accX, accY });
-	return { accX, accY };
+	getEntity()->moveAcc({ ax, ay });
+	return { ax, ay };
 }
 
 vec2_t CompPhys::applyForce( vec2_t force )
 {
 	flog( 0 ); // NOTE : applies a force to the object ( acc += force / mass )
-	if( !hasSisterComps() ){ return { 0, 0 }; }
-	if( force.x == 0 && force.y == 0 )
+	if( !hasSisterComps() ){ return vec2_t(); }
+	if( force == 0 )
 	{
 		qlog( "CompPhys::applyForce() : force is 0", DEBUG, 0 );
-		return { 0, 0 };
+		return vec2_t();
 	}
 
-	fixed_t accX = force.x / _mass;
-	fixed_t accY = force.y / _mass;
+	fixed_t ax = force.x / _mass;
+	fixed_t ay = force.y / _mass;
 
-	getEntity()->moveAcc({ accX, accY });
-	return { accX, accY };
+	getEntity()->moveAcc({ ax, ay });
+	return { ax, ay };
 }
+
 vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 {
 	flog( 0 ); // NOTE : applies a force in the opposite direction of the velocity ( acc -= breakForce * velocity / mass )
-	if( !hasSisterComps() ){ return { 0, 0 }; }
+	if( !hasSisterComps() ){ return vec2_t(); }
 	if( breakForce == 0 )
 	{
-		qlog( "CompPhys::applyBreakForce() : break force is 0", DEBUG, 0 );
-		return { 0, 0 };
+		qlog( "CompPhys::applyBreakForce() : break force is 0 : skipping maths", DEBUG, 0 );
+		return vec2_t();
 	}
-	vec2_t vel = getEntity()->getVel();
-	if( vel.x == 0 && vel.y == 0 )
+	if( breakForce < 0 )
 	{
-		qlog( "CompPhys::applyBreakForce() : velocity is 0", DEBUG, 0 );
-		return { 0, 0 };
+		qlog( "CompPhys::applyBreakForce() : break force is negative", WARN, 0 );
+		breakForce = o_abs( breakForce );
+	}
+
+	vec2_t vel = getEntity()->getVel();
+	if( vel == 0 )
+	{
+		qlog( "CompPhys::applyBreakForce() : velocity is 0 : skipping maths", DEBUG, 0 );
+		return vec2_t();
 	}
 
 	// TODO : Check if this is correct
-	// TODO : handle when the velocity is 0
 	// Accelerates by breakForce in the opposite direction of the velocity
 
 	fixed_t mag  = Operate< fixed_t >::sqrt( vel.x * vel.x + vel.y * vel.y );
-	fixed_t accX = -breakForce * vel.x / ( mag * _mass );
-	fixed_t accY = -breakForce * vel.y / ( mag * _mass );
+	fixed_t ax = -breakForce * vel.x / ( mag * _mass );
+	fixed_t ay = -breakForce * vel.y / ( mag * _mass );
 
-	getEntity()->moveAcc({ accX, accY });
-	return { accX, accY };
+	getEntity()->moveAcc({ ax, ay });
+	return { ax, ay };
 }
 
 vec2_t CompPhys::applyBreakFactor( fixed_t breakFactor )
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return { 0, 0 }; }
+	if( !hasSisterComps() ){ return vec2_t(); }
 
-	vec2_t acc = getEntity()->getAcc();
-	if( acc.x == 0 && acc.y == 0 )
+	if( breakFactor == 0 )
 	{
-		qlog( "CompPhys::applyBreakFactor() : acceleration is 0", DEBUG, 0 );
-		return { 0, 0 };
+		qlog( "CompPhys::applyBreakFactor() : break factor is 0 : skipping maths", DEBUG, 0 );
+		return vec2_t();
+	}
+	if( breakFactor < 0 || breakFactor > 1 )
+	{
+		qlog( "CompPhys::applyBreakFactor() : break factor is not between 0 and 1", WARN, 0 );
+		breakFactor = o_clmp( o_abs( breakFactor ), fixed_t( 0 ), fixed_t( 1 ));
 	}
 
-	fixed_t accX = -breakFactor * acc.x;
-	fixed_t accY = -breakFactor * acc.y;
+	vec2_t vel = getEntity()->getVel();
+	if( vel == 0 )
+	{
+		qlog( "CompPhys::applyBreakFactor() : velocity is 0 : skipping maths", DEBUG, 0 );
+		return vec2_t();
+	}
 
-	getEntity()->moveAcc({ accX, accY });
-	return { accX, accY };
+	fixed_t ax = -breakFactor * vel.x;
+	fixed_t ay = -breakFactor * vel.y;
+
+	getEntity()->moveAcc({ ax, ay });
+	return { ax, ay };
 }
 
 

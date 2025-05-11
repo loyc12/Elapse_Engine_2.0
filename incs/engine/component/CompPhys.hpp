@@ -109,7 +109,7 @@ class CompPhys : public CompBase
 
 		vec2_t applyForce(       vec2_t force ); //     NOTE : applies a force to the object ( acc += force / mass )
 		vec2_t applyBreakForce(  fixed_t breakForce ); //  NOTE : applies a force in the opposite direction of the velocity ( acc -= breakForce * velocity / mass )
-		vec2_t applyBreakFactor( fixed_t breakFactor ); // NOTE : multiplies the acceleration by a given factor ( acc *= breakFactor )
+		vec2_t applyBreakFactor( fixed_t breakFactor ); // NOTE : applies an acceleration to cancel out a given portion of the current velocity ( acc = -breakFactor * velocity )
 
 		// TODO : make sure these make sense
 		//vec2_t applyRotForce(       fixed_t rotForce ); //       NOTE : applies a rotational force to the object ( rotAcc += rotForce / mass )

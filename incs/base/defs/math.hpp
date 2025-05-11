@@ -19,8 +19,37 @@
 # define powf(  a, b ) std::pow( a, b ) //      NOTE : this is a workaround for the pow function in the Operate class
 # define rootf( a, b ) std::pow( a, 1.0f/b ) // NOTE : this is a workaround for the pow function in the Operate class
 
+
+# ifndef ANGLE_HPP_FORWARD // forward declaration
+#  define ANGLE_HPP_FORWARD
+
+	class Angle;
+
+	namespace std
+	{
+		template <> struct is_integral<       Angle > : std::true_type {};
+		template <> struct is_floating_point< Angle > : std::true_type {};
+	}
+
+# endif // ANGLE_HPP
+
+# ifndef FIXED_POINT_HPP_FORWARD
+#  define FIXED_POINT_HPP_FORWARD
+
+	template< std::integral T, byte_t D >
+	class FixedPoint;
+
+	namespace std
+	{
+		template < std::integral T, byte_t D > struct is_integral<       FixedPoint< T, D >> : std::true_type {};
+		template < std::integral T, byte_t D > struct is_floating_point< FixedPoint< T, D >> : std::true_type {};
+	}
+
+# endif // FIXED_POINT_HPP
+
+
 // NOTE : return value is always of type T
-template < typename T, typename U = T, typename V = T >
+template < typename T = FixedPoint< int64_t, 32 >, typename U = T, typename V = U >
 struct Operate
 {
 	static_assert( std::integral< T > || std::floating_point< T >, "Operate: T must be a numeric type" );
@@ -124,62 +153,63 @@ struct Operate
 };
 
 	// ============================ SHORTHAND FUNCTIONS
-/*
-#define TW template < typename W >
 
-TW inline static W abs(  const W &a ){ return Operate::abs(  a ); } // Absolute value
-TW inline static W sign( const W &a ){ return Operate::sign( a ); } // Sign
 
-TW inline static W sqr(  const W &a ){ return Operate::sqr(  a ); } // Square
-TW inline static W sqrt( const W &a ){ return Operate::sqrt( a ); } // Square root
+# define TU template < typename U = FixedPoint< int64_t, 32 >, typename = std::enable_if_t<( std::is_integral_v< U > || std::is_floating_point_v< U > )>>
 
-TW inline static W cub(  const W &a ){ return Operate::cub(  a ); } // Cube
-TW inline static W cbrt( const W &a ){ return Operate::cbrt( a ); } // Cube root
+TU inline static U o_abs(  const U &a ){ return Operate< U >::abs(  a ); } // Absolute value
+TU inline static U o_sign( const U &a ){ return Operate< U >::sign( a ); } // Sign
 
-TW inline static W d2r(  const W &a ){ return Operate::d2r( a ); } // Degrees to radians
-TW inline static W r2d(  const W &a ){ return Operate::r2d( a ); } // Radians to degrees
+TU inline static U o_sqr(  const U &a ){ return Operate< U >::sqr(  a ); } // Square
+TU inline static U o_sqrt( const U &a ){ return Operate< U >::sqrt( a ); } // Square root
 
-TW inline static W sin(  const W &a ){ return Operate::sin(  a ); } // Sine
-TW inline static W cos(  const W &a ){ return Operate::cos(  a ); } // Cosine
-TW inline static W tan(  const W &a ){ return Operate::tan(  a ); } // Tangent
+TU inline static U o_cub(  const U &a ){ return Operate< U >::cub(  a ); } // Cube
+TU inline static U o_cbrt( const U &a ){ return Operate< U >::cbrt( a ); } // Cube root
 
-TW inline static W sec(  const W &a ){ return Operate::sec(  a ); } // Secant
-TW inline static W csc(  const W &a ){ return Operate::csc(  a ); } // Cosecant
-TW inline static W cot(  const W &a ){ return Operate::cot(  a ); } // Cotangent
+TU inline static U o_d2r(  const U &a ){ return Operate< U >::d2r( a ); } // Degrees to radians
+TU inline static U o_r2d(  const U &a ){ return Operate< U >::r2d( a ); } // Radians to degrees
 
-TW inline static W asin( const W &a ){ return Operate::asin( a ); } // Inverse sine
-TW inline static W acos( const W &a ){ return Operate::acos( a ); } // Inverse cosine
-TW inline static W atan( const W &a ){ return Operate::atan( a ); } // Inverse tangent
+TU inline static U o_sin(  const U &a ){ return Operate< U >::sin(  a ); } // Sine
+TU inline static U o_cos(  const U &a ){ return Operate< U >::cos(  a ); } // Cosine
+TU inline static U o_tan(  const U &a ){ return Operate< U >::tan(  a ); } // Tangent
 
-TW inline static W atan2( const W &a, const W &b ){ return Operate::atan2( a, b ); } // Inverse tangent of y/x
+TU inline static U o_sec(  const U &a ){ return Operate< U >::sec(  a ); } // Secant
+TU inline static U o_csc(  const U &a ){ return Operate< U >::csc(  a ); } // Cosecant
+TU inline static U o_cot(  const U &a ){ return Operate< U >::cot(  a ); } // Cotangent
 
-TW inline static W add(  const W &a, const W &b ){ return Operate::add(  a, b ); } // Addition
-TW inline static W sub(  const W &a, const W &b ){ return Operate::sub(  a, b ); } // Subtraction
-TW inline static W mul(  const W &a, const W &b ){ return Operate::mul(  a, b ); } // Multiplication
-TW inline static W div(  const W &a, const W &b ){ return Operate::div(  a, b ); } // Division
+TU inline static U o_asin( const U &a ){ return Operate< U >::asin( a ); } // Inverse sine
+TU inline static U o_acos( const U &a ){ return Operate< U >::acos( a ); } // Inverse cosine
+TU inline static U o_atan( const U &a ){ return Operate< U >::atan( a ); } // Inverse tangent
 
-TW inline static W pow(  const W &a, const W &b ){ return Operate::pow(  a, b ); } // Power
-TW inline static W root( const W &a, const W &b ){ return Operate::root( a, b ); } // Root
+TU inline static U o_atan2( const U &a, const U &b ){ return Operate< U >::atan2( a, b ); } // Inverse tangent of y/x
 
-TW inline static W min(  const W &a, const W &b ){ return Operate::min(  a, b ); } // Minimum
-TW inline static W avg(  const W &a, const W &b ){ return Operate::avg(  a, b ); } // Average
-TW inline static W max(  const W &a, const W &b ){ return Operate::max(  a, b ); } // Maximum
-TW inline static W span( const W &a, const W &b ){ return Operate::span( a, b ); } // Absolute span
+TU inline static U o_add(  const U &a, const U &b ){ return Operate< U >::add(  a, b ); } // Addition
+TU inline static U o_sub(  const U &a, const U &b ){ return Operate< U >::sub(  a, b ); } // Subtraction
+TU inline static U o_mul(  const U &a, const U &b ){ return Operate< U >::mul(  a, b ); } // Multiplication
+TU inline static U o_div(  const U &a, const U &b ){ return Operate< U >::div(  a, b ); } // Division
 
-TW inline static W mod(  const W &a, const W &b ){ return Operate::mod(  a, b ); } // Sign variable modulus
-TW inline static W pmod( const W &a, const W &b ){ return Operate::pmod( a, b ); } // Strickly positive modulus
-TW inline static W nmod( const W &a, const W &b ){ return Operate::nmod( a, b ); } // Strickly negative modulus
+TU inline static U o_pow(  const U &a, const U &b ){ return Operate< U >::pow(  a, b ); } // Power
+TU inline static U o_root( const U &a, const U &b ){ return Operate< U >::root( a, b ); } // Root
 
-TW inline static W min(  const W &a, const W &b, const W &c ){ return Operate::min(  a, b, c ); } // Minimum of 3
-TW inline static W avg(  const W &a, const W &b, const W &c ){ return Operate::avg(  a, b, c ); } // Average of 3
-TW inline static W max(  const W &a, const W &b, const W &c ){ return Operate::max(  a, b, c ); } // Maximum of 3
-TW inline static W med(  const W &a, const W &b, const W &c ){ return Operate::med(  a, b, c ); } // Median of 3
+TU inline static U o_min(  const U &a, const U &b ){ return Operate< U >::min(  a, b ); } // Minimum
+TU inline static U o_avg(  const U &a, const U &b ){ return Operate< U >::avg(  a, b ); } // Average
+TU inline static U o_max(  const U &a, const U &b ){ return Operate< U >::max(  a, b ); } // Maximum
+TU inline static U o_span( const U &a, const U &b ){ return Operate< U >::span( a, b ); } // Absolute span
 
-TW inline static W clmp( const W &m, const W &a, const W &M ){ return Operate::clmp( m, a, M ); } // Clamping between m and M
-TW inline static W lerp( const W &a, const W &b, const W &t ){ return Operate::lerp( a, b, t ); } // Linear interpolation between a and b base on factor t
-TW inline static W norm( const W &a, const W &b, const W &v ){ return Operate::norm( a, b, v ); } // Clamps between [0,1] according to v's relative position between a and b
+TU inline static U o_mod(  const U &a, const U &b ){ return Operate< U >::mod(  a, b ); } // Sign variable modulus
+TU inline static U o_pmod( const U &a, const U &b ){ return Operate< U >::pmod( a, b ); } // Strickly positive modulus
+TU inline static U o_nmod( const U &a, const U &b ){ return Operate< U >::nmod( a, b ); } // Strickly negative modulus
 
-#undef TW
-*/
+TU inline static U o_min(  const U &a, const U &b, const U &c ){ return Operate< U >::min(  a, b, c ); } // Minimum of 3
+TU inline static U o_avg(  const U &a, const U &b, const U &c ){ return Operate< U >::avg(  a, b, c ); } // Average of 3
+TU inline static U o_max(  const U &a, const U &b, const U &c ){ return Operate< U >::max(  a, b, c ); } // Maximum of 3
+TU inline static U o_med(  const U &a, const U &b, const U &c ){ return Operate< U >::med(  a, b, c ); } // Median of 3
+
+TU inline static U o_clmp( const U &m, const U &a, const U &M ){ return Operate< U >::clmp( m, a, M ); } // Clamping between m and M
+TU inline static U o_lerp( const U &a, const U &b, const U &t ){ return Operate< U >::lerp( a, b, t ); } // Linear interpolation between a and b base on factor t
+TU inline static U o_norm( const U &a, const U &b, const U &v ){ return Operate< U >::norm( a, b, v ); } // Clamps between [0,1] according to v's relative position between a and b
+
+# undef TU
+
 
 #endif // MATH_HPP

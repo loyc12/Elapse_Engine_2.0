@@ -4,7 +4,10 @@
 # include <raylib.h>
 # include "../core.hpp"
 
-template < typename T >
+# include "./FixedPoint.hpp"
+//# include "./Angle.hpp"
+
+template < typename T = fixed_t >
 class Pos2
 {
 	static_assert( std::integral< T > || std::floating_point< T >, "Pos2 : Template error : T is not a number" );
@@ -18,11 +21,12 @@ class Pos2
 	// ============================ CONSTRUCTORS / DESTRUCTORS
 		inline ~Pos2(){};
 
-		inline Pos2()                              : x(  0  ), y(  0  ){} // defaults to a position of ( 0, 0 )
-		TU inline Pos2( const U &v )               : x(  v  ), y(  v  ){} // defaults to a position of ( val, val )
-		TU inline Pos2( const U &x_, const U &y_ ) : x(  x_ ), y(  y_ ){}
-		inline Pos2( const Pos2    &p )            : x( p.x ), y( p.y ){}
-		inline Pos2( const Vector2 &v )            : x( v.x ), y( v.y ){}
+		inline Pos2()                   : x(  0  ), y(  0  ){} // defaults to a position of ( 0, 0 )
+		inline Pos2( const Pos2    &p ) : x( p.x ), y( p.y ){}
+		inline Pos2( const Vector2 &v ) : x( v.x ), y( v.y ){}
+		TU inline Pos2( const U    &v ) : x(  v  ), y(  v  ){} // defaults to a position of ( val, val )
+
+		TU inline Pos2( const U &x_, const U &y_ ) : x( x_ ), y( y_ ){}
 
 		inline Pos2 operator=( const Pos2    &p ){ x = p.x; y = p.y; return *this; }
 		inline Pos2 operator=( const Vector2 &v ){ x = v.x; y = v.y; return *this; } // angle as a vector
@@ -31,47 +35,54 @@ class Pos2
 		inline void setX( T x_ ){ x = x_; }
 		inline void setY( T y_ ){ y = y_; }
 
-		inline void setPos( const T &x_, const T &y_ ){    x = x_;  y = y_;  }
-		inline void setPos( const Vector2 &v ){            x = v.x; y = v.y; }
-		inline void setPos( const Pos2 &p ){               x = p.x; y = p.y; }
+		inline    void setPos( const T &x_, const T &y_ ){ x = x_; y = y_; }
+		TU inline void setPos( const U &x_, const U &y_ ){ x = x_; y = y_; }
 
-		TU inline void setPos( const U &x_, const U &y_ ){ x = x_;  y = y_; }
-		TU inline void setPos( const U &v ){               x = v;   y = v;  }
+		inline    void setPos( const Vector2 &v ){ x = v.x; y = v.y; }
+		inline    void setPos( const Pos2    &p ){ x = p.x; y = p.y; }
+		TU inline void setPos( const U       &v ){ x = v;   y = v;   }
 
 		inline T getX() const { return x; }
 		inline T getY() const { return y; }
 
-		inline T lenSqr() const { return sqrf( x ) + sqrf( y ); } // returns the squared length of the vector
-		inline T len()    const { return sqrtf( lenSqr() ); }
+		inline fixed_t getLenSqr() const { return sqrf( x ) + sqrf( y ); } // returns the squared length of the vector
+		inline fixed_t getLen()    const { return sqrtf( getLenSqr() ); }
 
 		// NOTE : returns the dot product of this and a
-		inline T dotP( const Pos2    &p ) const { return ( x * p.x + y * p.y ); }
-		inline T dotP( const Vector2 &v ) const { return ( x * v.x + y * v.y ); }
+		inline fixed_t dotP( const Pos2    &p ) const { return (( x * p.x ) + ( y * p.y )); }
+		inline fixed_t dotP( const Vector2 &v ) const { return (( x * v.x ) + ( y * v.y )); }
 
 		// NOTE : returns the cross product of this and a
-		inline T crossP( const Pos2    &p ) const { return ( x * p.y - y * p.x ); }
-		inline T crossP( const Vector2 &v ) const { return ( x * v.y - y * v.x ); }
+		inline fixed_t crossP( const Pos2    &p ) const { return (( x * p.y ) - ( y * p.x )); }
+		inline fixed_t crossP( const Vector2 &v ) const { return (( x * v.y ) - ( y * v.x )); }
 
 		// NOTE : returns the angle between this and a // TODO : check if this is correct
-		//nline T angle( const Pos2    &p ) const { return acosf( dotP( p ) / ( len() * p.len() )); }
-		//nline T angle( const Vector2 &v ) const { return acosf( dotP( v ) / ( len() * sqrtf( sqrf( v.x_ ) + sqrf( v.y_ )))); }
+		//inline angle_t angle( const Pos2    &p ) const { return acosf( dotP( p ) / ( len() * p.len() )); }
+		//inline angle_t angle( const Vector2 &v ) const { return acosf( dotP( v ) / ( len() * sqrtf( sqrf( v.x ) + sqrf( v.y )))); }
 
 		inline void normalize()
 		{
-			T len = len();
-			if( len != 0 )
+			fixed_t len = this->getLen();
+
+			if ( len == 0 ) // NOTE : zero-div protection
+			{
+				x = y = 0;
+				qlog( "Pos2::normalize : length is 0 : unable to normalize : reseting values to 0", WARN, 0 );
+				return;
+			}
+			elif ( len != 1 )
 			{
 				x /= len;
 				y /= len;
 			}
-			else { qlog( "Pos2::normalize : length is 0 : unable to normalize", DEBUG, 0 ); }
+			else { qlog( "Pos2::normalize : length is 1 : already normalized", DEBUG, 0 ); }
 		}
 
 	// ============================ CASTING METHODS
 
-		inline operator Vector2() const { return Vector2{ float( x ), float( y )}; } // returns the vector as a Vector2
+		inline operator Vector2() const { return Vector2{ float( x ), float( y )}; }
 
-		TU inline operator U() const { return U( len() ); } // returns the vector's lenght
+		TU inline operator U() const { return U( getLen() ); } // returns the vector's lenght
 
 	// ============================ IN-CLASS OPERATORS
 
@@ -141,29 +152,35 @@ class Pos2
 		TU inline Pos2 operator%=( const U &val ){ x = Operate< T, U >::mod( x, val ); y = Operate< T, U >::mod( y, val ); return Pos2( x, y ); }
 
 		// NOTE : compare to the length to the absolute value of val
-		TU inline bool operator==( const T &val ) const { return ( lenSqr() == sqrf( val )); } // checks if len() == |val|
-		TU inline bool operator!=( const T &val ) const { return ( lenSqr() != sqrf( val )); } // checks if len() != |val|
-		TU inline bool operator<=( const T &val ) const { return ( lenSqr() <= sqrf( val )); } // checks if len() <= |val|
-		TU inline bool operator>=( const T &val ) const { return ( lenSqr() >= sqrf( val )); } // checks if len() >= |val|
-		TU inline bool operator<(  const T &val ) const { return ( lenSqr() <  sqrf( val )); } // checks if len() <  |val|
-		TU inline bool operator>(  const T &val ) const { return ( lenSqr() >  sqrf( val )); } // checks if len() >  |val|
-
-		#undef TU
+		TU inline bool operator==( const U &val ) const { return ( getLenSqr() == Operate< U >::sqr( val )); } // checks if len() == |val|
+		TU inline bool operator!=( const U &val ) const { return ( getLenSqr() != Operate< U >::sqr( val )); } // checks if len() != |val|
+		TU inline bool operator<=( const U &val ) const { return ( getLenSqr() <= Operate< U >::sqr( val )); } // checks if len() <= |val|
+		TU inline bool operator>=( const U &val ) const { return ( getLenSqr() >= Operate< U >::sqr( val )); } // checks if len() >= |val|
+		TU inline bool operator<(  const U &val ) const { return ( getLenSqr() <  Operate< U >::sqr( val )); } // checks if len() <  |val|
+		TU inline bool operator>(  const U &val ) const { return ( getLenSqr() >  Operate< U >::sqr( val )); } // checks if len() >  |val|
 
 	// ============================ FRIEND METHODS
 
 		inline friend std::ostream &operator<<( std::ostream &os, const Pos2 &p ){ os << "[" << p.x << ":" << p.y << "]"; return os; }
 		inline friend std::string to_string( const Pos2 &p ){ return "[" + to_string( p.x ) + ":" + to_string( p.y ) + "]"; }
+
+		# undef TU
 };
 
 // ============================ DEFAULT POS2 TYPES
 
 typedef Pos2< double > pos2d_t;
-typedef Pos2< float >  pos2f_t;
-typedef Pos2< long >   pos2l_t;
-typedef Pos2< int >    pos2i_t;
+typedef Pos2< float  > pos2f_t;
 
-# include "./FixedPoint.hpp"
+typedef Pos2< int8_t  > pos2_8_t;
+typedef Pos2< int16_t > pos2_16_t;
+typedef Pos2< int32_t > pos2_32_t;
+typedef Pos2< int64_t > pos2_64_t;
+
+typedef Pos2< uint8_t  > pos2_u8_t;
+typedef Pos2< uint16_t > pos2_u16_t;
+typedef Pos2< uint32_t > pos2_u32_t;
+typedef Pos2< uint64_t > pos2_u64_t;
 
 typedef Pos2< fixed_t > vec2_t; // default position type
 

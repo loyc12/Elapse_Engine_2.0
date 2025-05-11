@@ -8,18 +8,18 @@
 // TODO : make sure this handles rounding properly
 // TODO : use template for int and floats instead of hardcoding them
 
-#ifndef ANGLE_HPP_FORWARD // forward declaration
-# define ANGLE_HPP_FORWARD
+# ifndef FIXED_POINT_HPP_FORWARD
+#  define FIXED_POINT_HPP_FORWARD
 
-	class Angle;
+	class FixedPoint;
 
 	namespace std
 	{
-		template <> struct is_integral<       Angle > : std::true_type {};
-		template <> struct is_floating_point< Angle > : std::true_type {};
+		template < std::integral T, byte_t D > struct is_integral<       FixedPoint< T, D >> : std::true_type {};
+		template < std::integral T, byte_t D > struct is_floating_point< FixedPoint< T, D >> : std::true_type {};
 	}
 
-#endif // ANGLE_HPP
+# endif // FIXED_POINT_HPP
 
 template< std::integral T, byte_t D >
 class FixedPoint
@@ -214,12 +214,6 @@ class FixedPoint
 
 	// ============================ MARKING POS2 AS VALID INTEGRAL / FLOATING POINT TYPE
 
-	namespace std
-	{
-		template < std::integral T, byte_t D > struct is_integral<       FixedPoint< T, D >> : std::true_type {};
-		template < std::integral T, byte_t D > struct is_floating_point< FixedPoint< T, D >> : std::true_type {};
-	}
-
 // ============================ SIGNED FIXED POINT TYPES
 
 typedef FixedPoint< int8_t,  4  > fxt_8x4_t;
@@ -260,7 +254,7 @@ typedef FixedPoint< uint64_t, 48 > ufx_64x48_t;
 
 // ============================ DEFAULT FIXED POINT TYPE
 
-typedef fxt_64x32_t fixed_t; // NOTE : default fixed point type
+typedef FixedPoint< int64_t, 32 > fixed_t;
 
 
 #endif // FIXED_POINT_HPP

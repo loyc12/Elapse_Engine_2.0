@@ -142,7 +142,7 @@ fixed_t Entity::getLineDistTo( fixed_t x, fixed_t y ) const
 vec2_t Entity::getVel() const
 {
 	flog( _id );
-	if( !hasComponent( COMP_MOVEMENT )){ return { 0, 0 }; }
+	if( !hasComponent( COMP_MOVEMENT )){ return vec2_t(); }
 	return getComponent< CompMove >()->getVel();
 }
 fixed_t Entity::getLinearVel() const
@@ -167,7 +167,7 @@ bool Entity::moveVel( vec2_t delta )
 vec2_t Entity::getAcc() const
 {
 	flog( _id );
-	if( !hasComponent( COMP_MOVEMENT )){ return { 0, 0 }; }
+	if( !hasComponent( COMP_MOVEMENT )){ return vec2_t(); }
 	return getComponent< CompMove >()->getAcc();
 }
 fixed_t Entity::getLinearAcc() const
