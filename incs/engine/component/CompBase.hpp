@@ -43,7 +43,7 @@ inline bool IsValidCompType( comp_type_e type )
 
 class Entity; // NOTE : forward declaration
 
-// NOTE : Components, like Entities, are created and destroyed via the Component Manager
+// NOTE : Components, like Entities, are created and destroyed via the Component Mngr
 class CompBase
 {
 	protected:

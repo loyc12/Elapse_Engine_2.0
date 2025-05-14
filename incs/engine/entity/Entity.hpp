@@ -26,7 +26,7 @@ class Entity
 {
 	private:
 	// ================================ ATTRIBUTES
-		id_t _id; //     NOTE : if the ID is 0, the entity is not supposed to be in EntityManager's map
+		id_t _id; //     NOTE : if the ID is 0, the entity is not supposed to be in EntityMngr's map
 		bool _active; // NOTE : if flase, all component are treated as unactive, when possible
 
 		CompArray _components;
@@ -38,23 +38,23 @@ class Entity
 		bool onDel();
 		bool onCpy( const Entity &rhs );
 
-		bool addToManager(); //   NOTE : automatically adds this instance to EntityManager's map
-		bool delFromManager(); // NOTE : automatically removes this instance to EntityManager's map
+		bool addToMngr(); //   NOTE : automatically adds this instance to EntityMngr's map
+		bool delFromMngr(); // NOTE : automatically removes this instance to EntityMngr's map
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
 		~Entity();
 
 		Entity();
-		Entity( bool addEntityToManager, id_t id = 0); // NOTE : should only be called by EntityManager
+		Entity( bool addEntityToMngr, id_t id = 0); // NOTE : should only be called by EntityMngr
 
 		Entity( const Entity &rhs );
 		Entity &operator=( const Entity &rhs );
 
 	// ================================ ACCESSORS / MUTATORS
 		inline id_t getID() const { return _id; }
-		inline bool setID( id_t id ){ _id = id; return true; } // NOTE : should only be called by EntityManager
-		inline bool delID(){ _id = 0; return true; } //           NOTE : should only be called by EntityManager
+		inline bool setID( id_t id ){ _id = id; return true; } // NOTE : should only be called by EntityMngr
+		inline bool delID(){ _id = 0; return true; } //           NOTE : should only be called by EntityMngr
 
 		inline bool isActive() const { return _active; }
 		inline bool setActivity( bool activate ){ _active = activate; return _active; }

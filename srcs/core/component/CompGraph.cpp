@@ -72,11 +72,7 @@ bool CompGraph::onTick()
 		return false;
 	}
 
-	DrawCircle(
-		( int )_Ntt->getPos().x,
-		( int )_Ntt->getPos().y,
-		( int )_cirRad, _col
-	);
+	GetScrnM->putCirc( getEntity()->getPos(), _cirRad, _col );
 
 	return true;
 }

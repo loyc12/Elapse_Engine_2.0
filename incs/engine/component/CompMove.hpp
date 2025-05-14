@@ -43,7 +43,7 @@ class CompMove : public CompBase
 	// ================ POSITION METHODS
 	// ======== VELOCITY METHODS
 		inline vec2_t  getVel() const { return _vel; }
-		inline fixed_t getLinearVel() const { return Operate< fixed_t >::sqrt(( _vel.x * _vel.x ) + ( _vel.y * _vel.y )); }
+		inline fixed_t getLinearVel() const { return Opfx::sqrt(( _vel.x * _vel.x ) + ( _vel.y * _vel.y )); }
 		inline bool    voidVel(){ _vel = vec2_t() ; return true; }
 
 		inline bool setVel( vec2_t vel ){ _vel = vel; return true; }
@@ -57,7 +57,7 @@ class CompMove : public CompBase
 
 	// ======== ACCELERATION METHODS
 		inline vec2_t  getAcc() const { return _acc; }
-		inline fixed_t getLinearAcc() const { return Operate< fixed_t >::sqrt(( _acc.x * _acc.x ) + ( _acc.y * _acc.y )); }
+		inline fixed_t getLinearAcc() const { return Opfx::sqrt(( _acc.x * _acc.x ) + ( _acc.y * _acc.y )); }
 		inline bool    voidAcc(){ _acc = COMP_DEF_ACC; return true; }
 
 		inline bool setAcc( vec2_t acc ){ _acc = acc; return true; }

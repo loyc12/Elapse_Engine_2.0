@@ -1,5 +1,5 @@
-#ifndef SCREEN_MANAGER_HPP
-# define SCREEN_MANAGER_HPP
+#ifndef SCREEN_MNGR_HPP
+# define SCREEN_MNGR_HPP
 
 # include <raylib.h>
 # include "../../base.hpp"
@@ -13,29 +13,27 @@
 
 # define DEBUG_FONT_SIZE 32
 # define MAX_ZOOM        0.25f
-# define DEFAULT_ZOOM    2.00f
+# define DEFAULT_ZOOM    1.00f
 # define MIN_ZOOM        16.0f
 
 # define BACKGROUND_COLOUR { 64, 64, 64, 255 }
 
-class ScreenManager
+class ScreenMngr
 {
 	private:
 	// ================================ ATTRIBUTES
-		byte_t	_targetFPS;
-
-		vec2_t	_windowSize;     // latest size of the window in pixels
-		vec2_t	_mouseScreenPos; // latest position of the mouse in pixels // TODO : move to event manager calls
+		byte_t	_targetFPS; 		 // target frames per second
+		vec2_t	_screenMngr;       // latest size of camera field of view in world units
+		vec2_t	_mouseScreenPos; // latest position of the mouse in pixels //        TODO : move these two to event mngr calls
 		vec2_t	_mouseWorldPos;  // latest position of the mouse in world units
 
-		Entity *_trackedEntity;
-
-		Camera2D _camera;       // contains target, zoom, rotation, offset // FROM RAYLIB
+		Entity  *_trackedEntity; // entity being tracked by the camera, if any
+		Camera2D _camera;        // contains target, zoom, rotation, offset //   FROM RAYLIB
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		ScreenManager();
-		~ScreenManager();
+		ScreenMngr();
+		~ScreenMngr();
 
 	private:
 	// ================================ CORE METHODS
@@ -48,8 +46,8 @@ class ScreenManager
 		void update();
 		void refresh();
 
-		void updateSize();
-		void updateMouse();
+		void updateView();
+		void updateMouse(); // TODO : move this to event mngr calls
 		void updateCamera();
 
 	// ================================ ACCESSORS / MUTATORS
@@ -57,23 +55,18 @@ class ScreenManager
 		inline vec2_t  getMouseWorldPos()  const { return _mouseWorldPos; }
 		inline fixed_t getTargetFPS()      const { return _targetFPS; }
 
-		inline fixed_t getWidth()    const { return _windowSize.x; }
-		inline fixed_t getHeight()   const { return _windowSize.y; }
-
+		inline fixed_t getWidth()    const { return _screenMngr.x; }
+		inline fixed_t getHeight()   const { return _screenMngr.y; }
 		inline fixed_t getZoom()     const { return _camera.zoom; }
 		inline fixed_t getRotation() const { return _camera.rotation; }
-
 		inline vec2_t  getOffset()   const { return _camera.target; }
 		inline vec2_t  getTarget()   const { return _camera.target; }
 
 		void setTargetFPS( byte_t fps );
-
-		void setZoom(   fixed_t zoom );
-		void scaleZoom( fixed_t factor );
-
+		void setZoom(      fixed_t zoom );
+		void scaleZoom(    fixed_t factor );
 		void setRotation(  fixed_t rotation );
 		void moveRotation( fixed_t delta );
-
 		//void setOffset(  vec2_t offset );
 		//void moveOffset( vec2_t delta );
 
@@ -111,19 +104,19 @@ class ScreenManager
 	// ================================ DRAWING METHODS
 		void putPoin( vec2_t pos,                       Color colour = WHITE );
 		void putLine( vec2_t p1,  vec2_t p2,            Color colour = WHITE, bool fill = true );
-		void putTria( vec2_t p1,  vec2_t p2, vec2_t p3, Color colour = WHITE, bool fill = true ); // NOTE : point order does not matter
+		void putTria( vec2_t p1,  vec2_t p2, vec2_t p3, Color colour = WHITE, bool fill = true, bool checkOrder = true );
 
-		void putRectCorn( vec2_t p1,  vec2_t p2,        Color colour = WHITE, bool fill = true ); // NOTE : point order does not matter
-		void putRect(     vec2_t pos, vec2_t sizes,     Color colour = WHITE, bool fill = true );
+		void putRect(     vec2_t pos, vec2_t  sizes,    Color colour = WHITE, bool fill = true );
 		void putCirc(     vec2_t pos, fixed_t radius,   Color colour = WHITE, bool fill = true );
+		void putRectCorn( vec2_t p1,  vec2_t  p2,       Color colour = WHITE, bool fill = true );
 		void putCircSect( vec2_t pos, fixed_t radius, angle_t start, angle_t end, Color colour = WHITE, bool fill = true );
 
 		void putRect( vec2_t pos, vec2_t sizes, angle_t angle,               Color colour = WHITE, bool fill = true  ); // TODO : implement me
 		void putOval( vec2_t pos, vec2_t sizes, angle_t angle,               Color colour = WHITE, bool fill = true  ); // TODO : implement me
 		void putPoly( vec2_t pos, vec2_t sizes, angle_t angle, byte_t sideC, Color colour = WHITE, bool fill = true  ); // TODO : implement me
 
-		void putForm( vec2_arr_t points, Color colour = WHITE, bool fill = true ); // NOTE : point order does not matter // TODO : implement me
+		void putForm( vec2_arr_t points, Color colour = WHITE, bool fill = true, bool checkOrder = true );// TODO : implement me
 };
 
 
-#endif // SCREEN_MANAGER_HPP
+#endif // SCREEN_MNGR_HPP

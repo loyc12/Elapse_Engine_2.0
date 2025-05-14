@@ -6,9 +6,9 @@
 # include "./base.hpp"
 
 
-# include "./engine/entity/EntityManager.hpp"
-# include "./engine/systems/EventManager.hpp"
-# include "./engine/systems/ScreenManager.hpp"
+# include "./engine/entity/EntityMngr.hpp"
+# include "./engine/systems/EventMngr.hpp"
+# include "./engine/systems/ScreenMngr.hpp"
 
 # include "./engine/interface/injectors.hpp"
 

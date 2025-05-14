@@ -3,7 +3,7 @@
 
 // ================================ CORE METHODS
 
-void EventManager::init()
+void EventMngr::init()
 {
 	flog( 0 );
 
@@ -13,24 +13,24 @@ void EventManager::init()
 
 // ================================ CONSTRUCTORS / DESTRUCTORS
 
-EventManager::EventManager()
+EventMngr::EventMngr()
 {
 	flog( 0 );
 	init();
 }
-EventManager::~EventManager()
+EventMngr::~EventMngr()
 {
 	flog( 0 );
 }
 
 // ================================ ACCESSORS
 
-inputs_s &EventManager::getLatestInputs()   { return _latestInputs; }
-inputs_s &EventManager::getPreviousInputs(){ return _previousInputs; }
+inputs_s &EventMngr::getLatestInputs()   { return _latestInputs; }
+inputs_s &EventMngr::getPreviousInputs(){ return _previousInputs; }
 
 // ================================ METHODS
 
-void EventManager::refreshInputs() // NOTE : archaic way of doing things, but it works for now
+void EventMngr::refreshInputs() // NOTE : archaic way of doing things, but it works for now
 {
 	flog( 0 );
 

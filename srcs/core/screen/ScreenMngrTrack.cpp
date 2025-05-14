@@ -3,7 +3,7 @@
 
 // ================================ ENTITY TRACKING METHODS
 
-void ScreenManager::setTarget( vec2_t target, bool overrideTracking )
+void ScreenMngr::setTarget( vec2_t target, bool overrideTracking )
 {
 	flog( 0 );
 	if( _trackedEntity )
@@ -18,13 +18,13 @@ void ScreenManager::setTarget( vec2_t target, bool overrideTracking )
 	}
 	_camera.target = target;
 }
-void ScreenManager::moveTarget( vec2_t offset )
+void ScreenMngr::moveTarget( vec2_t offset )
 {
 	_camera.target.x += float( offset.x );
 	_camera.target.y += float( offset.y );
 }
 
-bool ScreenManager::trackEntity( Entity *Ntt, bool overrideTracking )
+bool ScreenMngr::trackEntity( Entity *Ntt, bool overrideTracking )
 {
 	flog( 0 );
 	if( Ntt == nullptr )
@@ -49,7 +49,7 @@ bool ScreenManager::trackEntity( Entity *Ntt, bool overrideTracking )
 	return true;
 }
 
-bool ScreenManager::untrackEntity()
+bool ScreenMngr::untrackEntity()
 {
 	flog( 0 );
 	if( !isTracking() ){ return false; }

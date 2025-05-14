@@ -189,7 +189,7 @@ vec2_t CompPhys::applyForceTowards( fixed_t force, vec2_t dir )
 	}
 	dir.normalize();
 
-	fixed_t mag  = Operate< fixed_t >::sqrt( dir.x * dir.x + dir.y * dir.y );
+	fixed_t mag  = Opfx::sqrt( dir.x * dir.x + dir.y * dir.y );
 	fixed_t ax = force * dir.x / ( mag * _mass );
 	fixed_t ay = force * dir.y / ( mag * _mass );
 
@@ -239,7 +239,7 @@ vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 	// TODO : Check if this is correct
 	// Accelerates by breakForce in the opposite direction of the velocity
 
-	fixed_t mag  = Operate< fixed_t >::sqrt( vel.x * vel.x + vel.y * vel.y );
+	fixed_t mag  = Opfx::sqrt( vel.x * vel.x + vel.y * vel.y );
 	fixed_t ax = -breakForce * vel.x / ( mag * _mass );
 	fixed_t ay = -breakForce * vel.y / ( mag * _mass );
 

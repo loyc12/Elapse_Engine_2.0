@@ -4,9 +4,9 @@
 # include <raylib.h>
 # include "../base.hpp"
 
-# include "./entity/EntityManager.hpp"
-# include "./systems/ScreenManager.hpp"
-# include "./systems/EventManager.hpp"
+# include "./entity/EntityMngr.hpp"
+# include "./systems/ScreenMngr.hpp"
+# include "./systems/EventMngr.hpp"
 
 
 typedef enum : byte_t
@@ -34,9 +34,9 @@ class Engine
 		fixed_t _DT; // delta time
 		fixed_t _TS; // time scale
 
-		ScreenManager *_viewport2D;
-		EventManager  *_controller;
-		EntityManager *_compManager;
+		ScreenMngr *_screenMngr2D;
+		EventMngr  *_eventMngr;
+		EntityMngr *_entityMngr;
 
 		engineState_e _state;
 		std::mutex mtx_state;
@@ -84,15 +84,15 @@ class Engine
 
 		inline bool isTimePaused(){ return ( _TS == 0 ); }
 
-		inline inputs_s    &getLatestInputs(){   return _controller->getLatestInputs(); }
-		inline inputs_s    &getPreviousInputs(){ return _controller->getPreviousInputs(); }
-		inline EventManager  *getEventManager(){     return _controller; }
+		inline inputs_s    &getLatestInputs(){   return _eventMngr->getLatestInputs(); }
+		inline inputs_s    &getPreviousInputs(){ return _eventMngr->getPreviousInputs(); }
+		inline EventMngr  *getEventMngr(){     return _eventMngr; }
 
-		inline Camera2D    *getCamera(){   return _viewport2D->getCamera(); }
-		inline ScreenManager  *getScreenManager(){ return _viewport2D; }
+		inline Camera2D    *getCamera(){   return _screenMngr2D->getCamera(); }
+		inline ScreenMngr  *getScreenMngr(){ return _screenMngr2D; }
 
-		inline Entity      *getEntity( id_t id ){ return _compManager->getEntity( id ); }
-		inline EntityManager *getEntityManager(){     return _compManager; }
+		inline Entity      *getEntity( id_t id ){ return _entityMngr->getEntity( id ); }
+		inline EntityMngr *getEntityMngr(){     return _entityMngr; }
 
 		inline fixed_t updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
 		inline fixed_t getDeltaTimeScaled() const { return _DT * _TS; }
@@ -111,9 +111,9 @@ class Engine
 // Shortcuts to the engine and its components
 
 extern Engine      *GetNG;
-extern ScreenManager  *GetScrnM;
-extern EventManager  *GetEvntM;
-extern EntityManager *GetNttM;
+extern ScreenMngr  *GetScrnM;
+extern EventMngr  *GetEvntM;
+extern EntityMngr *GetNttM;
 
 extern fixed_t   GDTS();
 extern inputs_s &GIN();

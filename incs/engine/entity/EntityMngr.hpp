@@ -1,5 +1,5 @@
-#ifndef ENTITY_MANAGER_HPP
-# define ENTITY_MANAGER_HPP
+#ifndef ENTITY_MNGR_HPP
+# define ENTITY_MNGR_HPP
 
 # include "../../base.hpp"
 # include "../component/CompBase.hpp"
@@ -9,7 +9,7 @@ typedef std::unordered_map< id_t, Entity* > NttMap_t;
 
 Entity *CpyEntityOver( Entity *src, Entity *dst );
 
-class EntityManager
+class EntityMngr
 {
 	private:
 	// ================================ ATTRIBUTES
@@ -29,8 +29,8 @@ class EntityManager
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		inline  EntityManager(){ _maxID = 0; };
-		inline ~EntityManager(){ deleteAllEntities(); };
+		inline  EntityMngr(){ _maxID = 0; };
+		inline ~EntityMngr(){ deleteAllEntities(); };
 
 	// ================================ ACCESSORS / MUTATORS
 
@@ -42,7 +42,7 @@ class EntityManager
 		inline bool isFreeID( id_t id ) const { return !hasEntity( id ); }
 
 		bool hasEntity( id_t id ) const;
-		bool addEntity( id_t id ); // NOTE : should only be called by Entity's AddToManager()
+		bool addEntity( id_t id ); // NOTE : should only be called by Entity's AddToMngr()
 		bool delEntity( id_t id, bool freeMem = true );
 
 		bool hasThatEntity( Entity *Ntt ) const;
@@ -95,14 +95,14 @@ class EntityManager
 		static bool isValidID( id_t id ); // NOTE : Checks if the ID is above the current ID use range ( _maxID )
 
 	// ================================ FACTORY METHODS
-		// NOTE : if ID is 0, the entity is not supposed to be in EntityManager's map
+		// NOTE : if ID is 0, the entity is not supposed to be in EntityMngr's map
 		static Entity *EntityFactory( id_t id = 0 ); // NOTE : allocs a new entity with the given ID
 		static Entity *EntityFactory( Entity *src, id_t id = 0 ); // NOTE : allocs a new entity with the given ID, based on the src entity
 };
 
 CompBase *CompFactory( comp_type_e compType, Entity *Ntt = nullptr, bool isActive = COMP_DEF_ACTIVITY );
 
-# include "./EntityManager_T.hpp"
+# include "./EntityMngr_T.hpp"
 
-#endif // ENTITY_MANAGER_HPP
+#endif // ENTITY_MNGR_HPP
 

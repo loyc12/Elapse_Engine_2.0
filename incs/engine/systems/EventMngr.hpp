@@ -1,5 +1,5 @@
-#ifndef EVENT_MANAGER_HPP
-# define EVENT_MANAGER_HPP
+#ifndef EVENT_MNGR_HPP
+# define EVENT_MNGR_HPP
 
 # include "../../base.hpp"
 
@@ -26,7 +26,7 @@ struct inputs_s
 	bool ADD, SUB, MUL, DIV, DOT, EQU, MIN, SLA; // MIN is not on the keypad, SUB is
 };
 
-class EventManager
+class EventMngr
 {
 	private:
 	// ================================ ATTRIBUTES
@@ -38,8 +38,8 @@ class EventManager
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		EventManager();
-		~EventManager();
+		EventMngr();
+		~EventMngr();
 
 	// ================================ ACCESSORS
 		inputs_s &getLatestInputs();
@@ -52,4 +52,4 @@ class EventManager
 };
 
 
-#endif // EVENT_MANAGER_HPP
+#endif // EVENT_MNGR_HPP

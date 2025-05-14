@@ -25,7 +25,7 @@ Entity *CpyEntityOver( Entity *src, Entity *dst )
 		if( dst == nullptr )
 		{
 			qlog( "cpyEntityOver : dst is nullptr : creating new dst", INFO, 0 );
-			dst = EntityManager::EntityFactory( src );
+			dst = EntityMngr::EntityFactory( src );
 		}
 		else
 		{
@@ -38,7 +38,7 @@ Entity *CpyEntityOver( Entity *src, Entity *dst )
 
 // ================================ CORE METHODS
 
-void EntityManager::deleteAllEntities() // TODO : TEST ME
+void EntityMngr::deleteAllEntities() // TODO : TEST ME
 {
 	flog( 0 );
 	for( auto it = _NttMap.begin(); it != _NttMap.end(); )
@@ -56,13 +56,13 @@ void EntityManager::deleteAllEntities() // TODO : TEST ME
 
 // ================ ENTITY METHODS
 
-id_t EntityManager::getEntityCount() const
+id_t EntityMngr::getEntityCount() const
 {
 	flog( 0 );
 	return _NttMap.size();
 }
 
-Entity *EntityManager::getEntity( id_t id ) const
+Entity *EntityMngr::getEntity( id_t id ) const
 {
 	flog( 0 );
 	if( id == 0 ){ return nullptr; }
@@ -71,13 +71,13 @@ Entity *EntityManager::getEntity( id_t id ) const
 	return _NttMap.find( id )->second;
 }
 
-bool EntityManager::hasEntity( id_t id ) const
+bool EntityMngr::hasEntity( id_t id ) const
 {
 	flog( 0 );
 	if( id == 0 ){ return false; }
 	return ( _NttMap.find( id ) != _NttMap.end() );
 }
-bool EntityManager::addEntity( id_t id )
+bool EntityMngr::addEntity( id_t id )
 {
 	flog( 0 );
 	if( id == 0 ){ return false; }
@@ -89,7 +89,7 @@ bool EntityManager::addEntity( id_t id )
 
 	qlog( "addEntity : Adding entity with ID: " + std::to_string( id ), INFO, 0 );
 
-	_NttMap[ id ] = EntityManager::EntityFactory( id );
+	_NttMap[ id ] = EntityMngr::EntityFactory( id );
 
 	qlog( "addEntity : Added entity with ID: " + std::to_string( id ), INFO, 0 );
 
@@ -97,7 +97,7 @@ bool EntityManager::addEntity( id_t id )
 	return true;
 }
 
-bool EntityManager::delEntity( id_t id, bool freeMemory )
+bool EntityMngr::delEntity( id_t id, bool freeMemory )
 {
 	flog( 0 );
 	if( id == 0 ){ return false; }
@@ -124,7 +124,7 @@ bool EntityManager::delEntity( id_t id, bool freeMemory )
 	return true;
 }
 
-bool EntityManager::hasThatEntity( Entity *Ntt ) const
+bool EntityMngr::hasThatEntity( Entity *Ntt ) const
 {
 	flog( 0 );
 	if( Ntt == nullptr ){ return false; }
@@ -146,7 +146,7 @@ bool EntityManager::hasThatEntity( Entity *Ntt ) const
 
 	return ( false );
 }
-bool EntityManager::addThatEntity( Entity *Ntt )
+bool EntityMngr::addThatEntity( Entity *Ntt )
 {
 	flog( 0 );
 	if( hasThatEntity( Ntt ))
@@ -161,7 +161,7 @@ bool EntityManager::addThatEntity( Entity *Ntt )
 	qlog( "addThatEntity : Added entity with ID: " + std::to_string( Ntt->getID()), INFO, 0 );
 	return true;
 }
-bool EntityManager::delThatEntity( Entity *Ntt, bool freeMemory )
+bool EntityMngr::delThatEntity( Entity *Ntt, bool freeMemory )
 {
 	flog( 0 );
 	if( Ntt == nullptr ){ return false; }
@@ -186,7 +186,7 @@ bool EntityManager::delThatEntity( Entity *Ntt, bool freeMemory )
 	return true;
 }
 
-bool EntityManager::defragEntityMap()
+bool EntityMngr::defragEntityMap()
 {
 	flog( 0 );
 	qlog( "defragEntityMap : Defragmenting the entity map", INFO, 0 );
@@ -205,13 +205,13 @@ bool EntityManager::defragEntityMap()
 	return true;
 }
 
-bool EntityManager::dupEntity( id_t src ){ return dupEntity( getEntity( src )); }
-bool EntityManager::dupEntity( Entity *src )
+bool EntityMngr::dupEntity( id_t src ){ return dupEntity( getEntity( src )); }
+bool EntityMngr::dupEntity( Entity *src )
 {
 	flog( 0 );
 	if( src == nullptr ){ return false; }
 
-	Entity *newNtt = EntityManager::EntityFactory( src );
+	Entity *newNtt = EntityMngr::EntityFactory( src );
 
 	if( newNtt == nullptr )
 	{
@@ -225,7 +225,7 @@ bool EntityManager::dupEntity( Entity *src )
 
 // ================================ FACTORY METHODS
 
-Entity *EntityManager::EntityFactory( id_t id )
+Entity *EntityMngr::EntityFactory( id_t id )
 {
 	flog( 0 );
 
@@ -238,10 +238,10 @@ Entity *EntityManager::EntityFactory( id_t id )
 	}
 	return Ntt;
 }
-Entity *EntityManager::EntityFactory( Entity *src, id_t id )
+Entity *EntityMngr::EntityFactory( Entity *src, id_t id )
 {
 	flog( 0 );
-	Entity* Ntt = EntityManager::EntityFactory( id );
+	Entity* Ntt = EntityMngr::EntityFactory( id );
 
 	if( Ntt != nullptr ){ *Ntt = *src; } // NOTE : copies the entity and its components
 

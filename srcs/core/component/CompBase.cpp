@@ -65,7 +65,7 @@ bool CompBase::canTick() const
 }
 
 bool CompBase::onTick() // NOTE : override this in derived classes
-{ //                       NOTE : onTick() should only be called by EntityManager
+{ //                       NOTE : onTick() should only be called by EntityMngr
 	flog( 0 );
 	if( !canTick() ){ return false; }
 	// NOTE : CompBase does not do anything on tick

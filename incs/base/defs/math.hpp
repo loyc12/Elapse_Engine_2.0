@@ -211,5 +211,7 @@ TU inline static U o_norm( const U &a, const U &b, const U &v ){ return Operate<
 
 # undef TU
 
+# define Opfx Operate< fixed_t >
+
 
 #endif // MATH_HPP

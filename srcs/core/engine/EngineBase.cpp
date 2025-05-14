@@ -54,9 +54,9 @@ bool Engine::canEngineTick()
 // Shortcuts to the engine and its subsystems
 
 Engine        *GetNG    = Engine::getEngine();
-EventManager  *GetEvntM = GetNG->getEventManager();
-ScreenManager *GetScrnM = GetNG->getScreenManager();
-EntityManager *GetNttM  = GetNG->getEntityManager();
+EventMngr  *GetEvntM = GetNG->getEventMngr();
+ScreenMngr *GetScrnM = GetNG->getScreenMngr();
+EntityMngr *GetNttM  = GetNG->getEntityMngr();
 
 fixed_t  GDTS(){ return GetNG->getDeltaTimeScaled(); }
 inputs_s &GIN(){ return GetNG->getLatestInputs(); }

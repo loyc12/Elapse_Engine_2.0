@@ -2,7 +2,7 @@
 
 // ================================ METHODS UPDATE METHODS
 
-void EntityManager::updateAllEntities()
+void EntityMngr::updateAllEntities()
 {	// NOTE : calls the onTick() method of all components in the map ( one entity at a time )
 	flog( 0 );
 	for( auto it = _NttMap.begin(); it != _NttMap.end(); ++it ) // NOTE : Loop on all entities
@@ -10,7 +10,7 @@ void EntityManager::updateAllEntities()
 		Entity *Ntt = it->second;
 		if( Ntt == nullptr )
 		{
-			qlog( "EntityManager::updateAllEntities : Skipping nullptr entity", INFO, 0 );
+			qlog( "EntityMngr::updateAllEntities : Skipping nullptr entity", INFO, 0 );
 			continue;
 		}
 		for ( comp_count_t i = 0; i < COMP_TYPE_COUNT; ++i ) // NOTE : loop on all component types
@@ -20,7 +20,7 @@ void EntityManager::updateAllEntities()
 		}
 	}
 }
-void EntityManager::updateAllComponents()
+void EntityMngr::updateAllComponents()
 {	// NOTE : calls the onTick() method of all components in the map ( each component type at a time)
 	flog( 0 );
 	for ( comp_count_t i = 0; i < COMP_TYPE_COUNT; ++i ) // NOTE : loop on all component types
@@ -28,7 +28,7 @@ void EntityManager::updateAllComponents()
 		updateCompsByType( comp_type_e( i ));
 	}
 }
-void EntityManager::updateCompsByType( comp_type_e compType )
+void EntityMngr::updateCompsByType( comp_type_e compType )
 {	// NOTE : calls the onTick() method of all components of the given type in the map
 	flog( 0 );
 	if( !IsValidCompType( compType )){ return; }
@@ -40,12 +40,12 @@ void EntityManager::updateCompsByType( comp_type_e compType )
 
 		if( Ntt == nullptr )
 		{
-			qlog( "EntityManager::updateAllComponents : Skipping nullptr entity", INFO, 0 );
+			qlog( "EntityMngr::updateAllComponents : Skipping nullptr entity", INFO, 0 );
 			continue;
 		}
 		if( Ntt->getCompArray()[ compType ] == nullptr )
 		{
-			qlog( "EntityManager::updateCompsByType : Skipping nullptr component", INFO, 0 );
+			qlog( "EntityMngr::updateCompsByType : Skipping nullptr component", INFO, 0 );
 			continue;
 		}
 		Ntt->tickComponent( comp_type_e( compType ));
@@ -54,45 +54,45 @@ void EntityManager::updateCompsByType( comp_type_e compType )
 
 // ================ TICK METHODS
 
-void EntityManager::tickMovements()
+void EntityMngr::tickMovements()
 {
 	flog( 0 );
 	OnTickMovements(); // from injectors.hpp
 	updateCompsByType( COMP_MOVEMENT );
 }
-void EntityManager::tickCollides()
+void EntityMngr::tickCollides()
 {
 	flog( 0 );
 	OnTickCollides(); // from injectors.hpp
 	updateCompsByType( COMP_COLLIDE );
 }
-void EntityManager::tickPhysics()
+void EntityMngr::tickPhysics()
 {
 	flog( 0 );
 	OnTickPhysics(); // from injectors.hpp
 	updateCompsByType( COMP_PHYSIC );
 }
 
-void EntityManager::tickSounds()
+void EntityMngr::tickSounds()
 {
 	flog( 0 );
 	OnTickSounds(); // from injectors.hpp
 	//updateCompsByType( COMP_SOUND );
 }
-void EntityManager::tickShapes()
+void EntityMngr::tickShapes()
 {
 	flog( 0 );
 	OnTickShapes(); // from injectors.hpp
 	//updateCompsByType( COMP_SHAPE );
 }
-void EntityManager::tickGraphics()
+void EntityMngr::tickGraphics()
 {
 	flog( 0 );
 	OnTickGraphics(); // from injectors.hpp
 	updateCompsByType( COMP_GRAPHIC );
 }
 
-void EntityManager::tickScripts()
+void EntityMngr::tickScripts()
 {
 	flog( 0 );
 	OnTickScripts(); // from injectors.hpp

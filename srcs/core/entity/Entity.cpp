@@ -33,7 +33,7 @@ bool Entity::onDel()
 
 	if( GetScrnM != nullptr && GetScrnM->isTracking() && GetScrnM->getTrackedEntity() == this )
 	{
-		qlog( "delFromManager : Untracking entity due to deletion", INFO, _id );
+		qlog( "delFromMngr : Untracking entity due to deletion", INFO, _id );
 		GetScrnM->untrackEntity();
 	}
 
@@ -47,7 +47,7 @@ for ( comp_count_t i = 0; i < COMP_TYPE_COUNT; ++i )
 		}
 		else { qlog( "onDel : Component of type: " + std::to_string( i ) + " is already a nullptr", DEBUG, _id ); }
 	}
-	return delFromManager();
+	return delFromMngr();
 }
 bool Entity::onCpy( const Entity &rhs )
 {
@@ -65,25 +65,25 @@ bool Entity::onCpy( const Entity &rhs )
 	return true;
 }
 
-bool Entity::addToManager()
+bool Entity::addToMngr()
 {
 	flog( _id );
 	GetNttM->addThatEntity( this );
 	return true;
 }
-bool Entity::delFromManager()
+bool Entity::delFromMngr()
 {
 	flog( _id );
 
-	qlog( "delFromManager : Deleting this entity", INFO, _id );
+	qlog( "delFromMngr : Deleting this entity", INFO, _id );
 	if( _id != 0 )
 	{
 		if( GetNttM->hasThatEntity( this ))
 		{
-			qlog( "delFromManager : removing entity from manager", INFO, _id );
+			qlog( "delFromMngr : removing entity from mngr", INFO, _id );
 			GetNttM->delThatEntity( this, false );
 		}
-		else { qlog( "delFromManager : Entity has id but is not in manager", WARN, _id ); }
+		else { qlog( "delFromMngr : Entity has id but is not in mngr", WARN, _id ); }
 
 		_id = 0;
 	}
@@ -104,20 +104,20 @@ Entity::Entity() : _id( 0 )
 {
 	flog( _id );
 	onAdd();
-	addToManager();
+	addToMngr();
 }
-Entity::Entity( bool addEntityToManager, id_t id ) : _id( id ) // NOTE : should only be called by EntityManager
+Entity::Entity( bool addEntityToMngr, id_t id ) : _id( id ) // NOTE : should only be called by EntityMngr
 {
 	flog( _id );
 	onAdd();
-	if( addEntityToManager ){ addToManager(); }
+	if( addEntityToMngr ){ addToMngr(); }
 }
 
 Entity::Entity( const Entity &rhs ) : _id( 0 )
 {
 	flog( _id );
 	onAdd();
-	addToManager();
+	addToMngr();
 	*this = rhs; // NOTE : calls the copy assignment operator
 }
 Entity &Entity::operator=( const Entity &rhs )

@@ -100,9 +100,9 @@ void Engine::init()
 	if( getState() > ES_INITIALIZING ){ qlog( "init : Engine already initialized",  ERROR, 0 ); return; }
 	if( getState() < ES_CLOSED){        qlog( "init : how did you even get here ?", ERROR, 0 ); return; }
 
-	_controller  = new EventManager();   GetEvntM = _controller;
-	_viewport2D  = new ScreenManager();   GetScrnM = _viewport2D;
-	_compManager = new EntityManager();  GetNttM = _compManager;
+	_eventMngr    = new EventMngr();   GetEvntM = _eventMngr;
+	_screenMngr2D = new ScreenMngr();  GetScrnM = _screenMngr2D;
+	_entityMngr   = new EntityMngr();  GetNttM  = _entityMngr;
 
 	OnEngineInit(); // from injectors.hpp
 	setState( ES_INITIALIZED );
@@ -114,7 +114,7 @@ void Engine::start()
 	if( getState() > ES_STARTING ){    qlog( "start : Engine already started", ERROR, 0 ); return; }
 	if( getState() < ES_INITIALIZED ){ qlog( "start : Engine not initialized", ERROR, 0 ); return; }
 
-	_viewport2D->open();
+	_screenMngr2D->open();
 
 	OnEngineStart(); // from injectors.hpp
 	setState( ES_STARTED );
@@ -146,7 +146,7 @@ void Engine::stop()
 	if( getState() < ES_STOPPING ){ qlog( "stop : Engine not yet started",  ERROR, 0 ); return; }
 	if( getState() > ES_STARTED ){  qlog( "stop : Engine is still running", ERROR, 0 ); return; }
 
-	_viewport2D->close();
+	_screenMngr2D->close();
 
 	OnEngineStop(); // from injectors.hpp
 	setState( ES_INITIALIZED );
@@ -161,7 +161,7 @@ void Engine::close()
 	OnEngineClose(); // from injectors.hpp
 	setState( ES_CLOSED );
 
-	delete _compManager;  _compManager = nullptr;  GetNttM = nullptr;
-	delete _viewport2D;   _viewport2D = nullptr;   GetScrnM = nullptr;
-	delete _controller;   _controller = nullptr;   GetEvntM = nullptr;
+	delete _entityMngr;  _entityMngr = nullptr;  GetNttM = nullptr;
+	delete _screenMngr2D;   _screenMngr2D = nullptr;   GetScrnM = nullptr;
+	delete _eventMngr;   _eventMngr = nullptr;   GetEvntM = nullptr;
 }

@@ -45,10 +45,8 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 		if( G_PlayerNtt != nullptr )
 		{
 			CompPos *cmpPos = G_PlayerNtt->getComponent< CompPos >();
-			if ( cmpPos != nullptr )
-			{
-				cmpPos->setPos( GetScrnM->getMouseWorldPos());
-			}
+			if ( GetScrnM->getTrackedEntity() == G_PlayerNtt ){ GetScrnM->untrackEntity(); }
+			if ( cmpPos != nullptr ){ cmpPos->setPos( GetScrnM->getMouseWorldPos()); }
 		}
 	}
 	if( inp.CLICK_RIGHT )
@@ -56,12 +54,16 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 		if( G_EnemyNtt != nullptr )
 		{
 			CompPos *cmpPos = G_EnemyNtt->getComponent< CompPos >();
-			if ( cmpPos != nullptr )
-			{
-				cmpPos->setPos( GetScrnM->getMouseWorldPos());
-			}
+			if ( GetScrnM->getTrackedEntity() == G_EnemyNtt ){ GetScrnM->untrackEntity(); }
+			if ( cmpPos != nullptr ){ cmpPos->setPos( GetScrnM->getMouseWorldPos()); }
 		}
 	}
+
+	if ( inp.E ){ GetScrnM->moveRotation( 1.0f ); }
+	if ( inp.Q ){ GetScrnM->moveRotation( -1.0f ); }
+
+	if ( inp.SCROLL_UP   ){ GetScrnM->scaleZoom( 1.1f ); }
+	if ( inp.SCROLL_DOWN ){ GetScrnM->scaleZoom( 0.9f ); }
 }
 
 // ==================== GLOBAL TICK INJECTION FUNCTIONS

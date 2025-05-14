@@ -23,7 +23,7 @@ class Angle
 {
 	#define TU template < typename U, typename = std::enable_if_t<( !std::is_same_v< U, Angle >&& ( std::is_integral_v< U >|| std::is_floating_point_v< U > ))>>
 
-	#define ANG_MODULUS( a, b ) Operate< fixed_t >::pmod( a, b )
+	#define ANG_MODULUS( a, b ) Opfx::pmod( a, b )
 
 	protected:
 		fixed_t _angle; // NOTE : the angle stored in radians and between [0, TAU]
@@ -85,17 +85,17 @@ class Angle
 			else /* std::is_integral_v< U > */ {     _angle = ANG_MODULUS( angle * DtoR, TAU ); } // angle in degrees *
 		}
 
-		inline fixed_t cos() const { return Operate< fixed_t >::cos( _angle ); }
-		inline fixed_t sin() const { return Operate< fixed_t >::sin( _angle ); }
-		inline fixed_t tan() const { return Operate< fixed_t >::tan( _angle ); }
+		inline fixed_t cos()  const { return Opfx::cos( _angle ); }
+		inline fixed_t sin()  const { return Opfx::sin( _angle ); }
+		inline fixed_t tan()  const { return Opfx::tan( _angle ); }
 
-		inline fixed_t cot() const { return Operate< fixed_t >::cot( _angle ); }
-		inline fixed_t sec() const { return Operate< fixed_t >::sec( _angle ); }
-		inline fixed_t csc() const { return Operate< fixed_t >::csc( _angle ); }
+		inline fixed_t cot()  const { return Opfx::cot( _angle ); }
+		inline fixed_t sec()  const { return Opfx::sec( _angle ); }
+		inline fixed_t csc()  const { return Opfx::csc( _angle ); }
 
-		inline fixed_t acos() const { return Operate< fixed_t >::acos( _angle ); }
-		inline fixed_t asin() const { return Operate< fixed_t >::asin( _angle ); }
-		inline fixed_t atan() const { return Operate< fixed_t >::atan( _angle ); }
+		inline fixed_t acos() const { return Opfx::acos( _angle ); }
+		inline fixed_t asin() const { return Opfx::asin( _angle ); }
+		inline fixed_t atan() const { return Opfx::atan( _angle ); }
 
 		inline operator Vector2() const { return getVec2(); } // Returns the angle as a vector
 
@@ -219,24 +219,24 @@ class Angle
 			else /* std::is_integral_v< U > */ { return    this->isOpposite( Angle( angle * DtoR )); } // angle in degrees *
 		}
 
-		inline bool isEqual(    const Angle &a ) const { return Operate< fixed_t >::abs( _angle - a._angle ) < EPS; } //  NOTE : checks if the angles are equal
-		inline bool isDiff(     const Angle &a ) const { return Operate< fixed_t >::abs( _angle - a._angle ) > EPS; } //  NOTE : checks if the angles are not equal
+		inline bool isEqual(    const Angle &a ) const { return Opfx::abs( _angle - a._angle ) < EPS; } //  NOTE : checks if the angles are equal
+		inline bool isDiff(     const Angle &a ) const { return Opfx::abs( _angle - a._angle ) > EPS; } //  NOTE : checks if the angles are not equal
 
-		inline bool isLeftOf(   const Angle &a ) const { return Operate< fixed_t >::sin( a._angle - _angle ) < 0.0f; } // NOTE : checks if this is left of a ( -180 to 0 degrees )
-		inline bool isSameDir(  const Angle &a ) const { return Operate< fixed_t >::cos( a._angle - _angle ) > 0.0f; } // NOTE : checks if this is in the same direction as a ( -90 to +90 degrees )
+		inline bool isLeftOf(   const Angle &a ) const { return Opfx::sin( a._angle - _angle ) < 0.0f; } // NOTE : checks if this is left of a ( -180 to 0 degrees )
+		inline bool isSameDir(  const Angle &a ) const { return Opfx::cos( a._angle - _angle ) > 0.0f; } // NOTE : checks if this is in the same direction as a ( -90 to +90 degrees )
 
-		inline bool isRightOf(  const Angle &a ) const { return Operate< fixed_t >::sin( a._angle - _angle ) > 0.0f; } // NOTE : checks if this is right of a ( 0 to +180 degrees )
-		inline bool isDiffDir(  const Angle &a ) const { return Operate< fixed_t >::cos( a._angle - _angle ) < 0.0f; } // NOTE : checks if this is in the opposite direction as a ( 90 to 270 degrees )
+		inline bool isRightOf(  const Angle &a ) const { return Opfx::sin( a._angle - _angle ) > 0.0f; } // NOTE : checks if this is right of a ( 0 to +180 degrees )
+		inline bool isDiffDir(  const Angle &a ) const { return Opfx::cos( a._angle - _angle ) < 0.0f; } // NOTE : checks if this is in the opposite direction as a ( 90 to 270 degrees )
 
-		inline bool isOpposite( const Angle &a ) const { return Operate< fixed_t >::abs( a._angle - PI ) < EPS ; } //     NOTE : checks if this is opposite to a ( 180 degrees )
-		inline bool isComplem(  const Angle &a ) const { return Operate< fixed_t >::abs( a._angle + _angle ) < EPS ; } // NOTE : checks if this is complementary to a ( a1 == -a2 )
+		inline bool isOpposite( const Angle &a ) const { return Opfx::abs( a._angle - PI ) < EPS ; } //     NOTE : checks if this is opposite to a ( 180 degrees )
+		inline bool isComplem(  const Angle &a ) const { return Opfx::abs( a._angle + _angle ) < EPS ; } // NOTE : checks if this is complementary to a ( a1 == -a2 )
 
-		inline bool isParallel( const Angle &a ) const { return Operate< fixed_t >::abs( Operate< fixed_t >::sin( a._angle - _angle )) < EPS; } // NOTE : checks if this is parallel to a ( -90 or 90 degrees )
-		inline bool isPerpend(  const Angle &a ) const { return Operate< fixed_t >::abs( Operate< fixed_t >::cos( a._angle - _angle )) < EPS; } // NOTE : checks if this is perpendicular to a ( 0 or 180 degrees )
+		inline bool isParallel( const Angle &a ) const { return Opfx::abs( Opfx::sin( a._angle - _angle )) < EPS; } // NOTE : checks if this is parallel to a ( -90 or 90 degrees )
+		inline bool isPerpend(  const Angle &a ) const { return Opfx::abs( Opfx::cos( a._angle - _angle )) < EPS; } // NOTE : checks if this is perpendicular to a ( 0 or 180 degrees )
 
 		inline Angle getAverage(   const Angle &a ) const { return Angle( ANG_MODULUS(( _angle + a._angle ) / 2.0f, TAU )); } // returns the average ( bisection ) of two angles
 		inline Angle getDist(      const Angle &a ) const { return Angle( ANG_MODULUS( a._angle - _angle, TAU )); } //           returns the true angular distance between two angles ( order dependant )
-		inline Angle getShortDist( const Angle &a ) const { return Angle( Operate< fixed_t >::abs( a._angle - _angle )); } //    returns the smallest angular distance between two angles
+		inline Angle getShortDist( const Angle &a ) const { return Angle( Opfx::abs( a._angle - _angle )); } //    returns the smallest angular distance between two angles
 		inline Angle getLongDist(  const Angle &a ) const { return getShortDist( a ).getComplement(); } //                       returns the largest angular distance between two angles
 
 		// Moves the angle by 45 degrees increments in the given direction ( might conflict with the stream operator )

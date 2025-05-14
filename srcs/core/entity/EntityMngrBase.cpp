@@ -3,7 +3,7 @@
 
 // ================================ CORE METHODS
 
-void EntityManager::updateMaxID()
+void EntityMngr::updateMaxID()
 {
 	flog( 0 );
 	id_t newMaxID = 0;
@@ -16,7 +16,7 @@ void EntityManager::updateMaxID()
 
 // ================================ STATIC METHODS
 
-bool EntityManager::isValidID( id_t id )
+bool EntityMngr::isValidID( id_t id )
 {
 	flog( 0 );
 	if( id == 0 )

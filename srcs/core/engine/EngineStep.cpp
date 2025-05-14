@@ -30,12 +30,12 @@ void Engine::runStep()
 
 	_DT = updateDeltaTime();
 
-	_controller->refreshInputs();
+	_eventMngr->refreshInputs();
 
-	_compManager->tickScripts();
-	_compManager->tickPhysics();
-	_compManager->tickCollides();
-	_compManager->tickMovements();
+	_entityMngr->tickScripts();
+	_entityMngr->tickPhysics();
+	_entityMngr->tickCollides();
+	_entityMngr->tickMovements();
 
 	// NOTE : tickVisuals() is called in refreshScreen()
 	refreshScreen();
@@ -43,18 +43,18 @@ void Engine::runStep()
 	OnEndStep(); // from injectors.hpp
 }
 
-void Engine::refreshScreen()
+void Engine::refreshScreen() // TODO : move me to ScreenMngr
 {
 	flog( 0 );
 
 	BeginDrawing();
 	{
-		_viewport2D->refresh();
+		_screenMngr2D->refresh();
 
 		OnRenderBackground(); // from injectors.hpp
-		BeginMode2D( *_viewport2D->getCamera() );
+		BeginMode2D( *_screenMngr2D->getCamera() );
 		{
-			_compManager->tickGraphics();
+			_entityMngr->tickGraphics();
 			OnRenderWorld(); // from injectors.hpp
 		}
 		EndMode2D();

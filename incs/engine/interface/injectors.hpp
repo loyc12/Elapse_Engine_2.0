@@ -47,7 +47,7 @@ they are used to inject game specific code into the engine without modifying the
 	void OnEndLoop();
 
 // ===================== ENTITY TICK INJECTION FUNCTIONS
-// for when the EntityManager calls an entity's component tick methods
+// for when the EntityMngr calls an entity's component tick methods
 	class Entity;
 
 	void OnEntityTickMovement( Entity *Ntt ); // TODO : implement and use us
