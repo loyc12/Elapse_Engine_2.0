@@ -1,5 +1,5 @@
-#ifndef COMP_MANAGER_HPP
-# define COMP_MANAGER_HPP
+#ifndef ENTITY_MANAGER_HPP
+# define ENTITY_MANAGER_HPP
 
 # include "../../base.hpp"
 # include "../component/CompBase.hpp"
@@ -9,7 +9,7 @@ typedef std::unordered_map< id_t, Entity* > NttMap_t;
 
 Entity *CpyEntityOver( Entity *src, Entity *dst );
 
-class CompManager
+class EntityManager
 {
 	private:
 	// ================================ ATTRIBUTES
@@ -29,8 +29,8 @@ class CompManager
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		inline  CompManager(){ _maxID = 0; };
-		inline ~CompManager(){ deleteAllEntities(); };
+		inline  EntityManager(){ _maxID = 0; };
+		inline ~EntityManager(){ deleteAllEntities(); };
 
 	// ================================ ACCESSORS / MUTATORS
 
@@ -95,14 +95,14 @@ class CompManager
 		static bool isValidID( id_t id ); // NOTE : Checks if the ID is above the current ID use range ( _maxID )
 
 	// ================================ FACTORY METHODS
-		// NOTE : if ID is 0, the entity is not supposed to be in CompManager's map
+		// NOTE : if ID is 0, the entity is not supposed to be in EntityManager's map
 		static Entity *EntityFactory( id_t id = 0 ); // NOTE : allocs a new entity with the given ID
 		static Entity *EntityFactory( Entity *src, id_t id = 0 ); // NOTE : allocs a new entity with the given ID, based on the src entity
 };
 
 CompBase *CompFactory( comp_type_e compType, Entity *Ntt = nullptr, bool isActive = COMP_DEF_ACTIVITY );
 
-# include "./CompManagerT.hpp"
+# include "./EntityManager_T.hpp"
 
-#endif // COMP_MANAGER_HPP
+#endif // ENTITY_MANAGER_HPP
 

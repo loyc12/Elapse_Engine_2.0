@@ -4,9 +4,9 @@
 # include <raylib.h>
 # include "../base.hpp"
 
-# include "./system/Viewport.hpp"
-# include "./system/Controller.hpp"
-# include "./system/CompManager.hpp"
+# include "./entity/EntityManager.hpp"
+# include "./systems/ScreenManager.hpp"
+# include "./systems/EventManager.hpp"
 
 
 typedef enum : byte_t
@@ -34,9 +34,9 @@ class Engine
 		fixed_t _DT; // delta time
 		fixed_t _TS; // time scale
 
-		Viewport2D  *_viewport2D;
-		Controller  *_controller;
-		CompManager *_compManager;
+		ScreenManager *_viewport2D;
+		EventManager  *_controller;
+		EntityManager *_compManager;
 
 		engineState_e _state;
 		std::mutex mtx_state;
@@ -86,13 +86,13 @@ class Engine
 
 		inline inputs_s    &getLatestInputs(){   return _controller->getLatestInputs(); }
 		inline inputs_s    &getPreviousInputs(){ return _controller->getPreviousInputs(); }
-		inline Controller  *getController(){     return _controller; }
+		inline EventManager  *getEventManager(){     return _controller; }
 
 		inline Camera2D    *getCamera(){   return _viewport2D->getCamera(); }
-		inline Viewport2D  *getViewport(){ return _viewport2D; }
+		inline ScreenManager  *getScreenManager(){ return _viewport2D; }
 
 		inline Entity      *getEntity( id_t id ){ return _compManager->getEntity( id ); }
-		inline CompManager *getCompManager(){     return _compManager; }
+		inline EntityManager *getEntityManager(){     return _compManager; }
 
 		inline fixed_t updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
 		inline fixed_t getDeltaTimeScaled() const { return _DT * _TS; }
@@ -110,10 +110,10 @@ class Engine
 // ==================== ENGINE SHORTCUTS
 // Shortcuts to the engine and its components
 
-extern Engine      *GNG;
-extern Viewport2D  *GVP;
-extern Controller  *GCN;
-extern CompManager *GCM;
+extern Engine      *GetNG;
+extern ScreenManager  *GetScrnM;
+extern EventManager  *GetEvntM;
+extern EntityManager *GetNttM;
 
 extern fixed_t   GDTS();
 extern inputs_s &GIN();

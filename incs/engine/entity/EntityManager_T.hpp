@@ -1,16 +1,16 @@
 
-#ifndef COMP_MANAGER_TPP
-# define COMP_MANAGER_TPP
+#ifndef ENTITY_MANAGER_TPP
+# define ENTITY_MANAGER_TPP
 
 # pragma once
-# include "./CompManager.hpp"
+# include "./EntityManager.hpp"
 
 // ================================ ACCESSORS / MUTATORS
 
 // ================ COMPONENT METHODS
 
 /*
-TTC CompT *CompManager::getComponent( id_t id, comp_type_e compType ) const
+TTC CompT *EntityManager::getComponent( id_t id, comp_type_e compType ) const
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return nullptr; } // NOTE : returns a null CompBaseonent ( innactive )
@@ -31,7 +31,7 @@ TTC CompT *CompManager::getComponent( id_t id, comp_type_e compType ) const
 	return nullptr;
 }
 */
-TTC CompT *CompManager::getComponent( id_t id ) const
+TTC CompT *EntityManager::getComponent( id_t id ) const
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return nullptr; } // NOTE : returns a null CompBaseonent ( innactive )
@@ -53,4 +53,4 @@ TTC CompT *CompManager::getComponent( id_t id ) const
 }
 
 
-#endif // COMP_MANAGER_TPP
+#endif // ENTITY_MANAGER_TPP

@@ -186,6 +186,7 @@ typedef Pos3< uint16_t > pos3_u16_t;
 typedef Pos3< uint32_t > pos3_u32_t;
 typedef Pos3< uint64_t > pos3_u64_t;
 
-typedef Pos3< fixed_t > vec3_t; // default position type
+typedef Pos3<  fixed_t > vec3_t; //     default position type
+typedef vector< vec3_t > vec3_arr_t; // default position array type
 
 #endif // POS_3_HPP

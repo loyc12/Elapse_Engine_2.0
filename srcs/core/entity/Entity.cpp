@@ -31,10 +31,10 @@ bool Entity::onDel()
 {
 	flog( _id );
 
-	if( GVP != nullptr && GVP->isTracking() && GVP->getTrackedEntity() == this )
+	if( GetScrnM != nullptr && GetScrnM->isTracking() && GetScrnM->getTrackedEntity() == this )
 	{
 		qlog( "delFromManager : Untracking entity due to deletion", INFO, _id );
-		GVP->untrackEntity();
+		GetScrnM->untrackEntity();
 	}
 
 	qlog( "onDel : Deleting this entity", INFO, _id );
@@ -68,7 +68,7 @@ bool Entity::onCpy( const Entity &rhs )
 bool Entity::addToManager()
 {
 	flog( _id );
-	GCM->addThatEntity( this );
+	GetNttM->addThatEntity( this );
 	return true;
 }
 bool Entity::delFromManager()
@@ -78,10 +78,10 @@ bool Entity::delFromManager()
 	qlog( "delFromManager : Deleting this entity", INFO, _id );
 	if( _id != 0 )
 	{
-		if( GCM->hasThatEntity( this ))
+		if( GetNttM->hasThatEntity( this ))
 		{
 			qlog( "delFromManager : removing entity from manager", INFO, _id );
-			GCM->delThatEntity( this, false );
+			GetNttM->delThatEntity( this, false );
 		}
 		else { qlog( "delFromManager : Entity has id but is not in manager", WARN, _id ); }
 
@@ -106,7 +106,7 @@ Entity::Entity() : _id( 0 )
 	onAdd();
 	addToManager();
 }
-Entity::Entity( bool addEntityToManager, id_t id ) : _id( id ) // NOTE : should only be called by CompManager
+Entity::Entity( bool addEntityToManager, id_t id ) : _id( id ) // NOTE : should only be called by EntityManager
 {
 	flog( _id );
 	onAdd();

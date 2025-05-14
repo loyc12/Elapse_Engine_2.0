@@ -5,7 +5,7 @@
 # include "../core.hpp"
 
 # include "./FixedPoint.hpp"
-//# include "./Angle.hpp"
+# include "./Angle.hpp"
 
 template < typename T = fixed_t >
 class Pos2
@@ -60,7 +60,7 @@ class Pos2
 		//inline angle_t angle( const Pos2    &p ) const { return acosf( dotP( p ) / ( len() * p.len() )); }
 		//inline angle_t angle( const Vector2 &v ) const { return acosf( dotP( v ) / ( len() * sqrtf( sqrf( v.x ) + sqrf( v.y )))); }
 
-		inline void normalize()
+		inline Pos2 normalize()
 		{
 			fixed_t len = this->getLen();
 
@@ -68,7 +68,7 @@ class Pos2
 			{
 				x = y = 0;
 				qlog( "Pos2::normalize : length is 0 : unable to normalize : reseting values to 0", WARN, 0 );
-				return;
+				return Pos2();
 			}
 			elif ( len != 1 )
 			{
@@ -76,6 +76,21 @@ class Pos2
 				y /= len;
 			}
 			else { qlog( "Pos2::normalize : length is 1 : already normalized", DEBUG, 0 ); }
+			return Pos2( x, y );
+		}
+
+		inline Pos2 rotateBy( Angle a )
+		{
+			if ( a == 0 ) { return Pos2( x, y ); } // NOTE : skiping the maths
+			a += Angle( *this ); // finding the resulting angle after rotation
+
+			fixed_t len = this->getLen();
+			Vector2 v   = a.getVec2();
+
+			x = len * v.x;
+			y = len * v.y;
+
+			return Pos2( x, y );
 		}
 
 	// ============================ CASTING METHODS
@@ -182,6 +197,7 @@ typedef Pos2< uint16_t > pos2_u16_t;
 typedef Pos2< uint32_t > pos2_u32_t;
 typedef Pos2< uint64_t > pos2_u64_t;
 
-typedef Pos2< fixed_t > vec2_t; // default position type
+typedef Pos2<  fixed_t > vec2_t; //     default position type
+typedef vector< vec2_t > vec2_arr_t; // default position array type
 
 #endif // POS_2_HPP

@@ -111,7 +111,7 @@ bool Entity::moveAngle( angle_t delta )
 fixed_t Entity::getLineDistTo( id_t id ) const
 {
 	flog( _id );
-	return getLineDistTo( GCM->getEntity( id ) );
+	return getLineDistTo( GetNttM->getEntity( id ) );
 }
 fixed_t Entity::getLineDistTo( Entity *other ) const
 {

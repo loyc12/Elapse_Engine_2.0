@@ -100,9 +100,9 @@ void Engine::init()
 	if( getState() > ES_INITIALIZING ){ qlog( "init : Engine already initialized",  ERROR, 0 ); return; }
 	if( getState() < ES_CLOSED){        qlog( "init : how did you even get here ?", ERROR, 0 ); return; }
 
-	_controller  = new Controller();   GCN = _controller;
-	_viewport2D  = new Viewport2D();   GVP = _viewport2D;
-	_compManager = new CompManager();  GCM = _compManager;
+	_controller  = new EventManager();   GetEvntM = _controller;
+	_viewport2D  = new ScreenManager();   GetScrnM = _viewport2D;
+	_compManager = new EntityManager();  GetNttM = _compManager;
 
 	OnEngineInit(); // from injectors.hpp
 	setState( ES_INITIALIZED );
@@ -161,7 +161,7 @@ void Engine::close()
 	OnEngineClose(); // from injectors.hpp
 	setState( ES_CLOSED );
 
-	delete _compManager;  _compManager = nullptr;  GCM = nullptr;
-	delete _viewport2D;   _viewport2D = nullptr;   GVP = nullptr;
-	delete _controller;   _controller = nullptr;   GCN = nullptr;
+	delete _compManager;  _compManager = nullptr;  GetNttM = nullptr;
+	delete _viewport2D;   _viewport2D = nullptr;   GetScrnM = nullptr;
+	delete _controller;   _controller = nullptr;   GetEvntM = nullptr;
 }

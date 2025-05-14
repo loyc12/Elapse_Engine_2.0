@@ -5,14 +5,12 @@
 
 # include "./base.hpp"
 
-# include "./engine/component/CompBase.hpp"
-# include "./engine/entity/Entity.hpp"
+
+# include "./engine/entity/EntityManager.hpp"
+# include "./engine/systems/EventManager.hpp"
+# include "./engine/systems/ScreenManager.hpp"
 
 # include "./engine/interface/injectors.hpp"
-
-# include "./engine/system/CompManager.hpp"
-# include "./engine/system/Controller.hpp"
-# include "./engine/system/Viewport.hpp"
 
 # include "./engine/Engine.hpp"
 

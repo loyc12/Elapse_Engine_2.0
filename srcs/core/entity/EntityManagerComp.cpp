@@ -30,7 +30,7 @@ CompBase *CompFactory( comp_type_e compType, Entity *Ntt, bool isActive )
 
 // ================ COMPONENT METHODS
 
-comp_count_t CompManager::getCompCount( id_t id ) const
+comp_count_t EntityManager::getCompCount( id_t id ) const
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return 0; }
@@ -40,7 +40,7 @@ comp_count_t CompManager::getCompCount( id_t id ) const
 
 	return Ntt->getCompCount();
 }
-comp_count_t CompManager::getActCompCount( id_t id ) const
+comp_count_t EntityManager::getActCompCount( id_t id ) const
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return 0; }
@@ -51,7 +51,7 @@ comp_count_t CompManager::getActCompCount( id_t id ) const
 	return Ntt->getActCompCount();
 }
 
-bool CompManager::hasComponent( id_t id, comp_type_e compType ) const
+bool EntityManager::hasComponent( id_t id, comp_type_e compType ) const
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return false; }
@@ -65,7 +65,7 @@ bool CompManager::hasComponent( id_t id, comp_type_e compType ) const
 
 	return ( Ntt->hasComponent( compType ));
 }
-bool CompManager::addComponent( id_t id, comp_type_e compType )
+bool EntityManager::addComponent( id_t id, comp_type_e compType )
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return false; }
@@ -79,7 +79,7 @@ bool CompManager::addComponent( id_t id, comp_type_e compType )
 
 	return ( Ntt->addComponent( compType ));
 }
-bool CompManager::delComponent( id_t id, comp_type_e compType, bool freeMem )
+bool EntityManager::delComponent( id_t id, comp_type_e compType, bool freeMem )
 {
 	flog( 0 );
 	if( !hasEntity( id )){ return false; }

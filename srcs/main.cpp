@@ -4,13 +4,13 @@ int main()
 {
 	flog( 0 );
 
-	GNG->switchState( ES_RUNNING );
+	GetNG->switchState( ES_RUNNING );
 
-	GNG->launchLoop();
+	GetNG->launchLoop();
 
-	GNG->switchState( ES_CLOSED );
+	GetNG->switchState( ES_CLOSED );
 
-	delete GNG;   GNG = nullptr;
+	delete GetNG;   GetNG = nullptr;
 
 	qlog( "Exiting main()", INFO, 0 );
 }

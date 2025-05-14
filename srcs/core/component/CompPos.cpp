@@ -51,7 +51,7 @@ fixed_t CompPos::getLineDistTo( id_t id ) const
 		qlog( "CompPos::getLineDistTo() : id is 0", WARN, 0 );
 		return 0;
 	}
-	return getLineDistTo( GCM->getEntity( id ) );
+	return getLineDistTo( GetNttM->getEntity( id ) );
 }
 fixed_t CompPos::getLineDistTo( Entity *other ) const
 {

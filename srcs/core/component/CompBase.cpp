@@ -56,7 +56,7 @@ bool CompBase::canTick() const
 		qlog( "CompPos::canTick() : missing required sister components", INFO, 0 );
 		return false;
 	}
-	if ( !GNG->canEngineTick() )
+	if ( !GetNG->canEngineTick() )
 	{
 		qlog( "CompPos::canTick() : Engine is not in a tickable state", INFO, 0 );
 		return false;
@@ -65,7 +65,7 @@ bool CompBase::canTick() const
 }
 
 bool CompBase::onTick() // NOTE : override this in derived classes
-{ //                       NOTE : onTick() should only be called by CompManager
+{ //                       NOTE : onTick() should only be called by EntityManager
 	flog( 0 );
 	if( !canTick() ){ return false; }
 	// NOTE : CompBase does not do anything on tick

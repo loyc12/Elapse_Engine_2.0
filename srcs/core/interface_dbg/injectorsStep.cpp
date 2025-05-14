@@ -32,12 +32,12 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 
 	if( inp.P && !prev.P )
 	{
-		GNG->togglePause();
+		GetNG->togglePause();
 	}
 	if( inp.X && !prev.X )
 	{
-		if( GVP->isTracking() ){ GVP->untrackEntity(); }
-		else { GVP->trackEntity( G_PlayerNtt ); }
+		if( GetScrnM->isTracking() ){ GetScrnM->untrackEntity(); }
+		else { GetScrnM->trackEntity( G_PlayerNtt ); }
 	}
 
 	if( inp.CLICK_LEFT )
@@ -47,7 +47,7 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 			CompPos *cmpPos = G_PlayerNtt->getComponent< CompPos >();
 			if ( cmpPos != nullptr )
 			{
-				cmpPos->setPos( GVP->getMouseWorldPos());
+				cmpPos->setPos( GetScrnM->getMouseWorldPos());
 			}
 		}
 	}
@@ -58,7 +58,7 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 			CompPos *cmpPos = G_EnemyNtt->getComponent< CompPos >();
 			if ( cmpPos != nullptr )
 			{
-				cmpPos->setPos( GVP->getMouseWorldPos());
+				cmpPos->setPos( GetScrnM->getMouseWorldPos());
 			}
 		}
 	}
@@ -125,11 +125,11 @@ void OnRenderUI()
 	DrawText( "BL", FontSizeUI,                               GetScreenHeight() - ( 2.0 * FontSizeUI ), FontSizeUI, WHITE );
 	DrawText( "BR", GetScreenWidth() - ( 2.5f * FontSizeUI ), GetScreenHeight() - ( 2.0 * FontSizeUI ), FontSizeUI, WHITE );
 
-	string moInfo = "Mouse  : " + to_string( ( int )GVP->getMouseWorldPos().x ) + ":" + to_string( ( int )GVP->getMouseWorldPos().y ) + " | " + to_string( ( int )GVP->getMousePos().x ) + ":" + to_string( ( int )GVP->getMousePos().y );
+	string moInfo = "Mouse  : " + to_string( ( int )GetScrnM->getMouseWorldPos().x ) + ":" + to_string( ( int )GetScrnM->getMouseWorldPos().y ) + " | " + to_string( ( int )GetScrnM->getMouseScreenPos().x ) + ":" + to_string( ( int )GetScrnM->getMouseScreenPos().y );
 	qlog( moInfo, INFO, 0 );
 	DrawText( moInfo.c_str(), FontSizeUI, ( 2.5f * FontSizeUI ), FontSizeUI, WHITE );
 
-	string caInfo = "Camera : " + to_string( GVP->getZoom() ) + " | " + to_string( ( int )GVP->getRotation() ) + " | " + to_string( ( int )GVP->getTarget().x ) + ":" + to_string( ( int )GVP->getTarget().y );
+	string caInfo = "Camera : " + to_string( GetScrnM->getZoom() ) + " | " + to_string( ( int )GetScrnM->getRotation() ) + " | " + to_string( ( int )GetScrnM->getTarget().x ) + ":" + to_string( ( int )GetScrnM->getTarget().y );
 	qlog( caInfo, INFO, 0 );
 	DrawText( caInfo.c_str(), FontSizeUI, ( 4.0f * FontSizeUI ), FontSizeUI, WHITE );
 
@@ -147,7 +147,7 @@ void OnRenderUI()
 	}
 
 	vec2_t playerWorldPos = G_PlayerNtt->getPos();
-	vec2_t playerScreenPos = GetWorldToScreen2D( playerWorldPos, *GVP->getCamera() );
+	vec2_t playerScreenPos = GetWorldToScreen2D( playerWorldPos, *GetScrnM->getCamera() );
 
 	string plInfo = "G_Player  : " + to_string( ( int )playerScreenPos.x ) + ":" + to_string( ( int )playerScreenPos.y ) + " | " + to_string( ( int )playerWorldPos.x ) + ":" + to_string( ( int )playerWorldPos.y );
 	qlog( plInfo, INFO, 0 );
