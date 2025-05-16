@@ -107,47 +107,23 @@ class Angle
 
 		// ============================ OPERATORS
 
-		inline Angle operator+( const Angle   &a ) const { return Angle( SMOD( _angle + a._angle, TAU )); }
-		inline Angle operator+( const Vector2 &v ) const { return Angle( SMOD( _angle + Angle( v )._angle, TAU )); }
+		inline Angle operator+( const Angle &a ) const { Angle r = Angle( *this ); r += a; return r; }
+		inline Angle operator-( const Angle &a ) const { Angle r = Angle( *this ); r -= a; return r; }
+		inline Angle operator*( const Angle &a ) const { Angle r = Angle( *this ); r *= a; return r; }
+		inline Angle operator/( const Angle &a ) const { Angle r = Angle( *this ); r /= a; return r; }
+		inline Angle operator%( const Angle &a ) const { Angle r = Angle( *this ); r %= a; return r; }
 
-		inline Angle operator-( const Angle   &a ) const { return Angle( SMOD( _angle - a._angle, TAU )); }
-		inline Angle operator-( const Vector2 &v ) const { return Angle( SMOD( _angle - Angle( v )._angle, TAU )); }
+		inline Angle operator+( const Vector2 &v ) const { Angle r = Angle( *this ); r += v; return r; }
+		inline Angle operator-( const Vector2 &v ) const { Angle r = Angle( *this ); r -= v; return r; }
+		inline Angle operator*( const Vector2 &v ) const { Angle r = Angle( *this ); r *= v; return r; }
+		inline Angle operator/( const Vector2 &v ) const { Angle r = Angle( *this ); r /= v; return r; }
+		inline Angle operator%( const Vector2 &v ) const { Angle r = Angle( *this ); r %= v; return r; }
 
-		inline Angle operator*( const Angle   &a ) const { return Angle( SMOD( _angle * a._angle, TAU )); }
-		inline Angle operator*( const Vector2 &v ) const { return Angle( SMOD( _angle * Angle( v )._angle, TAU )); }
-
-		inline Angle operator/( const Angle   &a ) const { return Angle( SMOD( _angle / a._angle, TAU )); }
-		inline Angle operator/( const Vector2 &v ) const { return Angle( SMOD( _angle / Angle( v )._angle, TAU )); }
-
-		inline Angle operator%( const Angle   &a ) const { return Angle( SMOD( _angle,  a._angle )); }
-		inline Angle operator%( const Vector2 &v ) const { return Angle( SMOD( _angle,  Angle( v )._angle )); }
-
-		TU inline Angle operator+( U angle ) const
-		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle + angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle + ( angle * DtoR ), TAU )); } // angle in degrees *
-		}
-		TU inline Angle operator-( U angle ) const
-		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle - angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle - ( angle * DtoR ), TAU )); } // angle in degrees *
-		}
-
-		TU inline Angle operator*( U angle ) const
-		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle * angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle * ( angle * DtoR ), TAU )); } // angle in degrees *
-		}
-		TU inline Angle operator/( U angle ) const
-		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle / angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle / ( angle * DtoR ), TAU )); } // angle in degrees *
-		}
-		TU inline Angle operator%( U angle ) const
-		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle,  angle )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle,  ( angle * DtoR ))); } // angle in degrees *
-		}
+		TU inline Angle operator+( U angle ) const { Angle r = Angle( *this ); r += angle; return r; }
+		TU inline Angle operator-( U angle ) const { Angle r = Angle( *this ); r -= angle; return r; }
+		TU inline Angle operator*( U angle ) const { Angle r = Angle( *this ); r *= angle; return r; }
+		TU inline Angle operator/( U angle ) const { Angle r = Angle( *this ); r /= angle; return r; }
+		TU inline Angle operator%( U angle ) const { Angle r = Angle( *this ); r %= angle; return r; }
 
 		//Checks for relative position of the angles // TODO : check if all this is correct
 

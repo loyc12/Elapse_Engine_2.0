@@ -48,7 +48,10 @@ class Pos2
 		inline T getY() const { return y; }
 
 		inline fixed_t getLenSqr() const { return sqrf( x ) + sqrf( y ); } // returns the squared length of the vector
-		inline fixed_t getLen()    const { return sqrtf( getLenSqr() ); }
+		inline fixed_t getLen()    const { return sqrtf( getLenSqr() ); } //  returns the length of the vector
+
+		inline fixed_t getDistSqr( const Pos2 &p ) const { return sqrf( x - p.x ) + sqrf( y - p.y ); } // returns the squared distance to another point
+		inline fixed_t getDist(    const Pos2 &p ) const { return sqrtf( getDistSqr( p )); } //           returns the distance to another point
 
 		// NOTE : returns the dot product of this and a
 		inline fixed_t dotP( const Pos2    &p ) const { return (( x * p.x ) + ( y * p.y )); }
@@ -112,11 +115,11 @@ class Pos2
 		inline Pos2 operator++( int ){ Pos2 tmp( x, y ); x++; y++; return tmp; }
 		inline Pos2 operator--( int ){ Pos2 tmp( x, y ); x--; y--; return tmp; }
 
-		inline Pos2 operator+( const Pos2 &p ) const { return Pos2( x + p.x, y + p.y ); }
-		inline Pos2 operator-( const Pos2 &p ) const { return Pos2( x - p.x, y - p.y ); }
-		inline Pos2 operator*( const Pos2 &p ) const { return Pos2( x * p.x, y * p.y ); }
-		inline Pos2 operator/( const Pos2 &p ) const { return Pos2( x / p.x, y / p.y ); }
-		inline Pos2 operator%( const Pos2 &p ) const { return Pos2( SMOD( x, p.x ), SMOD( y, p.y )); }
+		inline Pos2 operator+( const Pos2 &p ) const { Pos2 r = Pos2( *this ); r += p; return r; }
+		inline Pos2 operator-( const Pos2 &p ) const { Pos2 r = Pos2( *this ); r -= p; return r; }
+		inline Pos2 operator*( const Pos2 &p ) const { Pos2 r = Pos2( *this ); r *= p; return r; }
+		inline Pos2 operator/( const Pos2 &p ) const { Pos2 r = Pos2( *this ); r /= p; return r; }
+		inline Pos2 operator%( const Pos2 &p ) const { Pos2 r = Pos2( *this ); r %= p; return r; }
 
 		inline Pos2 operator+=( const Pos2 &p ){ x += p.x; y += p.y; return Pos2( x, y ); }
 		inline Pos2 operator-=( const Pos2 &p ){ x -= p.x; y -= p.y; return Pos2( x, y ); }
@@ -134,11 +137,11 @@ class Pos2
 
 	// ============================ VECTOR2 OPERATORS ( raylib dependent )
 
-		inline Pos2 operator+( const Vector2 &v ) const { return Pos2( x + v.x, y + v.y ); }
-		inline Pos2 operator-( const Vector2 &v ) const { return Pos2( x - v.x, y - v.y ); }
-		inline Pos2 operator*( const Vector2 &v ) const { return Pos2( x * v.x, y * v.y ); }
-		inline Pos2 operator/( const Vector2 &v ) const { return Pos2( x / v.x, y / v.y ); }
-		inline Pos2 operator%( const Vector2 &v ) const { return Pos2( SMOD( x, v.x ), SMOD( y, v.y )); }
+		inline Pos2 operator+( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r += v; return r; }
+		inline Pos2 operator-( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r -= v; return r; }
+		inline Pos2 operator*( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r *= v; return r; }
+		inline Pos2 operator/( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r /= v; return r; }
+		inline Pos2 operator%( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r %= v; return r; }
 
 		inline Pos2 operator+=( const Vector2 &v ){ x += v.x; y += v.y; return Pos2( x, y ); }
 		inline Pos2 operator-=( const Vector2 &v ){ x -= v.x; y -= v.y; return Pos2( x, y ); }
@@ -156,11 +159,11 @@ class Pos2
 
 	// ============================ TYPENAME OPERATORS
 
-		TU inline Pos2 operator+( const U &val ) const { return Pos2( OTU::add( x, val ), OTU::add( y, val )); }
-		TU inline Pos2 operator-( const U &val ) const { return Pos2( OTU::sub( x, val ), OTU::sub( y, val )); }
-		TU inline Pos2 operator*( const U &val ) const { return Pos2( OTU::mul( x, val ), OTU::mul( y, val )); }
-		TU inline Pos2 operator/( const U &val ) const { return Pos2( OTU::div( x, val ), OTU::div( y, val )); }
-		TU inline Pos2 operator%( const U &val ) const { return Pos2( OTU::mod( x, val ), OTU::mod( y, val )); }
+		TU inline Pos2 operator+( const U &val ) const { Pos2 r = Pos2( *this ); r += val; return r; }
+		TU inline Pos2 operator-( const U &val ) const { Pos2 r = Pos2( *this ); r -= val; return r; }
+		TU inline Pos2 operator*( const U &val ) const { Pos2 r = Pos2( *this ); r *= val; return r; }
+		TU inline Pos2 operator/( const U &val ) const { Pos2 r = Pos2( *this ); r /= val; return r; }
+		TU inline Pos2 operator%( const U &val ) const { Pos2 r = Pos2( *this ); r %= val; return r; }
 
 		TU inline Pos2 operator+=( const U &val ){ x = OTU::add( x, val ); y = OTU::add( y, val ); return Pos2( x, y ); }
 		TU inline Pos2 operator-=( const U &val ){ x = OTU::sub( x, val ); y = OTU::sub( y, val ); return Pos2( x, y ); }

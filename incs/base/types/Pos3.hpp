@@ -50,8 +50,11 @@ class Pos3
 		inline T getY() const { return y; }
 		inline T getZ() const { return z; }
 
-		inline T getLenSqr() const { return sqrf( x ) + sqrf( y ) + sqrf( z ); } // returns the squared length of the vector
-		inline T getLen()    const { return sqrtf( getLenSqr() ); }
+		inline fixed_t getLenSqr() const { return sqrf( x ) + sqrf( y ) + sqrf( z ); } // returns the squared length of the vector
+		inline fixed_t getLen()    const { return sqrtf( getLenSqr() ); } //              returns the length of the vector
+
+		inline fixed_t getDistSqr( const Pos3 &p ) const { return sqrf( x - p.x ) + sqrf( y - p.y ) + sqrf( z - p.z ); } // returns the squared distance to another point
+		inline fixed_t getDist(    const Pos3 &p ) const { return sqrtf( getDistSqr( p )); } //                             returns the distance to another point
 
 		// NOTE : returns the dot product of this and a
 		inline fixed_t dotP( const Pos3    &p ) const { return (( x * p.x ) + ( y * p.y ) + ( z * p.z )); }
@@ -101,11 +104,11 @@ class Pos3
 		inline Pos3 operator++( int ){ Pos3 tmp( x, y, z ); x++; y++; z++; return tmp; }
 		inline Pos3 operator--( int ){ Pos3 tmp( x, y, z ); x--; y--; z--; return tmp; }
 
-		inline Pos3 operator+( const Pos3 &p ) const { return Pos3( x + p.x, y + p.y, z + p.z ); }
-		inline Pos3 operator-( const Pos3 &p ) const { return Pos3( x - p.x, y - p.y, z - p.z ); }
-		inline Pos3 operator*( const Pos3 &p ) const { return Pos3( x * p.x, y * p.y, z * p.z ); }
-		inline Pos3 operator/( const Pos3 &p ) const { return Pos3( x / p.x, y / p.y, z / p.z ); }
-		inline Pos3 operator%( const Pos3 &p ) const { return Pos3( SMOD( x, p.x ), SMOD( y, p.y ), SMOD( z, p.z )); }
+		inline Pos3 operator+( const Pos3 &p ) const { Pos3 r = Pos3( *this ); r += p; return r; }
+		inline Pos3 operator-( const Pos3 &p ) const { Pos3 r = Pos3( *this ); r -= p; return r; }
+		inline Pos3 operator*( const Pos3 &p ) const { Pos3 r = Pos3( *this ); r *= p; return r; }
+		inline Pos3 operator/( const Pos3 &p ) const { Pos3 r = Pos3( *this ); r /= p; return r; }
+		inline Pos3 operator%( const Pos3 &p ) const { Pos3 r = Pos3( *this ); r %= p; return r; }
 
 		inline Pos3 operator+=( const Pos3 &p ){ x += p.x; y += p.y; z += p.z; return Pos3( x, y, z ); }
 		inline Pos3 operator-=( const Pos3 &p ){ x -= p.x; y -= p.y; z -= p.z; return Pos3( x, y, z ); }
@@ -123,11 +126,11 @@ class Pos3
 
 	// ============================ VECTOR2 OPERATORS ( raylib dependent )
 
-		inline Pos3 operator+( const Vector3 &v ) const { return Pos3( x + v.x, y + v.y, z + v.z ); }
-		inline Pos3 operator-( const Vector3 &v ) const { return Pos3( x - v.x, y - v.y, z - v.z ); }
-		inline Pos3 operator*( const Vector3 &v ) const { return Pos3( x * v.x, y * v.y, z * v.z ); }
-		inline Pos3 operator/( const Vector3 &v ) const { return Pos3( x / v.x, y / v.y, z / v.z ); }
-		inline Pos3 operator%( const Vector3 &v ) const { return Pos3( SMOD( x, v.x ), SMOD( y, v.y ), SMOD( z, v.z )); }
+		inline Pos3 operator+( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r += v; return r; }
+		inline Pos3 operator-( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r -= v; return r; }
+		inline Pos3 operator*( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r *= v; return r; }
+		inline Pos3 operator/( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r /= v; return r; }
+		inline Pos3 operator%( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r %= v; return r; }
 
 		inline Pos3 operator+=( const Vector3 &v ){ x += v.x; y += v.y; z += v.z; return Pos3( x, y, z ); }
 		inline Pos3 operator-=( const Vector3 &v ){ x -= v.x; y -= v.y; z -= v.z; return Pos3( x, y, z ); }
@@ -145,11 +148,11 @@ class Pos3
 
 	// ============================ TYPENAME OPERATORS
 
-		TU inline Pos3 operator+( const U &val ) const { return Pos3( OTU::add( x, val ), OTU::add( y, val ), OTU::add( z, val )); }
-		TU inline Pos3 operator-( const U &val ) const { return Pos3( OTU::sub( x, val ), OTU::sub( y, val ), OTU::sub( z, val )); }
-		TU inline Pos3 operator*( const U &val ) const { return Pos3( OTU::mul( x, val ), OTU::mul( y, val ), OTU::mul( z, val )); }
-		TU inline Pos3 operator/( const U &val ) const { return Pos3( OTU::div( x, val ), OTU::div( y, val ), OTU::div( z, val )); }
-		TU inline Pos3 operator%( const U &val ) const { return Pos3( OTU::mod( x, val ), OTU::mod( y, val ), OTU::mod( z, val )); }
+		TU inline Pos3 operator+( const U &val ) const { Pos3 r = Pos3( *this ); r += val; return r; }
+		TU inline Pos3 operator-( const U &val ) const { Pos3 r = Pos3( *this ); r -= val; return r; }
+		TU inline Pos3 operator*( const U &val ) const { Pos3 r = Pos3( *this ); r *= val; return r; }
+		TU inline Pos3 operator/( const U &val ) const { Pos3 r = Pos3( *this ); r /= val; return r; }
+		TU inline Pos3 operator%( const U &val ) const { Pos3 r = Pos3( *this ); r %= val; return r; }
 
 		TU inline Pos3 operator+=( const U &val ){ x = OTU::add( x, val ); y = OTU::add( y, val ); OTU::add( z, val); return Pos3( x, y ); }
 		TU inline Pos3 operator-=( const U &val ){ x = OTU::sub( x, val ); y = OTU::sub( y, val ); OTU::sub( z, val); return Pos3( x, y ); }

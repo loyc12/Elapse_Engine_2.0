@@ -4,6 +4,9 @@ WIP
 	- finish the ScreenMngr draw methods
 	- implement the event manager properly
 
+To add
+	- implement a Col4 type
+
 Style
 
 Refactor
