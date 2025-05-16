@@ -5,7 +5,7 @@
 # include "../core.hpp"
 
 # include "./FixedPoint.hpp"
-//# include "./Angle.hpp"
+# include "./Angle.hpp"
 
 template < typename T >
 class Pos3
@@ -68,24 +68,46 @@ class Pos3
 		//inline angle_t angle( const Pos3    &p ) const { return acosf( dotP( p ) / ( getLen() * p.getLen() )); }
 		//inline angle_t angle( const Vector3 &v ) const { return acosf( dotP( v ) / ( getLen() * sqrtf( sqrf( v.x ) + sqrf( v.y ) + sqrf( v.z )))); }
 
-		inline void normalize()
+		inline Pos3 getNormalizedCpy() const { Pos3 r = Pos3( *this ); r.normalize(); return Pos3( x, y, z ); }
+		inline Pos3 normalize()
 		{
-			fixed_t getLen = this->getLen();
+			fixed_t len = this->getLen();
 
-			if ( getLen == 0 ) // NOTE : zero-div protection
+			if ( len == 0 ) // NOTE : zero-div protection
 			{
 				x = y = z = 0;
-				qlog( "Pos2::normalize : length is 0 : unable to normalize : reseting values to 0", WARN, 0 );
-				return;
+				qlog( "Pos3::normalize : length is 0 : unable to normalize : reseting values to 0", WARN, 0 );
+				return Pos3();
 			}
-			elif ( getLen != 1 )
+			elif ( len != 1 ) // NOTE : skips the math if len is already 1
 			{
-				x /= getLen;
-				y /= getLen;
-				z /= getLen;
+				x /= len;
+				y /= len;
+				z /= len;
 			}
-			else { qlog( "Pos2::normalize : length is 1 : already normalized", DEBUG, 0 ); }
+			else { qlog( "Pos3::normalize : length is 1 : already normalized", DEBUG, 0 ); }
+			return Pos3( x, y, z ); // NOTE : returns a copy of the resulting Pos3, if needed
 		}
+
+		/*
+		inline Pos3 getRotatedCpy( Angle a, Angle b ) const { Pos3 r = Pos3( *this ); r.rotateBy( a, b ); return Pos3( x, y, z ); }
+		inline Pos3 rotateBy( Angle a, Angle b )
+		{
+			if ( a == 0 && b == 0 ) { return Pos3( x, y, z ); } // NOTE : skiping the maths
+
+			// TODO : check if this is correct
+			a += Angle( *this ); // finding the resulting angle after rotation
+			b += Angle( *this );
+
+			fixed_t len = this->getLen();
+
+			// NOTE : a nad b both rotate the vector. A does so around the z axis, and b rotates around the y axis
+
+			// TODO : do the maths here
+
+			return Pos3( x, y, z ); // NOTE : returns a copy of the resulting Pos3, if needed
+		}
+		*/
 
 	// ============================ CASTING METHODS
 

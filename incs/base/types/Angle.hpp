@@ -68,6 +68,9 @@ class Angle
 		inline fixed_t getDegCen() const { return ( _angle - PI ) * RtoD; } //  returns the angle in the range [-180, 180]
 		inline fixed_t getDegNeg() const { return ( _angle - TAU ) * RtoD; } // returns the angle in the range [-360, 0]
 
+		inline fixed_t getX() const { return this->cos(); } // returns the x component of the angle as a vector
+		inline fixed_t getY() const { return this->sin(); } // returns the y component of the angle as a vector
+
 		// returns the angle as a unit vector ( normalized )
 		inline Vector2 getVec2() const
 		{

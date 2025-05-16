@@ -10,9 +10,13 @@
 
 # define MAX_VERT_COUNT 256 // maximum number of vertices in a shape
 
-class Shape
+class Shape // TODO : move the large definitions to a .cpp file
 {
 	// ============================ ATTRIBUTES
+	protected:
+		// returns the number of vertices in the shape, for comparisons with the index value
+		int16_t getVertC() const { return int16_t( _verts.size()); }
+
 	public:
 		vec2_t     _centre; // position of the shape
 		Angle      _angle; //  angle of the
@@ -20,7 +24,7 @@ class Shape
 		vec2_arr_t _verts; //  vertices of the shape
 
 	// ============================ CONSTRUCTORS / DESTRUCTORS
-	public:
+
 		inline ~Shape(){};
 		inline  Shape() : _centre( 0, 0 ), _angle( 0 ), _colour( WHITE ), _verts(){}
 		inline  Shape( const vec2_t &center, const Angle &angle = 0, const Color &colour = WHITE, const vec2_arr_t &verts = vec2_arr_t() ):
@@ -70,166 +74,44 @@ class Shape
 
 	// ============================ OPERATORS
 
-		inline vec2_t operator[]( int16_t i ) const
-		{
-			i = Operate< int16_t >::pmod( i, _verts.size() ); // NOTE : this is to avoid out of bound indexing and allow for wrapping
-			return _verts[ i ];
-		}
+		// NOTE : this avoids out of bound indexing and allow for wrapping
+		inline vec2_t operator[]( int16_t i ) const { i = Operate< int16_t >::pmod( i, getVertC() ); return _verts[ i ]; }
 
 	// ============================ VERTEX METHODS
 
-		inline bool delVert( int16_t i )
-		{
-			if ( i < 0 || i >= _verts.size() )
-			{
-				qlog( "Shape::delVert : index out of bounds", WARN, 0 );
-				return false;
-			}
-			_verts.erase( _verts.begin() + i );
-			return true;
-		}
+		bool delVert( int16_t i );
+		bool addVert( const vec2_t &v );
+		bool copyVerts( const vec2_arr_t &verts );
+		bool sortVerts();bool scaleVerts( const fixed_t &scale );
 
-		inline bool addVert( const vec2_t &v )
-		{
-			if ( _verts.size() >= MAX_VERT_COUNT )
-			{
-				qlog( "Shape::addVert : MAX_VERT_COUNT reached : cannot add any more", ERROR, 0 );
-				return false;
-			}
-			_verts.push_back( v );
-			sortVerts();
-			return true;
-		}
+	// ============================ SHAPE METHODS
 
-		inline bool copyVerts( const vec2_arr_t &verts )
-		{
-			bool copiedAll = true;
-			for ( int16_t i = 0; i < verts.size(); i++ )
-			{
-				if ( _verts.size() >= MAX_VERT_COUNT )
-				{
-					qlog( "Shape::copyVerts : MAX_VERT_COUNT reached : cannot add any more", ERROR, 0 );
-					copiedAll = false;
-					break;
-				}
-				_verts.push_back( verts[ i ]);
-			}
-			sortVerts();
-			return copiedAll;
-		}
+		// NOTE : these obtain the true maximum distance between the most oposite verticies's position, assuming the shape is not rotated
+		inline vec2_t getSize() const { return vec2_t( getWidth(), getHeight() );}
+		fixed_t getWidth()      const;
+		fixed_t getHeight()     const;
 
-		inline bool sortVerts() // TODO : make sure this works
-		{
-			if ( _verts.size() == 0 ) { return false; }
-			std::sort( _verts.begin(), _verts.end(), []( const vec2_t &a, const vec2_t &b ){ return Angle( a ) < Angle( b ); });
-			return true;
-		}
+		// NOTE : these obtain the true maximum distance between the most oposite verticies's position, based on the current rotation
+		inline vec2_t getRotatedSize() const { return vec2_t( getRotatedWidth(), getRotatedHeight() );}
+		fixed_t getRotatedWidth()      const;
+		fixed_t getRotatedHeight()     const;
 
-		inline bool scaleVerts( const fixed_t &scale )
-		{
-			if ( _verts.size() == 0 ) { return false; }
-			for ( int16_t i = 0; i < _verts.size(); i++ ){ _verts[ i ] *= scale; }
-			return true;
-		}
+		fixed_t getArea()      const;
+		fixed_t getPerimeter() const;
 
-		// ============================ SHAPE METHODS
+		fixed_t getMinRadius() const;
+		fixed_t getMaxRadius() const;
+		fixed_t getAvgRadius() const;
 
-		inline vec2_t  getSize()  const { return vec2_t( getWidth(), getHeight() );}
-		inline fixed_t getWidth() const
-		{
-			if ( _verts.size() == 0 ) { return 0; }
-			fixed_t minX = _verts[ 0 ].getX();
-			fixed_t maxX = _verts[ 0 ].getX();
-			for ( int16_t i = 1; i < _verts.size(); i++ )
-			{
-				if ( _verts[ i ].getX() < minX ) { minX = _verts[ i ].getX(); }
-				if ( _verts[ i ].getX() > maxX ) { maxX = _verts[ i ].getX(); }
-			}
-			return maxX - minX;
-		}
-		inline fixed_t getHeight() const
-		{
-			if ( _verts.size() == 0 ) { return 0; }
-			fixed_t minY = _verts[ 0 ].getY();
-			fixed_t maxY = _verts[ 0 ].getY();
-			for ( int16_t i = 1; i < _verts.size(); i++ )
-			{
-				if ( _verts[ i ].getY() < minY ) { minY = _verts[ i ].getY(); }
-				if ( _verts[ i ].getY() > maxY ) { maxY = _verts[ i ].getY(); }
-			}
-			return maxY - minY;
-		}
-
-		inline fixed_t getArea() const
-		{
-			if ( _verts.size() == 0 ) { return 0; }
-			fixed_t area = 0;
-
-			for ( int16_t i = 0; i < _verts.size(); i++ )
-			{
-				int16_t j = ( i + 1 ) % _verts.size();
-				area += ( _verts[ i ].getX() * _verts[ j ].getY() ) - ( _verts[ j ].getX() * _verts[ i ].getY() );
-			}
-			return area / 2;
-		}
-		inline fixed_t getPerimeter() const
-		{
-			if ( _verts.size() == 0 ) { return 0; }
-			fixed_t perimeter = 0;
-
-			for ( int16_t i = 0; i < _verts.size(); i++ )
-			{
-				int16_t j = ( i + 1 ) % _verts.size();
-				perimeter += _verts[ i ].getDist( _verts[ j ] );
-			}
-			return perimeter;
-		}
-
-		inline fixed_t getMinRadius() const
-		{
-			if ( _verts.size() == 0 ) { return 0; }
-			fixed_t minRadius = _verts[ 0 ].getDist( _centre );
-
-			for ( int16_t i = 1; i < _verts.size(); i++ )
-			{
-				fixed_t radius = _verts[ i ].getDist( _centre );
-				if ( radius < minRadius ) { minRadius = radius; }
-			}
-			return minRadius;
-		}
-		inline fixed_t getMaxRadius() const
-		{
-			if ( _verts.size() == 0 ) { return 0; }
-			fixed_t maxRadius = _verts[ 0 ].getDist( _centre );
-
-			for ( int16_t i = 1; i < _verts.size(); i++ )
-			{
-				fixed_t radius = _verts[ i ].getDist( _centre );
-				if ( radius > maxRadius ) { maxRadius = radius; }
-			}
-			return maxRadius;
-		}
-		inline fixed_t getAvgRadius() const
-		{
-			if ( _verts.size() == 0 ) { return 0; }
-			fixed_t avgRadius = 0;
-
-			for ( int16_t i = 0; i < _verts.size(); i++ )
-			{
-				avgRadius += _verts[ i ].getDist( _centre );
-			}
-			return avgRadius / _verts.size();
-		}
-
-		// ============================= FRIEND METHODS
+	// ============================= FRIEND METHODS
 
 		inline friend std::ostream &operator<<( std::ostream &os, const Shape &s )
 		{
 			os << "Shape : [center: " << s._centre << ", angle: " << s._angle << ", colour: " << s._colour.r << ":" << s._colour.g << ":" << s._colour.b << ":" << s._colour.a << ", verts: [";
-			for ( int16_t i = 0; i < s._verts.size(); i++ )
+			for ( int16_t i = 0; i < s.getVertC(); i++ )
 			{
 				os << s._verts[ i ];
-				if ( i != s._verts.size() - 1 ) { os << ", "; }
+				if ( i != s.getVertC() - 1 ) { os << ", "; }
 			}
 			os << "]";
 			return os;
