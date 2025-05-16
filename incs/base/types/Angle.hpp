@@ -23,7 +23,7 @@ class Angle
 {
 	#define TU template < typename U, typename = std::enable_if_t<( !std::is_same_v< U, Angle >&& ( std::is_integral_v< U >|| std::is_floating_point_v< U > ))>>
 
-	#define ANG_MODULUS( a, b ) Opfx::pmod( a, b )
+	#define SMOD( a, b ) Opfx::pmod( a, b )
 
 	protected:
 		fixed_t _angle; // NOTE : the angle stored in radians and between [0, TAU]
@@ -37,8 +37,8 @@ class Angle
 		inline Angle( const Vector2 &v ){ _angle = atan2f( v.y, v.x );}
 		TU inline Angle( U angle )
 		{
-			if constexpr( std::is_floating_point_v< U >){ _angle = ANG_MODULUS( angle, TAU ); } // angle in radians
-			else /* std::is_integral_v< U > */ {   _angle = ANG_MODULUS( angle * DtoR, TAU ); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U >){ _angle = SMOD( angle, TAU ); } // angle in radians
+			else /* std::is_integral_v< U > */ {   _angle = SMOD( angle * DtoR, TAU ); } // angle in degrees *
 		}
 
 
@@ -47,13 +47,13 @@ class Angle
 		inline Angle operator=( const Vector2 &v ){ _angle = atan2f( v.y, v.x ); return *this; }
 		TU inline Angle operator=( const U &angle )
 		{
-			if constexpr( std::is_floating_point_v< U > ){ _angle = ANG_MODULUS( angle, TAU ); } // angle in radians
-			else /* std::is_integral_v< U > */ {    _angle = ANG_MODULUS( angle * DtoR, TAU ); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U > ){ _angle = SMOD( angle, TAU ); } // angle in radians
+			else /* std::is_integral_v< U > */ {    _angle = SMOD( angle * DtoR, TAU ); } // angle in degrees *
 			return *this;
 		}
 
 		// ============================ ACCESSORS / MUTATORS
-		inline fixed_t normalize() { _angle = ANG_MODULUS( _angle, TAU ); return _angle; } // returns the angle in the range [0, TAU]
+		inline fixed_t normalize() { _angle = SMOD( _angle, TAU ); return _angle; } // returns the angle in the range [0, TAU]
 
 		inline fixed_t getRad() const { return _angle; } //                 returns the angle in the range [0, TAU]
 		inline fixed_t getDeg() const { return _angle * RtoD; } //          returns the angle in the range [0, 360]
@@ -81,8 +81,8 @@ class Angle
 		inline void setTo( const Vector2 &v ){ _angle = atan2f( v.y, v.x ); } //           angle as a vector
 		TU inline void setTo( U angle )
 		{
-			if constexpr( std::is_floating_point_v< U >){ _angle = ANG_MODULUS( angle, TAU ); } //        angle in radians
-			else /* std::is_integral_v< U > */ {     _angle = ANG_MODULUS( angle * DtoR, TAU ); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U >){ _angle = SMOD( angle, TAU ); } //        angle in radians
+			else /* std::is_integral_v< U > */ {     _angle = SMOD( angle * DtoR, TAU ); } // angle in degrees *
 		}
 
 		inline fixed_t cos()  const { return Opfx::cos( _angle ); }
@@ -107,46 +107,46 @@ class Angle
 
 		// ============================ OPERATORS
 
-		inline Angle operator+( const Angle   &a ) const { return Angle( ANG_MODULUS( _angle + a._angle, TAU )); }
-		inline Angle operator+( const Vector2 &v ) const { return Angle( ANG_MODULUS( _angle + Angle( v )._angle, TAU )); }
+		inline Angle operator+( const Angle   &a ) const { return Angle( SMOD( _angle + a._angle, TAU )); }
+		inline Angle operator+( const Vector2 &v ) const { return Angle( SMOD( _angle + Angle( v )._angle, TAU )); }
 
-		inline Angle operator-( const Angle   &a ) const { return Angle( ANG_MODULUS( _angle - a._angle, TAU )); }
-		inline Angle operator-( const Vector2 &v ) const { return Angle( ANG_MODULUS( _angle - Angle( v )._angle, TAU )); }
+		inline Angle operator-( const Angle   &a ) const { return Angle( SMOD( _angle - a._angle, TAU )); }
+		inline Angle operator-( const Vector2 &v ) const { return Angle( SMOD( _angle - Angle( v )._angle, TAU )); }
 
-		inline Angle operator*( const Angle   &a ) const { return Angle( ANG_MODULUS( _angle * a._angle, TAU )); }
-		inline Angle operator*( const Vector2 &v ) const { return Angle( ANG_MODULUS( _angle * Angle( v )._angle, TAU )); }
+		inline Angle operator*( const Angle   &a ) const { return Angle( SMOD( _angle * a._angle, TAU )); }
+		inline Angle operator*( const Vector2 &v ) const { return Angle( SMOD( _angle * Angle( v )._angle, TAU )); }
 
-		inline Angle operator/( const Angle   &a ) const { return Angle( ANG_MODULUS( _angle / a._angle, TAU )); }
-		inline Angle operator/( const Vector2 &v ) const { return Angle( ANG_MODULUS( _angle / Angle( v )._angle, TAU )); }
+		inline Angle operator/( const Angle   &a ) const { return Angle( SMOD( _angle / a._angle, TAU )); }
+		inline Angle operator/( const Vector2 &v ) const { return Angle( SMOD( _angle / Angle( v )._angle, TAU )); }
 
-		inline Angle operator%( const Angle   &a ) const { return Angle( ANG_MODULUS( _angle,  a._angle )); }
-		inline Angle operator%( const Vector2 &v ) const { return Angle( ANG_MODULUS( _angle,  Angle( v )._angle )); }
+		inline Angle operator%( const Angle   &a ) const { return Angle( SMOD( _angle,  a._angle )); }
+		inline Angle operator%( const Vector2 &v ) const { return Angle( SMOD( _angle,  Angle( v )._angle )); }
 
 		TU inline Angle operator+( U angle ) const
 		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( ANG_MODULUS( _angle + angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( ANG_MODULUS( _angle + ( angle * DtoR ), TAU )); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle + angle,  TAU )); } // angle in radians
+			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle + ( angle * DtoR ), TAU )); } // angle in degrees *
 		}
 		TU inline Angle operator-( U angle ) const
 		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( ANG_MODULUS( _angle - angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( ANG_MODULUS( _angle - ( angle * DtoR ), TAU )); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle - angle,  TAU )); } // angle in radians
+			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle - ( angle * DtoR ), TAU )); } // angle in degrees *
 		}
 
 		TU inline Angle operator*( U angle ) const
 		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( ANG_MODULUS( _angle * angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( ANG_MODULUS( _angle * ( angle * DtoR ), TAU )); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle * angle,  TAU )); } // angle in radians
+			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle * ( angle * DtoR ), TAU )); } // angle in degrees *
 		}
 		TU inline Angle operator/( U angle ) const
 		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( ANG_MODULUS( _angle / angle,  TAU )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( ANG_MODULUS( _angle / ( angle * DtoR ), TAU )); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle / angle,  TAU )); } // angle in radians
+			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle / ( angle * DtoR ), TAU )); } // angle in degrees *
 		}
 		TU inline Angle operator%( U angle ) const
 		{
-			if constexpr( std::is_floating_point_v< U > ){ return Angle( ANG_MODULUS( _angle,  angle )); } // angle in radians
-			else /* std::is_integral_v< U > */ { return Angle( ANG_MODULUS( _angle,  ( angle * DtoR ))); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U > ){ return Angle( SMOD( _angle,  angle )); } // angle in radians
+			else /* std::is_integral_v< U > */ { return Angle( SMOD( _angle,  ( angle * DtoR ))); } // angle in degrees *
 		}
 
 		//Checks for relative position of the angles // TODO : check if all this is correct
@@ -234,80 +234,80 @@ class Angle
 		inline bool isParallel( const Angle &a ) const { return Opfx::abs( Opfx::sin( a._angle - _angle )) < EPS; } // NOTE : checks if this is parallel to a ( -90 or 90 degrees )
 		inline bool isPerpend(  const Angle &a ) const { return Opfx::abs( Opfx::cos( a._angle - _angle )) < EPS; } // NOTE : checks if this is perpendicular to a ( 0 or 180 degrees )
 
-		inline Angle getAverage(   const Angle &a ) const { return Angle( ANG_MODULUS(( _angle + a._angle ) / 2.0f, TAU )); } // returns the average ( bisection ) of two angles
-		inline Angle getDist(      const Angle &a ) const { return Angle( ANG_MODULUS( a._angle - _angle, TAU )); } //           returns the true angular distance between two angles ( order dependant )
+		inline Angle getAverage(   const Angle &a ) const { return Angle( SMOD(( _angle + a._angle ) / 2.0f, TAU )); } // returns the average ( bisection ) of two angles
+		inline Angle getDist(      const Angle &a ) const { return Angle( SMOD( a._angle - _angle, TAU )); } //           returns the true angular distance between two angles ( order dependant )
 		inline Angle getShortDist( const Angle &a ) const { return Angle( Opfx::abs( a._angle - _angle )); } //    returns the smallest angular distance between two angles
 		inline Angle getLongDist(  const Angle &a ) const { return getShortDist( a ).getComplement(); } //                       returns the largest angular distance between two angles
 
 		// Moves the angle by 45 degrees increments in the given direction ( might conflict with the stream operator )
-		//inline Angle operator>>( int n ){ _angle = ANG_MODULUS( _angle + ( n * ( PI / 4.0f )), TAU ); return *this; } // rotate the angle clockwise
-		//inline Angle operator<<( int n ){ _angle = ANG_MODULUS( _angle - ( n * ( PI / 4.0f )), TAU ); return *this; } // rotate the angle counter-clockwise
+		//inline Angle operator>>( int n ){ _angle = SMOD( _angle + ( n * ( PI / 4.0f )), TAU ); return *this; } // rotate the angle clockwise
+		//inline Angle operator<<( int n ){ _angle = SMOD( _angle - ( n * ( PI / 4.0f )), TAU ); return *this; } // rotate the angle counter-clockwise
 
 		inline Angle operator+() const { return Angle( _angle ); } // returns the angle
 		inline Angle operator-() const { return getComplement(); } // return the complementary angle ( -a )
 		inline Angle operator!() const { return getOpposite(); } //   returns the opposite angle ( + 180 degrees )
 
-		inline Angle getComplement() const { return Angle( ANG_MODULUS( -_angle, TAU )); } //      return the flips the angle around 0 ( ex : 37 -> -37)
-		inline Angle getOpposite()   const { return Angle( ANG_MODULUS(  _angle + PI, TAU )); } // returns the opposite angle
+		inline Angle getComplement() const { return Angle( SMOD( -_angle, TAU )); } //      return the flips the angle around 0 ( ex : 37 -> -37)
+		inline Angle getOpposite()   const { return Angle( SMOD(  _angle + PI, TAU )); } // returns the opposite angle
 
 		inline Angle getPerpend()  const { return getPerpendP(); } //                                      returns a perpendicular angle
-		inline Angle getPerpendP() const { return Angle( ANG_MODULUS( _angle + ( PI / 2.0f ), TAU )); } // returns the clockwise perpendicular angle
-		inline Angle getPerpendN() const { return Angle( ANG_MODULUS( _angle - ( PI / 2.0f ), TAU )); } // returns the counter clockwise perpendicular angle
+		inline Angle getPerpendP() const { return Angle( SMOD( _angle + ( PI / 2.0f ), TAU )); } // returns the clockwise perpendicular angle
+		inline Angle getPerpendN() const { return Angle( SMOD( _angle - ( PI / 2.0f ), TAU )); } // returns the counter clockwise perpendicular angle
 
 		// increments / decrements the angle by 0.1 degrees
-		inline Angle operator++(){ _angle = ANG_MODULUS( _angle + ( 0.1f * DtoR ), TAU ); return *this; }
-		inline Angle operator--(){ _angle = ANG_MODULUS( _angle - ( 0.1f * DtoR ), TAU ); return *this; }
+		inline Angle operator++(){ _angle = SMOD( _angle + ( 0.1f * DtoR ), TAU ); return *this; }
+		inline Angle operator--(){ _angle = SMOD( _angle - ( 0.1f * DtoR ), TAU ); return *this; }
 
 		// increments / decrements the angle by 0.1 degrees and returns the old value
-		inline Angle operator++( int ){ Angle a = *this; _angle = ANG_MODULUS( _angle + ( 0.1f * DtoR ), TAU ); return a; }
-		inline Angle operator--( int ){ Angle a = *this; _angle = ANG_MODULUS( _angle - ( 0.1f * DtoR ), TAU ); return a; }
+		inline Angle operator++( int ){ Angle a = *this; _angle = SMOD( _angle + ( 0.1f * DtoR ), TAU ); return a; }
+		inline Angle operator--( int ){ Angle a = *this; _angle = SMOD( _angle - ( 0.1f * DtoR ), TAU ); return a; }
 
-		inline Angle operator+=( const Angle   &a ){ _angle = ANG_MODULUS( _angle + a._angle, TAU );          return *this; }
-		inline Angle operator+=( const Vector2 &v ){ _angle = ANG_MODULUS( _angle + Angle( v )._angle, TAU ); return *this; }
+		inline Angle operator+=( const Angle   &a ){ _angle = SMOD( _angle + a._angle, TAU );          return *this; }
+		inline Angle operator+=( const Vector2 &v ){ _angle = SMOD( _angle + Angle( v )._angle, TAU ); return *this; }
 
 		TU inline Angle operator+=( U angle )
 		{
-			if constexpr( std::is_floating_point_v< U >){   _angle = ANG_MODULUS( _angle + angle, TAU ); } // angle in radians
-			else /* std::is_integral_v< U > */ { _angle = ANG_MODULUS( _angle + ( angle * DtoR ), TAU ); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U >){   _angle = SMOD( _angle + angle, TAU ); } // angle in radians
+			else /* std::is_integral_v< U > */ { _angle = SMOD( _angle + ( angle * DtoR ), TAU ); } // angle in degrees *
 			return *this;
 		}
 
-		inline Angle operator-=( const Angle   &a ){ _angle = ANG_MODULUS( _angle - a._angle, TAU );          return *this; }
-		inline Angle operator-=( const Vector2 &v ){ _angle = ANG_MODULUS( _angle - Angle( v )._angle, TAU ); return *this; }
+		inline Angle operator-=( const Angle   &a ){ _angle = SMOD( _angle - a._angle, TAU );          return *this; }
+		inline Angle operator-=( const Vector2 &v ){ _angle = SMOD( _angle - Angle( v )._angle, TAU ); return *this; }
 
 		TU inline Angle operator-=( U angle )
 		{
-			if constexpr( std::is_floating_point_v< U >){   _angle = ANG_MODULUS( _angle - angle, TAU ); } // angle in radians
-			else /* std::is_integral_v< U > */ { _angle = ANG_MODULUS( _angle - ( angle * DtoR ), TAU ); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U >){   _angle = SMOD( _angle - angle, TAU ); } // angle in radians
+			else /* std::is_integral_v< U > */ { _angle = SMOD( _angle - ( angle * DtoR ), TAU ); } // angle in degrees *
 			return *this;
 		}
 
-		inline Angle operator*=( const Angle   &a ){ _angle = ANG_MODULUS( _angle * a._angle, TAU );          return *this; }
-		inline Angle operator*=( const Vector2 &v ){ _angle = ANG_MODULUS( _angle * Angle( v )._angle, TAU ); return *this; }
+		inline Angle operator*=( const Angle   &a ){ _angle = SMOD( _angle * a._angle, TAU );          return *this; }
+		inline Angle operator*=( const Vector2 &v ){ _angle = SMOD( _angle * Angle( v )._angle, TAU ); return *this; }
 
 		TU inline Angle operator*=( U angle )
 		{
-			if constexpr( std::is_floating_point_v< U >){   _angle = ANG_MODULUS( _angle * angle, TAU ); } // angle in radians
-			else /* std::is_integral_v< U > */ { _angle = ANG_MODULUS( _angle * ( angle * DtoR ), TAU ); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U >){   _angle = SMOD( _angle * angle, TAU ); } // angle in radians
+			else /* std::is_integral_v< U > */ { _angle = SMOD( _angle * ( angle * DtoR ), TAU ); } // angle in degrees *
 			return *this;
 		}
 
-		inline Angle operator/=( const Angle   &a ){ _angle = ANG_MODULUS( _angle / a._angle, TAU );          return *this; }
-		inline Angle operator/=( const Vector2 &v ){ _angle = ANG_MODULUS( _angle / Angle( v )._angle, TAU ); return *this; }
+		inline Angle operator/=( const Angle   &a ){ _angle = SMOD( _angle / a._angle, TAU );          return *this; }
+		inline Angle operator/=( const Vector2 &v ){ _angle = SMOD( _angle / Angle( v )._angle, TAU ); return *this; }
 
 		TU inline Angle operator/=( U angle )
 		{
-			if constexpr( std::is_floating_point_v< U >){   _angle = ANG_MODULUS( _angle / angle, TAU ); } // angle in radians
-			else /* std::is_integral_v< U > */ { _angle = ANG_MODULUS( _angle / ( angle * DtoR ), TAU ); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U >){   _angle = SMOD( _angle / angle, TAU ); } // angle in radians
+			else /* std::is_integral_v< U > */ { _angle = SMOD( _angle / ( angle * DtoR ), TAU ); } // angle in degrees *
 			return *this;
 		}
 
-		inline Angle operator%=( const Angle   &a ){ _angle = ANG_MODULUS( _angle, a._angle );          return *this; }
-		inline Angle operator%=( const Vector2 &v ){ _angle = ANG_MODULUS( _angle, Angle( v )._angle ); return *this; }
+		inline Angle operator%=( const Angle   &a ){ _angle = SMOD( _angle, a._angle );          return *this; }
+		inline Angle operator%=( const Vector2 &v ){ _angle = SMOD( _angle, Angle( v )._angle ); return *this; }
 		TU inline Angle operator%=( U angle )
 		{
-			if constexpr( std::is_floating_point_v< U >){  _angle = ANG_MODULUS( _angle, angle ); } // angle in radians
-			else /* std::is_integral_v< U > */ { _angle = ANG_MODULUS( _angle, ( angle * DtoR )); } // angle in degrees *
+			if constexpr( std::is_floating_point_v< U >){  _angle = SMOD( _angle, angle ); } // angle in radians
+			else /* std::is_integral_v< U > */ { _angle = SMOD( _angle, ( angle * DtoR )); } // angle in degrees *
 			return *this;
 		}
 
@@ -317,11 +317,11 @@ class Angle
 
 		// ============================ STATIC FUNCTIONS
 
-		static inline fixed_t normalizeRad( fixed_t angle ) { return ANG_MODULUS( angle, TAU ); } //    returns the angle in the range [0, TAU]
-		static inline fixed_t normalizeDeg( fixed_t angle ) { return ANG_MODULUS( angle, 360.0f ); } // returns the angle in the range [0, 360]
+		static inline fixed_t normalizeRad( fixed_t angle ) { return SMOD( angle, TAU ); } //    returns the angle in the range [0, TAU]
+		static inline fixed_t normalizeDeg( fixed_t angle ) { return SMOD( angle, 360.0f ); } // returns the angle in the range [0, 360]
 
-		#undef ANG_MODULUS
 		#undef TU
+		#undef SMOD
 };
 
 

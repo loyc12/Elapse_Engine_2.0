@@ -13,6 +13,8 @@ class Pos2
 	static_assert( std::integral< T > || std::floating_point< T >, "Pos2 : Template error : T is not a number" );
 
 	#define TU template < typename U, typename = std::enable_if_t< std::is_integral_v< U > || std::is_floating_point_v< U > >>
+	#define OTU Operate< T, U >
+	#define SMOD Operate< T >::mod
 
 	public:
 		T x;
@@ -114,13 +116,13 @@ class Pos2
 		inline Pos2 operator-( const Pos2 &p ) const { return Pos2( x - p.x, y - p.y ); }
 		inline Pos2 operator*( const Pos2 &p ) const { return Pos2( x * p.x, y * p.y ); }
 		inline Pos2 operator/( const Pos2 &p ) const { return Pos2( x / p.x, y / p.y ); }
-		inline Pos2 operator%( const Pos2 &p ) const { return Pos2( fmod( x, p.x ), fmod( y, p.y )); }
+		inline Pos2 operator%( const Pos2 &p ) const { return Pos2( SMOD( x, p.x ), SMOD( y, p.y )); }
 
 		inline Pos2 operator+=( const Pos2 &p ){ x += p.x; y += p.y; return Pos2( x, y ); }
 		inline Pos2 operator-=( const Pos2 &p ){ x -= p.x; y -= p.y; return Pos2( x, y ); }
 		inline Pos2 operator*=( const Pos2 &p ){ x *= p.x; y *= p.y; return Pos2( x, y ); }
 		inline Pos2 operator/=( const Pos2 &p ){ x /= p.x; y /= p.y; return Pos2( x, y ); }
-		inline Pos2 operator%=( const Pos2 &p ){ x = fmod( x, p.x ); y = fmod( y, p.y ); return Pos2( x, y ); }
+		inline Pos2 operator%=( const Pos2 &p ){ x = SMOD( x, p.x ); y = SMOD( y, p.y ); return Pos2( x, y ); }
 
 		// NOTE : compare to  both x_ and y_ individually
 		inline bool operator==( const Pos2 &p ) const { return ( x == p.x && y == p.y ); }
@@ -136,13 +138,13 @@ class Pos2
 		inline Pos2 operator-( const Vector2 &v ) const { return Pos2( x - v.x, y - v.y ); }
 		inline Pos2 operator*( const Vector2 &v ) const { return Pos2( x * v.x, y * v.y ); }
 		inline Pos2 operator/( const Vector2 &v ) const { return Pos2( x / v.x, y / v.y ); }
-		inline Pos2 operator%( const Vector2 &v ) const { return Pos2( fmod( x, v.x ), fmod( y, v.y )); }
+		inline Pos2 operator%( const Vector2 &v ) const { return Pos2( SMOD( x, v.x ), SMOD( y, v.y )); }
 
 		inline Pos2 operator+=( const Vector2 &v ){ x += v.x; y += v.y; return Pos2( x, y ); }
 		inline Pos2 operator-=( const Vector2 &v ){ x -= v.x; y -= v.y; return Pos2( x, y ); }
 		inline Pos2 operator*=( const Vector2 &v ){ x *= v.x; y *= v.y; return Pos2( x, y ); }
 		inline Pos2 operator/=( const Vector2 &v ){ x /= v.x; y /= v.y; return Pos2( x, y ); }
-		inline Pos2 operator%=( const Vector2 &v ){ x = fmod( x, v.x ); y = fmod( y, v.y ); return Pos2( x, y ); }
+		inline Pos2 operator%=( const Vector2 &v ){ x = SMOD( x, v.x ); y = SMOD( y, v.y ); return Pos2( x, y ); }
 
 		// NOTE : compare to  both x_ and y_ individually
 		inline bool operator==( const Vector2 &v ) const { return ( x == v.x && y == v.y ); }
@@ -154,17 +156,17 @@ class Pos2
 
 	// ============================ TYPENAME OPERATORS
 
-		TU inline Pos2 operator+( const U &val ) const { return Pos2( Operate< T, U >::add( x, val), Operate< T, U >::add( y, val)); }
-		TU inline Pos2 operator-( const U &val ) const { return Pos2( Operate< T, U >::sub( x, val), Operate< T, U >::sub( y, val)); }
-		TU inline Pos2 operator*( const U &val ) const { return Pos2( Operate< T, U >::mul( x, val), Operate< T, U >::mul( y, val)); }
-		TU inline Pos2 operator/( const U &val ) const { return Pos2( Operate< T, U >::div( x, val), Operate< T, U >::div( y, val)); }
-		TU inline Pos2 operator%( const U &val ) const { return Pos2( Operate< T, U >::mod( x, val), Operate< T, U >::mod( y, val)); }
+		TU inline Pos2 operator+( const U &val ) const { return Pos2( OTU::add( x, val ), OTU::add( y, val )); }
+		TU inline Pos2 operator-( const U &val ) const { return Pos2( OTU::sub( x, val ), OTU::sub( y, val )); }
+		TU inline Pos2 operator*( const U &val ) const { return Pos2( OTU::mul( x, val ), OTU::mul( y, val )); }
+		TU inline Pos2 operator/( const U &val ) const { return Pos2( OTU::div( x, val ), OTU::div( y, val )); }
+		TU inline Pos2 operator%( const U &val ) const { return Pos2( OTU::mod( x, val ), OTU::mod( y, val )); }
 
-		TU inline Pos2 operator+=( const U &val ){ x = Operate< T, U >::add( x, val ); y = Operate< T, U >::add( y, val ); return Pos2( x, y ); }
-		TU inline Pos2 operator-=( const U &val ){ x = Operate< T, U >::sub( x, val ); y = Operate< T, U >::sub( y, val ); return Pos2( x, y ); }
-		TU inline Pos2 operator*=( const U &val ){ x = Operate< T, U >::mul( x, val ); y = Operate< T, U >::mul( y, val ); return Pos2( x, y ); }
-		TU inline Pos2 operator/=( const U &val ){ x = Operate< T, U >::div( x, val ); y = Operate< T, U >::div( y, val ); return Pos2( x, y ); }
-		TU inline Pos2 operator%=( const U &val ){ x = Operate< T, U >::mod( x, val ); y = Operate< T, U >::mod( y, val ); return Pos2( x, y ); }
+		TU inline Pos2 operator+=( const U &val ){ x = OTU::add( x, val ); y = OTU::add( y, val ); return Pos2( x, y ); }
+		TU inline Pos2 operator-=( const U &val ){ x = OTU::sub( x, val ); y = OTU::sub( y, val ); return Pos2( x, y ); }
+		TU inline Pos2 operator*=( const U &val ){ x = OTU::mul( x, val ); y = OTU::mul( y, val ); return Pos2( x, y ); }
+		TU inline Pos2 operator/=( const U &val ){ x = OTU::div( x, val ); y = OTU::div( y, val ); return Pos2( x, y ); }
+		TU inline Pos2 operator%=( const U &val ){ x = OTU::mod( x, val ); y = OTU::mod( y, val ); return Pos2( x, y ); }
 
 		// NOTE : compare to the length to the absolute value of val
 		TU inline bool operator==( const U &val ) const { return ( getLenSqr() == Operate< U >::sqr( val )); } // checks if len() == |val|
@@ -180,6 +182,8 @@ class Pos2
 		inline friend std::string to_string( const Pos2 &p ){ return "[" + to_string( p.x ) + ":" + to_string( p.y ) + "]"; }
 
 		# undef TU
+		# undef OTU
+		# undef SMOD
 };
 
 // ============================ DEFAULT POS2 TYPES

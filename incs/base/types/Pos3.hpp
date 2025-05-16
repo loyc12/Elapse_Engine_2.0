@@ -13,6 +13,8 @@ class Pos3
 	static_assert( std::integral< T > || std::floating_point< T >, "Pos3 : Template error : T is not a number" );
 
 	#define TU template < typename U, typename = std::enable_if_t< std::is_integral_v< U > || std::is_floating_point_v< U > >>
+	#define OTU Operate< T, U >
+	#define SMOD Operate< T >::mod
 
 	public:
 		T x;
@@ -88,72 +90,72 @@ class Pos3
 
 		TU inline operator U() const { return U( getLen() ); } // returns the vector's lenght
 
-	// ============================ IN-CLASS OPERATORS //                                                  TODO : updated me to use z
+	// ============================ IN-CLASS OPERATORS
 
-		inline Pos3 operator+() const { return Pos3( +x, +y ); }
-		inline Pos3 operator-() const { return Pos3( -x, -y ); }
+		inline Pos3 operator+() const { return Pos3( +x, +y, +z ); }
+		inline Pos3 operator-() const { return Pos3( -x, -y, -z ); }
 
-		inline Pos3 operator++(){ x++; y++; return Pos3( x, y ); }
-		inline Pos3 operator--(){ x--; y--; return Pos3( x, y ); }
+		inline Pos3 operator++(){ x++; y++; z++; return Pos3( x, y, z ); }
+		inline Pos3 operator--(){ x--; y--; z--; return Pos3( x, y, z ); }
 
-		inline Pos3 operator++( int ){ Pos3 tmp( x, y ); x++; y++; return tmp; }
-		inline Pos3 operator--( int ){ Pos3 tmp( x, y ); x--; y--; return tmp; }
+		inline Pos3 operator++( int ){ Pos3 tmp( x, y, z ); x++; y++; z++; return tmp; }
+		inline Pos3 operator--( int ){ Pos3 tmp( x, y, z ); x--; y--; z--; return tmp; }
 
-		inline Pos3 operator+( const Pos3 &p ) const { return Pos3( x + p.x, y + p.y ); }
-		inline Pos3 operator-( const Pos3 &p ) const { return Pos3( x - p.x, y - p.y ); }
-		inline Pos3 operator*( const Pos3 &p ) const { return Pos3( x * p.x, y * p.y ); }
-		inline Pos3 operator/( const Pos3 &p ) const { return Pos3( x / p.x, y / p.y ); }
-		inline Pos3 operator%( const Pos3 &p ) const { return Pos3( fmod( x, p.x ), fmod( y, p.y )); }
+		inline Pos3 operator+( const Pos3 &p ) const { return Pos3( x + p.x, y + p.y, z + p.z ); }
+		inline Pos3 operator-( const Pos3 &p ) const { return Pos3( x - p.x, y - p.y, z - p.z ); }
+		inline Pos3 operator*( const Pos3 &p ) const { return Pos3( x * p.x, y * p.y, z * p.z ); }
+		inline Pos3 operator/( const Pos3 &p ) const { return Pos3( x / p.x, y / p.y, z / p.z ); }
+		inline Pos3 operator%( const Pos3 &p ) const { return Pos3( SMOD( x, p.x ), SMOD( y, p.y ), SMOD( z, p.z )); }
 
-		inline Pos3 operator+=( const Pos3 &p ){ x += p.x; y += p.y; return Pos3( x, y ); }
-		inline Pos3 operator-=( const Pos3 &p ){ x -= p.x; y -= p.y; return Pos3( x, y ); }
-		inline Pos3 operator*=( const Pos3 &p ){ x *= p.x; y *= p.y; return Pos3( x, y ); }
-		inline Pos3 operator/=( const Pos3 &p ){ x /= p.x; y /= p.y; return Pos3( x, y ); }
-		inline Pos3 operator%=( const Pos3 &p ){ x = fmod( x, p.x ); y = fmod( y, p.y ); return Pos3( x, y ); }
+		inline Pos3 operator+=( const Pos3 &p ){ x += p.x; y += p.y; z += p.z; return Pos3( x, y, z ); }
+		inline Pos3 operator-=( const Pos3 &p ){ x -= p.x; y -= p.y; z -= p.z; return Pos3( x, y, z ); }
+		inline Pos3 operator*=( const Pos3 &p ){ x *= p.x; y *= p.y; z *= p.z; return Pos3( x, y, z ); }
+		inline Pos3 operator/=( const Pos3 &p ){ x /= p.x; y /= p.y; z /= p.z; return Pos3( x, y, z ); }
+		inline Pos3 operator%=( const Pos3 &p ){ x = SMOD( x, p.x ); y = SMOD( y, p.y ), z = SMOD( z, p.z ); return Pos3( x, y, z ); }
 
 		// NOTE : compare to  both x_ and y_ individually
-		inline bool operator==( const Pos3 &p ) const { return ( x == p.x && y == p.y ); }
-		inline bool operator!=( const Pos3 &p ) const { return ( x != p.x || y != p.y ); }
-		inline bool operator<=( const Pos3 &p ) const { return ( x <= p.x && y <= p.y ); }
-		inline bool operator>=( const Pos3 &p ) const { return ( x >= p.x && y >= p.y ); }
-		inline bool operator<(  const Pos3 &p ) const { return ( x <  p.x && y <  p.y ); }
-		inline bool operator>(  const Pos3 &p ) const { return ( x >  p.x && y >  p.y ); }
+		inline bool operator==( const Pos3 &p ) const { return ( x == p.x && y == p.y && z == p.z ); }
+		inline bool operator!=( const Pos3 &p ) const { return ( x != p.x || y != p.y || z != p.z ); }
+		inline bool operator<=( const Pos3 &p ) const { return ( x <= p.x && y <= p.y && z <= p.z ); }
+		inline bool operator>=( const Pos3 &p ) const { return ( x >= p.x && y >= p.y && z >= p.z ); }
+		inline bool operator<(  const Pos3 &p ) const { return ( x <  p.x && y <  p.y && z <  p.z ); }
+		inline bool operator>(  const Pos3 &p ) const { return ( x >  p.x && y >  p.y && z >  p.z ); }
 
 	// ============================ VECTOR2 OPERATORS ( raylib dependent )
 
-		inline Pos3 operator+( const Vector3 &v ) const { return Pos3( x + v.x, y + v.y ); }
-		inline Pos3 operator-( const Vector3 &v ) const { return Pos3( x - v.x, y - v.y ); }
-		inline Pos3 operator*( const Vector3 &v ) const { return Pos3( x * v.x, y * v.y ); }
-		inline Pos3 operator/( const Vector3 &v ) const { return Pos3( x / v.x, y / v.y ); }
-		inline Pos3 operator%( const Vector3 &v ) const { return Pos3( fmod( x, v.x ), fmod( y, v.y )); }
+		inline Pos3 operator+( const Vector3 &v ) const { return Pos3( x + v.x, y + v.y, z + v.z ); }
+		inline Pos3 operator-( const Vector3 &v ) const { return Pos3( x - v.x, y - v.y, z - v.z ); }
+		inline Pos3 operator*( const Vector3 &v ) const { return Pos3( x * v.x, y * v.y, z * v.z ); }
+		inline Pos3 operator/( const Vector3 &v ) const { return Pos3( x / v.x, y / v.y, z / v.z ); }
+		inline Pos3 operator%( const Vector3 &v ) const { return Pos3( SMOD( x, v.x ), SMOD( y, v.y ), SMOD( z, v.z )); }
 
-		inline Pos3 operator+=( const Vector3 &v ){ x += v.x; y += v.y; return Pos3( x, y ); }
-		inline Pos3 operator-=( const Vector3 &v ){ x -= v.x; y -= v.y; return Pos3( x, y ); }
-		inline Pos3 operator*=( const Vector3 &v ){ x *= v.x; y *= v.y; return Pos3( x, y ); }
-		inline Pos3 operator/=( const Vector3 &v ){ x /= v.x; y /= v.y; return Pos3( x, y ); }
-		inline Pos3 operator%=( const Vector3 &v ){ x = fmod( x, v.x ); y = fmod( y, v.y ); return Pos3( x, y ); }
+		inline Pos3 operator+=( const Vector3 &v ){ x += v.x; y += v.y; z += v.z; return Pos3( x, y, z ); }
+		inline Pos3 operator-=( const Vector3 &v ){ x -= v.x; y -= v.y; z -= v.z; return Pos3( x, y, z ); }
+		inline Pos3 operator*=( const Vector3 &v ){ x *= v.x; y *= v.y; z *= v.z; return Pos3( x, y, z ); }
+		inline Pos3 operator/=( const Vector3 &v ){ x /= v.x; y /= v.y; z /= v.z; return Pos3( x, y, z ); }
+		inline Pos3 operator%=( const Vector3 &v ){ x = SMOD( x, v.x ); y = SMOD( y, v.y ); return Pos3( x, y ); }
 
 		// NOTE : compare to  both x_ and y_ individually
-		inline bool operator==( const Vector3 &v ) const { return ( x == v.x && y == v.y ); }
-		inline bool operator!=( const Vector3 &v ) const { return ( x != v.x || y != v.y ); }
-		inline bool operator<=( const Vector3 &v ) const { return ( x <= v.x && y <= v.y ); }
-		inline bool operator>=( const Vector3 &v ) const { return ( x >= v.x && y >= v.y ); }
-		inline bool operator<(  const Vector3 &v ) const { return ( x <  v.x && y <  v.y ); }
-		inline bool operator>(  const Vector3 &v ) const { return ( x >  v.x && y >  v.y ); }
+		inline bool operator==( const Vector3 &v ) const { return ( x == v.x && y == v.y && z == v.z ); }
+		inline bool operator!=( const Vector3 &v ) const { return ( x != v.x || y != v.y || z != v.z ); }
+		inline bool operator<=( const Vector3 &v ) const { return ( x <= v.x && y <= v.y && z <= v.z ); }
+		inline bool operator>=( const Vector3 &v ) const { return ( x >= v.x && y >= v.y && z >= v.z ); }
+		inline bool operator<(  const Vector3 &v ) const { return ( x <  v.x && y <  v.y && z <  v.z ); }
+		inline bool operator>(  const Vector3 &v ) const { return ( x >  v.x && y >  v.y && z >  v.z ); }
 
 	// ============================ TYPENAME OPERATORS
 
-		TU inline Pos3 operator+( const U &val ) const { return Pos3( Operate< T, U >::add( x, val), Operate< T, U >::add( y, val)); }
-		TU inline Pos3 operator-( const U &val ) const { return Pos3( Operate< T, U >::sub( x, val), Operate< T, U >::sub( y, val)); }
-		TU inline Pos3 operator*( const U &val ) const { return Pos3( Operate< T, U >::mul( x, val), Operate< T, U >::mul( y, val)); }
-		TU inline Pos3 operator/( const U &val ) const { return Pos3( Operate< T, U >::div( x, val), Operate< T, U >::div( y, val)); }
-		TU inline Pos3 operator%( const U &val ) const { return Pos3( Operate< T, U >::mod( x, val), Operate< T, U >::mod( y, val)); }
+		TU inline Pos3 operator+( const U &val ) const { return Pos3( OTU::add( x, val ), OTU::add( y, val ), OTU::add( z, val )); }
+		TU inline Pos3 operator-( const U &val ) const { return Pos3( OTU::sub( x, val ), OTU::sub( y, val ), OTU::sub( z, val )); }
+		TU inline Pos3 operator*( const U &val ) const { return Pos3( OTU::mul( x, val ), OTU::mul( y, val ), OTU::mul( z, val )); }
+		TU inline Pos3 operator/( const U &val ) const { return Pos3( OTU::div( x, val ), OTU::div( y, val ), OTU::div( z, val )); }
+		TU inline Pos3 operator%( const U &val ) const { return Pos3( OTU::mod( x, val ), OTU::mod( y, val ), OTU::mod( z, val )); }
 
-		TU inline Pos3 operator+=( const U &val ){ x = Operate< T, U >::add( x, val ); y = Operate< T, U >::add( y, val ); return Pos3( x, y ); }
-		TU inline Pos3 operator-=( const U &val ){ x = Operate< T, U >::sub( x, val ); y = Operate< T, U >::sub( y, val ); return Pos3( x, y ); }
-		TU inline Pos3 operator*=( const U &val ){ x = Operate< T, U >::mul( x, val ); y = Operate< T, U >::mul( y, val ); return Pos3( x, y ); }
-		TU inline Pos3 operator/=( const U &val ){ x = Operate< T, U >::div( x, val ); y = Operate< T, U >::div( y, val ); return Pos3( x, y ); }
-		TU inline Pos3 operator%=( const U &val ){ x = Operate< T, U >::mod( x, val ); y = Operate< T, U >::mod( y, val ); return Pos3( x, y ); }
+		TU inline Pos3 operator+=( const U &val ){ x = OTU::add( x, val ); y = OTU::add( y, val ); OTU::add( z, val); return Pos3( x, y ); }
+		TU inline Pos3 operator-=( const U &val ){ x = OTU::sub( x, val ); y = OTU::sub( y, val ); OTU::sub( z, val); return Pos3( x, y ); }
+		TU inline Pos3 operator*=( const U &val ){ x = OTU::mul( x, val ); y = OTU::mul( y, val ); OTU::mul( z, val); return Pos3( x, y ); }
+		TU inline Pos3 operator/=( const U &val ){ x = OTU::div( x, val ); y = OTU::div( y, val ); OTU::div( z, val); return Pos3( x, y ); }
+		TU inline Pos3 operator%=( const U &val ){ x = OTU::mod( x, val ); y = OTU::mod( y, val ); OTU::mod( z, val); return Pos3( x, y ); }
 
 		// NOTE : compare to the length to the absolute value of val
 		TU inline bool operator==( const U &val ) const { return ( getLenSqr() == Operate< U >::sqr( val )); } // checks if getLen() == |val|
@@ -165,10 +167,12 @@ class Pos3
 
 	// ============================ FRIEND METHODS
 
-		inline friend std::ostream &operator<<( std::ostream &os, const Pos3 &p ){ os << "[" << p.x << ":" << p.y << "]"; return os; }
-		inline friend std::string to_string( const Pos3 &p ){ return "[" + to_string( p.x ) + ":" + to_string( p.y ) + "]"; }
+		inline friend std::ostream &operator<<( std::ostream &os, const Pos3 &p ){ os << "[" << p.x << ":" << p.y << ":" << p.z << "]"; return os; }
+		inline friend std::string to_string( const Pos3 &p ){ return "[" + to_string( p.x ) + ":" + to_string( p.y ) + ":" + to_string( p.z ) + "]"; }
 
 		# undef TU
+		# undef OTU
+		# undef SMOD
 };
 
 // ============================ DEFAULT POS2 TYPES

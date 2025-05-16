@@ -2,11 +2,11 @@
 
 WIP
 	- finish the ScreenMngr draw methods
+	- implement the event manager properly
 
 Style
 
 Refactor
-	- implement the event manager properly
 
 Performance
 
@@ -21,5 +21,5 @@ set( val )         : v0 = v
 move( delta )      : v0 += d
 scale( factor )    : v0 *= f
 
-push( target, d )  : v0 += min( |d|, |t - v| ) : aka move by d towards t ( d can be negative ) // TODO : use me or lose me
-nudge( target, % ) : v0 += ( % * ( v - v0 ))   : aka move a % towards t  ( % can be negative ) // TODO : use me or lose me
+push( target, d )  : v0 += min( |d|, |t - v| ) : aka move by d towards t ( d can be negative ) //   TODO : use me or lose me
+nudge( target, % ) : v0 += ( % * ( v - v0 ))   : aka move a % towards t  ( % can be negative ) //   TODO : use me or lose me
