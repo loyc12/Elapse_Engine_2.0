@@ -33,7 +33,7 @@ Entity *CpyEntityOver( Entity *src, Entity *dst )
 			*dst = *src;
 		}
 	}
-	return dst;
+	freturn dst;
 }
 
 // ================================ CORE METHODS
@@ -50,41 +50,37 @@ void EntityMngr::deleteAllEntities() // TODO : TEST ME
 	qlog( "deleteAllEntities : Clearing the entity map", INFO, 0 );
 	_NttMap.clear();
 	_maxID = 0;
+
+	fend();
 }
 
 // ================================ ACCESSORS / MUTATORS
 
 // ================ ENTITY METHODS
 
-id_t EntityMngr::getEntityCount() const
-{
-	flog( 0 );
-	return _NttMap.size();
-}
-
 Entity *EntityMngr::getEntity( id_t id ) const
 {
 	flog( 0 );
-	if( id == 0 ){ return nullptr; }
+	if( id == 0 ){ freturn nullptr; }
 
-	if( !hasEntity( id )){ return nullptr; } // NOTE : returns a null entity ( ID = 0 )
-	return _NttMap.find( id )->second;
+	if( !hasEntity( id )){ freturn nullptr; } // NOTE : returns a null entity ( ID = 0 )
+	freturn _NttMap.find( id )->second;
 }
 
 bool EntityMngr::hasEntity( id_t id ) const
 {
 	flog( 0 );
-	if( id == 0 ){ return false; }
-	return ( _NttMap.find( id ) != _NttMap.end() );
+	if( id == 0 ){ freturn false; }
+	freturn ( _NttMap.find( id ) != _NttMap.end() );
 }
 bool EntityMngr::addEntity( id_t id )
 {
 	flog( 0 );
-	if( id == 0 ){ return false; }
+	if( id == 0 ){ freturn false; }
 	if( hasEntity( id ))
 	{
 		qlog( "addEntity : Entity already exists in the map", WARN, 0 );
-		return false;
+		freturn false;
 	}
 
 	qlog( "addEntity : Adding entity with ID: " + std::to_string( id ), INFO, 0 );
@@ -94,14 +90,14 @@ bool EntityMngr::addEntity( id_t id )
 	qlog( "addEntity : Added entity with ID: " + std::to_string( id ), INFO, 0 );
 
 	if( id > _maxID ){ _maxID = id; }
-	return true;
+	freturn true;
 }
 
 bool EntityMngr::delEntity( id_t id, bool freeMemory )
 {
 	flog( 0 );
-	if( id == 0 ){ return false; }
-	if( !hasEntity( id )){ return false; }
+	if( id == 0 ){         freturn false; }
+	if( !hasEntity( id )){ freturn false; }
 	qlog( "delEntity : Deleting entity with ID: " + std::to_string( id ), INFO, 0 );
 
 	auto it = _NttMap.find( id );
@@ -121,13 +117,13 @@ bool EntityMngr::delEntity( id_t id, bool freeMemory )
 	qlog( "delEntity : Deleted entity with ID: " + std::to_string( id ), INFO, 0 );
 	if( id == _maxID ){ --_maxID; }
 
-	return true;
+	freturn true;
 }
 
 bool EntityMngr::hasThatEntity( Entity *Ntt ) const
 {
 	flog( 0 );
-	if( Ntt == nullptr ){ return false; }
+	if( Ntt == nullptr ){ freturn false; }
 
 	for ( auto it = _NttMap.begin(); it != _NttMap.end(); ++it )
 	{
@@ -139,12 +135,12 @@ bool EntityMngr::hasThatEntity( Entity *Ntt ) const
 		if( it->second == Ntt )
 		{
 			qlog( "hasThatEntity : Found entity with ID: " + std::to_string( it->first ), DEBUG, 0 );
-			return true;
+			freturn true;
 		}
 	}
 	qlog( "hasThatEntity : Specific entity not found in the map", DEBUG, 0 );
 
-	return ( false );
+	freturn false;
 }
 bool EntityMngr::addThatEntity( Entity *Ntt )
 {
@@ -152,20 +148,20 @@ bool EntityMngr::addThatEntity( Entity *Ntt )
 	if( hasThatEntity( Ntt ))
 	{
 		qlog( "addThatEntity : Entity already exists in the map", WARN, 0 );
-		return false;
+		freturn false;
 	}
 
 	Ntt->setID( getNewID() );
 	_NttMap[ Ntt->getID() ] = { Ntt };
 
 	qlog( "addThatEntity : Added entity with ID: " + std::to_string( Ntt->getID()), INFO, 0 );
-	return true;
+	freturn true;
 }
 bool EntityMngr::delThatEntity( Entity *Ntt, bool freeMemory )
 {
 	flog( 0 );
-	if( Ntt == nullptr ){ return false; }
-	if( !hasThatEntity( Ntt )){ return false; }
+	if( Ntt == nullptr ){       freturn false; }
+	if( !hasThatEntity( Ntt )){ freturn false; }
 
 	qlog( "delThatEntity : Deleting entity with ID: " + std::to_string( Ntt->getID()), INFO, 0 );
 
@@ -183,7 +179,7 @@ bool EntityMngr::delThatEntity( Entity *Ntt, bool freeMemory )
 	}
 
 	qlog( "delThatEntity : Deleted the entity", INFO, 0 );
-	return true;
+	freturn true;
 }
 
 bool EntityMngr::defragEntityMap()
@@ -202,25 +198,24 @@ bool EntityMngr::defragEntityMap()
 	}
 
 	updateMaxID();
-	return true;
+	freturn true;
 }
 
-bool EntityMngr::dupEntity( id_t src ){ return dupEntity( getEntity( src )); }
 bool EntityMngr::dupEntity( Entity *src )
 {
 	flog( 0 );
-	if( src == nullptr ){ return false; }
+	if( src == nullptr ){ freturn false; }
 
 	Entity *newNtt = EntityMngr::EntityFactory( src );
 
 	if( newNtt == nullptr )
 	{
 		qlog( "dupEntity : Failed to allocate memory for new entity", ERROR, 0 );
-		return false;
+		freturn false;
 	}
 
 	qlog( "dupEntity : Created new entity with ID: " + std::to_string( newNtt->getID()), INFO, 0 );
-	return true;
+	freturn true;
 }
 
 // ================================ FACTORY METHODS
@@ -234,9 +229,9 @@ Entity *EntityMngr::EntityFactory( id_t id )
 	if( Ntt == nullptr )
 	{
 		qlog( "EntityFactory : Failed to allocate memory for new entity", ERROR, 0 );
-		return nullptr;
+		freturn nullptr;
 	}
-	return Ntt;
+	freturn Ntt;
 }
 Entity *EntityMngr::EntityFactory( Entity *src, id_t id )
 {
@@ -245,5 +240,5 @@ Entity *EntityMngr::EntityFactory( Entity *src, id_t id )
 
 	if( Ntt != nullptr ){ *Ntt = *src; } // NOTE : copies the entity and its components
 
-	return Ntt;
+	freturn Ntt;
 }

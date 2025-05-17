@@ -32,6 +32,8 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 
 	static bool disregard_log_file = false;
 
+	// NOTE : logic to determine if to output the messages to the log file or the console
+	// TODO : have it display on the console even if when writing to the log file
 	if( !disregard_log_file && LOG_FILE )
 	{
 		static ofstream log_file;
@@ -45,7 +47,8 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 
 	static bool use_clr = ( log_out == &cout );
 
-	if( LOG_TIME ) *log_out << ( use_clr ? CLR_LGR : "" ) << get_time_str() << " ";
+	bool use_red = ( lvl == ERROR || ( msg != nullptr && msg[0] == '!' ));
+	if( LOG_TIME ) *log_out << ( use_clr ? ( use_red ? CLR_RED : CLR_LGR ) : "" ) << get_time_str() << " ";
 
 	switch ( lvl )
 	{
@@ -62,7 +65,61 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 	if( LOG_LINE && file != nullptr ) *log_out << " [" << file << ":" << line << "]";
 	if( id > 0 ) *log_out << " [" << id << "]";
 
-	*log_out << ( use_clr ? CLR_RST : "" ) << " " << msg << endl;
+	*log_out << ( use_clr ? ( lvl == FUNCT ? CLR_LGR : ( use_red ? CLR_RED : CLR_RST )) : "" ) << " " << msg;
+	*log_out << ( use_clr ? CLR_LGR : "" ) << endl;
 
+	return true;
+}
+
+bool log_funct( bool unlog, const char *fct, const char *cls, id_t id, const char *file, int line )
+{
+	if( !SHOW_FCT_PATH )
+	{
+		if( !unlog )
+		{
+			if ( cls != nullptr && cls[0] != '\0' ) { log( fct + string( "::" ) + cls, FUNCT, id, file, line ); }
+			else {                                    log( fct, FUNCT, id, file, line ); }
+		}
+		return true;
+	}
+
+	static string funct_path = "";
+	static byte_t funct_depth = 0;
+
+	if ( unlog ) // NOTE : unloging the previous function from funct_path
+	{
+		if ( funct_depth == 0 )
+		{
+			qlog( "funct_log : funct_depth underflow", DEBUG, 0 );
+			return false;
+		}
+		else { funct_depth--; }
+
+		size_t pos = funct_path.find_last_of( FCT_SEPARATOR );
+
+		if( funct_path.size() > 0 && pos != string::npos ){ funct_path.erase( pos ); return true; }
+		else { qlog( "funct_log : unloging failed", ERROR, 0 ); return false; }
+	}
+	else
+	{
+		if( funct_depth == 255 )
+		{
+			qlog( "funct_log : funct_depth overflow", DEBUG, 0 );
+			return false;
+		}
+		else { funct_depth++; }
+
+		funct_path += FCT_SEPARATOR;
+
+		if ( FCT_MUL_PREFIX[ 0 ] != '\0' ){ for ( byte_t i = 0; i < funct_depth; i++ ) { funct_path += FCT_MUL_PREFIX; }}
+
+		if ( file != nullptr && file[0] != '\0' ){ funct_path += " [" + string( file ) + ":" + to_string( line ) + "] "; }
+		if ( cls  != nullptr && cls[0]  != '\0' ){ funct_path += cls + string( "::" ); }
+		if ( fct  != nullptr && fct[0]  != '\0' ){ funct_path += fct + string( "()" ); }
+
+		if ( id > 0 ) { funct_path += "[" + to_string( id ) + "]"; }
+
+		log( funct_path + string( "\n"), FUNCT, id, file, line );
+	}
 	return true;
 }

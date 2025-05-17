@@ -6,7 +6,7 @@
 void CompPhys::onCpy( const CompPhys &rhs )
 {
 	flog( 0 );
-	if( this == &rhs ){ return; } // NOTE : checks if the objects are the same
+	if( this == &rhs ){ freturn; } // NOTE : checks if the objects are the same
 
 	CompBase::onCpy( rhs );
 	_dynamic = rhs._dynamic;
@@ -15,6 +15,8 @@ void CompPhys::onCpy( const CompPhys &rhs )
 	_drag = rhs._drag;
 	_fric = rhs._fric;
 	_elas = rhs._elas;
+
+	fend();
 }
 
 // ================================ CONSTRUCTORS / DESTRUCTORS
@@ -22,6 +24,7 @@ void CompPhys::onCpy( const CompPhys &rhs )
 CompPhys::~CompPhys()
 {
 	flog( 0 );
+	fend();
 }
 
 CompPhys::CompPhys() : CompBase(),
@@ -33,6 +36,7 @@ CompPhys::CompPhys() : CompBase(),
 	_elas( COMP_MIN_ELAS )
 {
 	flog( 0 );
+	fend();
 }
 
 CompPhys::CompPhys( Entity *Ntt, bool isActive, bool isDynamic, fixed_t mass, fixed_t drag, fixed_t fric, fixed_t elas ) :
@@ -45,18 +49,20 @@ CompPhys::CompPhys( Entity *Ntt, bool isActive, bool isDynamic, fixed_t mass, fi
 	_elas( fmin( COMP_MIN_ELAS, elas ))
 {
 	flog( 0 );
+	fend();
 }
 
 CompPhys::CompPhys( const CompPhys &rhs ) : CompPhys()
 {
 	flog( 0 );
 	*this = rhs;
+	fend();
 }
 CompPhys &CompPhys::operator=( const CompPhys &rhs )
 {
 	flog( 0 );
 	onCpy( rhs );
-	return *this;
+	freturn *this;
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -67,59 +73,63 @@ bool CompPhys::hasSisterComps() const
 	if( !hasEntity() )
 	{
 		qlog( "CompPhys::hasSisterComps() : no entity found for component", WARN, 0 );
-		return false;
+		freturn false;
 	}
 	if( !getEntity()->hasComponent< CompPos >() )
 	{
 		qlog( "CompPhys::hasSisterComps() : no position component found for entity", INFO, 0 );
-		return false;
+		freturn false;
 	}
 	if( !getEntity()->hasComponent< CompMove >() )
 	{
 		qlog( "CompPhys::hasSisterComps() : no movement component found for entity", INFO, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }
 
 vec2_t CompPhys::applyDrag()
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
 	vec2_t dAcc = {
 		-_drag * getEntity()->getVel().x / _mass,
 		-_drag * getEntity()->getVel().y / _mass
 	};
 	getEntity()->moveAcc( dAcc );
-	return dAcc;
+	freturn dAcc;
 }
 vec2_t CompPhys::applyFriction( vec2_t surfaceNormal )
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
 	if( surfaceNormal == 0 )
 	{
 		qlog( "CompPhys::applyFriction() : surface normal is 0", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 
 	( void )surfaceNormal;
+
 	// TODO : replace this with a real friction calculation
-	return { TEMP_VALUE, TEMP_VALUE };
+
+	freturn { TEMP_VALUE, TEMP_VALUE };
 }
 vec2_t CompPhys::applyBounce( vec2_t surfaceNormal )
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
 	if( surfaceNormal == 0 )
 	{
 		qlog( "CompPhys::applyBounce() : surface normal is 0", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 
 	( void )surfaceNormal;
+
 	// TODO : replace this with a real bounce calculation
-	return { TEMP_VALUE, TEMP_VALUE };
+
+	freturn { TEMP_VALUE, TEMP_VALUE };
 }
 
 // ================ CALCULATED PROPERTIES METHODS
@@ -130,39 +140,39 @@ fixed_t CompPhys::getAvgRad() const
 	if( !hasEntity() )
 	{
 		qlog( "CompPhys::getAvgRad() : no entity found for component", ERROR, 0 );
-		return 0;
+		freturn 0;
 	}
 	if( !getEntity()->hasComponent< CompCollide >() )
 	{
 		qlog( "CompPhys::getAvgRad() : no collision component found for entity", ERROR, 0 );
-		return 0;
+		freturn 0;
 	}
-	return getEntity()->getHitRad();
+	freturn getEntity()->getHitRad();
 }
 fixed_t CompPhys::getArea() const
 {
 	flog( 0 );
-	return getAvgRad() * getAvgRad() * PI; // NOTE : area of a circle
+	freturn getAvgRad() * getAvgRad() * PI; // NOTE : area of a circle
 }
 fixed_t CompPhys::getDensity() const
 {
 	flog( 0 );
-	return _mass / getArea(); // NOTE : density = mass / volume
+	freturn _mass / getArea(); // NOTE : density = mass / volume
 }
 
 fixed_t CompPhys::getLinearMomentum() const
 {
 	flog( 0 ); // NOTE : linear momentum = mass * velocity
-	if( !hasSisterComps()){ return 0; }
-	return _mass * getEntity()->getLinearVel();
+	if( !hasSisterComps()){ freturn 0; }
+	freturn _mass * getEntity()->getLinearVel();
 }
 fixed_t CompPhys::getLinearEnergy() const
 {
 	flog( 0 ); // NOTE : linear energy = 1/2 * mass * velocity^2
-	if( !hasSisterComps()){ return 0; }
+	if( !hasSisterComps()){ freturn 0; }
 
 	fixed_t vel = getEntity()->getLinearVel();
-	return _mass * vel * vel * 0.5f;
+	freturn _mass * vel * vel * 0.5f;
 }
 
 // ================ FORCE METHODS
@@ -170,22 +180,24 @@ fixed_t CompPhys::getLinearEnergy() const
 vec2_t CompPhys::getGravAccAt( vec2_t pos ) const
 {
 	flog( 0 ); // NOTE : gravity acceleration = mass * gravity / distance^2
-	if( !hasSisterComps() ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
 
 	( void )pos;
+
 	// TODO : replace this with a real gravity calculation
-	return { TEMP_VALUE, TEMP_VALUE };
+
+	freturn { TEMP_VALUE, TEMP_VALUE };
 }
 
 vec2_t CompPhys::applyForceTowards( fixed_t force, vec2_t dir )
 {
 	flog( 0 ); // NOTE : applies a force to the object in a given direction ( acc += force * dir / mass )
-	if( !hasSisterComps() ){ return vec2_t(); }
-	if( force == 0 ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
+	if( force == 0 ){ freturn vec2_t(); }
 	if( dir == 0 )
 	{
 		qlog( "CompPhys::applyForceFrom() : direction is 0", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 	dir.normalize();
 
@@ -194,34 +206,34 @@ vec2_t CompPhys::applyForceTowards( fixed_t force, vec2_t dir )
 	fixed_t ay = force * dir.y / ( mag * _mass );
 
 	getEntity()->moveAcc({ ax, ay });
-	return { ax, ay };
+	freturn { ax, ay };
 }
 
 vec2_t CompPhys::applyForce( vec2_t force )
 {
 	flog( 0 ); // NOTE : applies a force to the object ( acc += force / mass )
-	if( !hasSisterComps() ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
 	if( force == 0 )
 	{
 		qlog( "CompPhys::applyForce() : force is 0", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 
 	fixed_t ax = force.x / _mass;
 	fixed_t ay = force.y / _mass;
 
 	getEntity()->moveAcc({ ax, ay });
-	return { ax, ay };
+	freturn { ax, ay };
 }
 
 vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 {
 	flog( 0 ); // NOTE : applies a force in the opposite direction of the velocity ( acc -= breakForce * velocity / mass )
-	if( !hasSisterComps() ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
 	if( breakForce == 0 )
 	{
 		qlog( "CompPhys::applyBreakForce() : break force is 0 : skipping maths", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 	if( breakForce < 0 )
 	{
@@ -233,7 +245,7 @@ vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 	if( vel == 0 )
 	{
 		qlog( "CompPhys::applyBreakForce() : velocity is 0 : skipping maths", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 
 	// TODO : Check if this is correct
@@ -244,18 +256,18 @@ vec2_t CompPhys::applyBreakForce( fixed_t breakForce )
 	fixed_t ay = -breakForce * vel.y / ( mag * _mass );
 
 	getEntity()->moveAcc({ ax, ay });
-	return { ax, ay };
+	freturn { ax, ay };
 }
 
 vec2_t CompPhys::applyBreakFactor( fixed_t breakFactor )
 {
 	flog( 0 );
-	if( !hasSisterComps() ){ return vec2_t(); }
+	if( !hasSisterComps() ){ freturn vec2_t(); }
 
 	if( breakFactor == 0 )
 	{
 		qlog( "CompPhys::applyBreakFactor() : break factor is 0 : skipping maths", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 	if( breakFactor < 0 || breakFactor > 1 )
 	{
@@ -267,14 +279,14 @@ vec2_t CompPhys::applyBreakFactor( fixed_t breakFactor )
 	if( vel == 0 )
 	{
 		qlog( "CompPhys::applyBreakFactor() : velocity is 0 : skipping maths", DEBUG, 0 );
-		return vec2_t();
+		freturn vec2_t();
 	}
 
 	fixed_t ax = -breakFactor * vel.x;
 	fixed_t ay = -breakFactor * vel.y;
 
 	getEntity()->moveAcc({ ax, ay });
-	return { ax, ay };
+	freturn { ax, ay };
 }
 
 
@@ -283,17 +295,17 @@ vec2_t CompPhys::applyBreakFactor( fixed_t breakFactor )
 bool CompPhys::onTick()
 {
 	flog( 0 );
-	if( !canTick() ){ return false; }
+	if( !canTick() ){ freturn false; }
 
 	fixed_t dt = GDTS();
 	if( dt <= 0 )
 	{
 		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );
-		return false;
+		freturn false;
 	}
 
 	// TODO : apply physics calculations here
 	// NOTE : for exemple, gravity, drag, friction, etc
 
-	return true;
+	freturn true;
 }

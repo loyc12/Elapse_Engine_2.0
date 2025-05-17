@@ -10,6 +10,8 @@ void OnEntityTickMovement( Entity *Ntt )
 	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEntityTickPhysic( Entity *Ntt )
 {
@@ -17,6 +19,8 @@ void OnEntityTickPhysic( Entity *Ntt )
 	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEntityTickCollide( Entity *Ntt )
 {
@@ -24,6 +28,8 @@ void OnEntityTickCollide( Entity *Ntt )
 	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnEntityTickSound( Entity *Ntt )
@@ -32,6 +38,8 @@ void OnEntityTickSound( Entity *Ntt )
 	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEntityTickShape( Entity *Ntt )
 {
@@ -39,6 +47,8 @@ void OnEntityTickShape( Entity *Ntt )
 	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEntityTickGraphics( Entity *Ntt )
 {
@@ -46,6 +56,8 @@ void OnEntityTickGraphics( Entity *Ntt )
 	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnEntityTickScript( Entity *Ntt )
@@ -54,4 +66,6 @@ void OnEntityTickScript( Entity *Ntt )
 	flog( Ntt->getID() );
 
 	// TODO : add game specific code here
+
+	fend();
 }

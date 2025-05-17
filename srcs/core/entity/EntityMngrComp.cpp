@@ -5,25 +5,25 @@ CompBase *CompFactory( comp_type_e compType, Entity *Ntt, bool isActive )
 	flog( 0 );
 	switch( compType )
 	{
-		case COMP_POSITION: return CompFactory< CompPos >(     Ntt, isActive );
-		case COMP_MOVEMENT: return CompFactory< CompMove >(    Ntt, isActive );
-		case COMP_PHYSIC:   return CompFactory< CompPhys >(    Ntt, isActive );
-		case COMP_COLLIDE:  return CompFactory< CompCollide >( Ntt, isActive );
+		case COMP_POSITION: freturn CompFactory< CompPos >(     Ntt, isActive );
+		case COMP_MOVEMENT: freturn CompFactory< CompMove >(    Ntt, isActive );
+		case COMP_PHYSIC:   freturn CompFactory< CompPhys >(    Ntt, isActive );
+		case COMP_COLLIDE:  freturn CompFactory< CompCollide >( Ntt, isActive );
 
-	//case COMP_TEXT:     return CompFactory< CompText >(    Ntt, isActive );
-	//case COMP_SOUND:    return CompFactory< CompSound >(   Ntt, isActive );
-	//case COMP_SHAPE:    return CompFactory< CompShape >(   Ntt, isActive );
-		case COMP_GRAPHIC:  return CompFactory< CompGraph >(   Ntt, isActive );
+	//case COMP_TEXT:     freturn CompFactory< CompText >(    Ntt, isActive );
+	//case COMP_SOUND:    freturn CompFactory< CompSound >(   Ntt, isActive );
+	//case COMP_SHAPE:    freturn CompFactory< CompShape >(   Ntt, isActive );
+		case COMP_GRAPHIC:  freturn CompFactory< CompGraph >(   Ntt, isActive );
 
-	//case COMP_SCRIPT:   return CompFactory< CompScript >(  Ntt, isActive );
+	//case COMP_SCRIPT:   freturn CompFactory< CompScript >(  Ntt, isActive );
 
 		case COMP_TYPE_BASE:
 	 		qlog( "CompFactory : Generating a base component", WARN, 0 );
-			return CompFactory< CompBase >( Ntt, isActive );
+			freturn CompFactory< CompBase >( Ntt, isActive );
 
 		default: qlog( "CompFactory : Invalid component type", ERROR, 0 );
 	}
-	return nullptr;
+	freturn nullptr;
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -33,63 +33,63 @@ CompBase *CompFactory( comp_type_e compType, Entity *Ntt, bool isActive )
 comp_count_t EntityMngr::getCompCount( id_t id ) const
 {
 	flog( 0 );
-	if( !hasEntity( id )){ return 0; }
+	if( !hasEntity( id )){ freturn 0; }
 
 	Entity *Ntt = getEntity( id );
-	if( Ntt == nullptr ){ return 0; }
+	if( Ntt == nullptr ){ freturn 0; }
 
-	return Ntt->getCompCount();
+	freturn Ntt->getCompCount();
 }
 comp_count_t EntityMngr::getActCompCount( id_t id ) const
 {
 	flog( 0 );
-	if( !hasEntity( id )){ return 0; }
+	if( !hasEntity( id )){ freturn 0; }
 
 	Entity *Ntt = getEntity( id );
-	if( Ntt == nullptr ){ return 0; }
+	if( Ntt == nullptr ){ freturn 0; }
 
-	return Ntt->getActCompCount();
+	freturn Ntt->getActCompCount();
 }
 
 bool EntityMngr::hasComponent( id_t id, comp_type_e compType ) const
 {
 	flog( 0 );
-	if( !hasEntity( id )){ return false; }
+	if( !hasEntity( id )){ freturn false; }
 
 	Entity *Ntt = _NttMap.find( id )->second;
 	if( Ntt == nullptr )
 	{
 		qlog( "hasComponent : Entity is nullptr", WARN, 0 );
-		return false;
+		freturn false;
 	}
 
-	return ( Ntt->hasComponent( compType ));
+	freturn ( Ntt->hasComponent( compType ));
 }
 bool EntityMngr::addComponent( id_t id, comp_type_e compType )
 {
 	flog( 0 );
-	if( !hasEntity( id )){ return false; }
+	if( !hasEntity( id )){ freturn false; }
 
 	Entity *Ntt = _NttMap.find( id )->second;
 	if( Ntt == nullptr )
 	{
 		qlog( "addComponent : Entity is nullptr", WARN, 0 );
-		return false;
+		freturn false;
 	}
 
-	return ( Ntt->addComponent( compType ));
+	freturn ( Ntt->addComponent( compType ));
 }
 bool EntityMngr::delComponent( id_t id, comp_type_e compType, bool freeMem )
 {
 	flog( 0 );
-	if( !hasEntity( id )){ return false; }
+	if( !hasEntity( id )){ freturn false; }
 
 	Entity *Ntt = _NttMap.find( id )->second;
 	if( Ntt == nullptr )
 	{
 		qlog( "delComponent : Entity is nullptr", WARN, 0 );
-		return false;
+		freturn false;
 	}
 
-	return ( Ntt->delComponent( compType, freeMem ));
+	freturn ( Ntt->delComponent( compType, freeMem ));
 }

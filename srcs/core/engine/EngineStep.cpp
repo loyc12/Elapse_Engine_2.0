@@ -9,7 +9,7 @@ bool Engine::launchLoop()
 	if( getState() < ES_STARTED )
 	{
 		qlog( "launchLoop : Engine not yet started", ERROR, 0 );
-		return false;
+		freturn false;
 	}
 
 	OnStartLoop(); // from injectors.hpp
@@ -18,13 +18,13 @@ bool Engine::launchLoop()
 
 	OnEndLoop(); // from injectors.hpp
 
-	return true;
+	freturn true;
 }
 
 void Engine::runStep()
 {
 	flog( 0 );
-	if( getState() < ES_STARTED ){ qlog( "runStep : Engine not started", ERROR, 0 ); return; }
+	if( getState() < ES_STARTED ){ qlog( "runStep : Engine not started", ERROR, 0 ); freturn; }
 
 	OnStartStep(); // from injectors.hpp
 
@@ -41,6 +41,8 @@ void Engine::runStep()
 	refreshScreen();
 
 	OnEndStep(); // from injectors.hpp
+
+	fend();
 }
 
 void Engine::refreshScreen() // TODO : move me to ScreenMngr
@@ -61,4 +63,6 @@ void Engine::refreshScreen() // TODO : move me to ScreenMngr
 		OnRenderUI(); // from injectors.hpp
 	}
 	EndDrawing();
+
+	fend();
 }

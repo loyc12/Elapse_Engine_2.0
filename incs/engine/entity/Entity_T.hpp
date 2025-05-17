@@ -32,7 +32,7 @@ TTC CompT *CpyCompOver( CompT *dst, CompT *src )
 			*dst = *src;
 		}
 	}
-	return dst;
+	freturn dst;
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -44,14 +44,14 @@ TTC CompT *Entity::getComponent( comp_type_e compType ) const
 	if( compType == COMP_TYPE_BASE )
 	{
 		qlog( "getComponent : Invalid component type", ERROR, 0 );
-		return nullptr;
+		freturn nullptr;
 	}
 	if( compType >= COMP_TYPE_COUNT )
 	{
 		qlog( "getComponent : Component type is out of range", ERROR, 0 );
-		return nullptr;
+		freturn nullptr;
 	}
-	return _components[ compType ];
+	freturn _components[ compType ];
 }
 */
 TTC CompT *Entity::getComponent() const
@@ -62,15 +62,15 @@ TTC CompT *Entity::getComponent() const
 	if( compType == COMP_TYPE_BASE )
 	{
 		qlog( "getComponent : Invalid component type", ERROR, 0 );
-		return nullptr;
+		freturn nullptr;
 	}
 	if( compType >= COMP_TYPE_COUNT )
 	{
 		qlog( "getComponent : Component type is out of range", ERROR, 0 );
-		return nullptr;
+		freturn nullptr;
 	}
 	// casting to CompT
-	return static_cast< CompT* >( _components[ compType ] );
+	freturn static_cast< CompT* >( _components[ compType ] );
 }
 
 #endif // ENTITY_TPP

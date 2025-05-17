@@ -7,23 +7,35 @@
 void OnStartLoop()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEndLoop()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnStartStep()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEndStep()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnReadInputs( inputs_s &inp, inputs_s &prev )
@@ -64,6 +76,8 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 
 	if ( inp.SCROLL_UP   ){ GetScrnM->scaleZoom( 1.1f ); }
 	if ( inp.SCROLL_DOWN ){ GetScrnM->scaleZoom( 0.9f ); }
+
+	fend();
 }
 
 // ==================== GLOBAL TICK INJECTION FUNCTIONS
@@ -71,50 +85,77 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 void OnTickMovements()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnTickPhysics()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnTickCollides()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnTickSounds()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnTickShapes()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnTickGraphics()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnTickScripts()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnRenderBackground()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnRenderWorld()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnRenderUI()
 {
@@ -138,14 +179,14 @@ void OnRenderUI()
 	if( G_PlayerNtt == nullptr )
 	{
 		qlog( "G_PlayerNtt is nullptr", ERROR, 0 );
-		return;
+		freturn;
 	}
 
 	CompPos *cmpPos = G_PlayerNtt->getComponent< CompPos >();
 	if( cmpPos == nullptr )
 	{
 		qlog( "G_PlayerNtt has no position component", ERROR, 0 );
-		return;
+		freturn;
 	}
 
 	vec2_t playerWorldPos = G_PlayerNtt->getPos();
@@ -154,4 +195,6 @@ void OnRenderUI()
 	string plInfo = "G_Player  : " + to_string( ( int )playerScreenPos.x ) + ":" + to_string( ( int )playerScreenPos.y ) + " | " + to_string( ( int )playerWorldPos.x ) + ":" + to_string( ( int )playerWorldPos.y );
 	qlog( plInfo, INFO, 0 );
 	DrawText( plInfo.c_str(), FontSizeUI, ( 5.5f * FontSizeUI ), FontSizeUI, WHITE );
+
+	fend();
 }

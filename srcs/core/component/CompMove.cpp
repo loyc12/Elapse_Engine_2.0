@@ -5,11 +5,13 @@
 void CompMove::onCpy( const CompMove &rhs )
 {
 	flog( 0 );
-	if( this == &rhs ){ return; } // NOTE : checks if the objects are the same
+	if( this == &rhs ){ freturn; } // NOTE : checks if the objects are the same
 
 	CompBase::onCpy( rhs );
 	_vel = rhs._vel;
 	_acc = rhs._acc;
+
+	fend();
 }
 
 // ================================ CONSTRUCTORS / DESTRUCTORS
@@ -17,11 +19,13 @@ void CompMove::onCpy( const CompMove &rhs )
 CompMove::~CompMove()
 {
 	flog( 0 );
+	fend();
 }
 
 CompMove::CompMove() : CompBase(), _vel(), _acc()
 {
 	flog( 0 );
+	fend();
 }
 CompMove::CompMove( Entity *Ntt, bool isActive, vec2_t vel, vec2_t acc ):
 	CompBase( Ntt, isActive ),
@@ -29,18 +33,20 @@ CompMove::CompMove( Entity *Ntt, bool isActive, vec2_t vel, vec2_t acc ):
 	_acc( acc )
 {
 	flog( 0 );
+	fend();
 }
 
 CompMove::CompMove( const CompMove &rhs ) : CompMove()
 {
 	flog( 0 );
 	*this = rhs;
+	fend();
 }
 CompMove &CompMove::operator=( const CompMove &rhs )
 {
 	flog( 0 );
 	onCpy( rhs );
-	return *this;
+	freturn *this;
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -51,14 +57,14 @@ bool CompMove::hasSisterComps() const
 	if( !hasEntity() )
 	{
 		qlog( "CompMove::hasSisterComps() : no entity found for component", WARN, 0 );
-		return false;
+		freturn false;
 	}
 	if( !getEntity()->hasComponent< CompPos >() )
 	{
 		qlog( "CompMove::hasSisterComps() : no position component found for entity", INFO, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }
 
 // ================================ TICK METHODS
@@ -66,13 +72,13 @@ bool CompMove::hasSisterComps() const
 bool CompMove::onTick()
 {
 	flog( 0 );
-	if( !canTick() ){ return false; }
+	if( !canTick() ){ freturn false; }
 
 	fixed_t dt = GDTS();
 	if( dt <= 0 )
 	{
 		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );
-		return false;
+		freturn false;
 	}
 
 	// NOTE : apply acceleration to velocity
@@ -88,12 +94,12 @@ bool CompMove::onTick()
 	if( cmp == nullptr )
 	{
 		qlog( "CompCollide::onTick() : no CompPos found for this entity", WARN, getEntityID() );
-		return false;
+		freturn false;
 	}
 
 	// TODO : move this logic to physic component
 	cmp->movePos( _vel.x * dt, _vel.y * dt );
 	cmp->moveAngle( _rotVel * dt );
 
-	return true;
+	freturn true;
 }

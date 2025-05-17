@@ -29,14 +29,14 @@ inline bool IsValidCompType( comp_type_e type )
 	if( type == COMP_TYPE_BASE )
 	{
 		qlog( "Component type cannot be COMP_TYPE_BASE", WARN, 0 );
-		return false;
+		freturn false;
 	}
 	if( type >= COMP_TYPE_COUNT )
 	{
 		qlog( "IsValidCompType : Component type is out of range", WARN, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }
 
 # define COMP_DEF_ACTIVITY true
@@ -105,19 +105,19 @@ TTC inline bool IsValidComponent( CompT *comp )
 	if( comp == nullptr )
 	{
 		qlog( "IsValidComponent : Component is nullptr", WARN, 0 );
-		return false;
+		freturn false;
 	}
 	if( !IsValidCompType( comp->getType() ))
 	{
 		qlog( "IsValidComponent : Component type is invalid", WARN, 0 );
-		return false;
+		freturn false;
 	}
 	if( comp->getEntityID() == 0 )
 	{
 		qlog( "IsValidComponent : Component ID cannot be 0", WARN, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }
 
 TTC inline CompT *CompFactory( Entity *Ntt = nullptr, bool isActive = COMP_DEF_ACTIVITY )
@@ -127,9 +127,9 @@ TTC inline CompT *CompFactory( Entity *Ntt = nullptr, bool isActive = COMP_DEF_A
 	if( comp == nullptr )
 	{
 		qlog( "CompFactory : Component creation failed", ERROR, 0 );
-		return nullptr;
+		freturn nullptr;
 	}
-	return comp;
+	freturn comp;
 }
 
 TTC inline CompT *CompFactory( CompT *src, Entity *Ntt = nullptr )
@@ -139,10 +139,10 @@ TTC inline CompT *CompFactory( CompT *src, Entity *Ntt = nullptr )
 	if( comp == nullptr )
 	{
 		qlog( "CompFactory : Component creation failed", ERROR, 0 );
-		return nullptr;
+		freturn nullptr;
 	}
 	comp->setEntity( Ntt );
-	return comp;
+	freturn comp;
 }
 
 #endif // COMP_BASE_HPP

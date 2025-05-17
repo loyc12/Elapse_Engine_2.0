@@ -6,22 +6,22 @@
 Engine::Engine() : _DT( 0.0f ), _TS( 1.0f ), _state( ES_CLOSED )
 {
 	flog( 0 );
-	if( getState() < ES_CLOSING )
-		switchState( ES_INITIALIZED );
+	if( getState() < ES_CLOSING ){ switchState( ES_INITIALIZED ); }
+	fend();
 }
 
 Engine::~Engine()
 {
 	flog( 0 );
-	if( getState() > ES_CLOSED )
-		switchState( ES_CLOSED );
+	if( getState() > ES_CLOSED ){ switchState( ES_CLOSING ); }
+	fend();
 }
 
 Engine *Engine::getEngine() // NOTE : static class method ( singleton )
 {
 	flog( 0 );
 	static Engine *instance = new Engine();
-	return instance;
+	freturn instance;
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -36,7 +36,7 @@ fixed_t  Engine::setTimeScale( fixed_t timeScale )
 	}
 	else { _TS = timeScale; }
 
-	return _TS;
+	freturn _TS;
 }
 
 bool Engine::canEngineTick()
@@ -45,9 +45,9 @@ bool Engine::canEngineTick()
 	if( getState() < ES_STARTED )
 	{
 		qlog( "canEngineTick : Engine needs to at least be started", WARN, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }
 
 // ==================== ENGINE SHORTCUTS

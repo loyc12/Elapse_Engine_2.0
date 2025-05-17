@@ -5,10 +5,12 @@
 void CompCollide::onCpy( const CompCollide &rhs )
 {
 	flog( 0 );
-	if( this == &rhs ){ return; } // NOTE : checks if the objects are the same
+	if( this == &rhs ){ freturn; } // NOTE : checks if the objects are the same
 
 	CompBase::onCpy( rhs );
 	_hitRad = rhs._hitRad;
+
+	fend();
 }
 
 // ================================ CONSTRUCTORS / DESTRUCTORS
@@ -16,11 +18,13 @@ void CompCollide::onCpy( const CompCollide &rhs )
 CompCollide::~CompCollide()
 {
 	flog( 0 );
+	fend();
 }
 
 CompCollide::CompCollide() : CompBase(), _collidable( COMP_DEF_COLLIDE ), _hitRad( COMP_DEF_HITRAD )
 {
 	flog( 0 );
+	fend();
 }
 CompCollide::CompCollide( Entity *Ntt, bool isActive, bool isCollidable, fixed_t hitRad ):
 	CompBase(   Ntt, isActive ),
@@ -28,18 +32,20 @@ CompCollide::CompCollide( Entity *Ntt, bool isActive, bool isCollidable, fixed_t
 	_hitRad(    hitRad )
 {
 	flog( 0 );
+	fend();
 }
 
 CompCollide::CompCollide( const CompCollide &rhs ) : CompCollide()
 {
 	flog( 0 );
 	*this = rhs;
+	fend();
 }
 CompCollide &CompCollide::operator=( const CompCollide &rhs )
 {
 	flog( 0 );
 	onCpy( rhs );
-	return *this;
+	freturn *this;
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -50,24 +56,24 @@ bool CompCollide::hasSisterComps() const
 	if( !hasEntity() )
 	{
 		qlog( "CompCollide::hasSisterComps() : no entity found for component", ERROR, 0 );
-		return false;
+		freturn false;
 	}
 	if( !getEntity()->hasComponent< CompPos >() )
 	{
 		qlog( "CompCollide::hasSisterComps() : no position component found for entity", ERROR, 0 );
-		return false;
+		freturn false;
 	}
 	if( !getEntity()->hasComponent< CompMove >() )
 	{
 		qlog( "CompCollide::hasSisterComps() : no movement component found for entity", ERROR, 0 );
-		return false;
+		freturn false;
 	}
 	if( !getEntity()->hasComponent< CompPhys >() )
 	{
 		qlog( "CompCollide::hasSisterComps() : no physics component found for entity", ERROR, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }
 
 // ================================ TICK METHODS
@@ -75,17 +81,17 @@ bool CompCollide::hasSisterComps() const
 bool CompCollide::onTick()
 {
 	flog( 0 );
-	if( !canTick() ){ return false; }
+	if( !canTick() ){ freturn false; }
 
 	fixed_t dt = GDTS();
 	if( dt <= 0 )
 	{
 		qlog( "CompMove::onTick() : delta time is 0 : skiping this tick", INFO, getEntityID() );
-		return false;
+		freturn false;
 	}
 
 	// TODO : check for collisions based on other entities' pos, hitrad and statuses
 	// TODO : then, call the collision function on this entity only
 
-	return true;
+	freturn true;
 }

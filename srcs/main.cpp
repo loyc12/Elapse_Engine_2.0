@@ -1,12 +1,22 @@
 #include "../incs/engine.hpp"
 
+
+void test()
+{
+
+}
+
+void entry()
+{
+	GetNG->launchLoop();
+}
+
 int main()
 {
-	flog( 0 );
-
 	GetNG->switchState( ES_RUNNING );
 
-	GetNG->launchLoop();
+	//test();
+	entry();
 
 	GetNG->switchState( ES_CLOSED );
 

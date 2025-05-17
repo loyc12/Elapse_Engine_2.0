@@ -9,9 +9,11 @@ void ScreenMngr::putPoin( vec2_t pos, Color colour )
 	if ( pos.x < 0 || pos.x > _screenMngr.x || pos.y < 0 || pos.y > _screenMngr.y )
 	{
 		qlog( "putPoin : point is out of bounds", WARN, 0 );
-		return;
+		freturn;
 	}
 	DrawPixel( pos.x, pos.y, colour );
+
+	fend();
 }
 void ScreenMngr::putLine( vec2_t start, vec2_t end, Color colour, bool fill )
 {
@@ -20,7 +22,7 @@ void ScreenMngr::putLine( vec2_t start, vec2_t end, Color colour, bool fill )
 	{
 		qlog( "putLine : start and end are the same : drawing a point instead", WARN, 0 );
 		putPoin( start, colour );
-		return;
+		freturn;
 	}
 	if ( fill ) { DrawLine( start.x, start.y, end.x, end.y, colour ); }
 	else
@@ -31,6 +33,8 @@ void ScreenMngr::putLine( vec2_t start, vec2_t end, Color colour, bool fill )
 		putPoin(( start + end ) * 3 / 4, colour );
 		putPoin( end,   colour );
 	}
+
+	fend();
 }
 void ScreenMngr::putTria( vec2_t p1, vec2_t p2, vec2_t p3, Color colour, bool fill, bool checkOrder )
 {
@@ -58,7 +62,7 @@ void ScreenMngr::putTria( vec2_t p1, vec2_t p2, vec2_t p3, Color colour, bool fi
 			qlog( "putTria : p2 and p3 are the same : drawing a line instead", WARN, 0 );
 			putLine( p2, p1, colour );
 		}
-		return;
+		freturn;
 	}
 
 	if( checkOrder )
@@ -73,13 +77,15 @@ void ScreenMngr::putTria( vec2_t p1, vec2_t p2, vec2_t p3, Color colour, bool fi
 			vec2_t max = vec2_t( Opfx::max( p1.x, p2.x, p3.x ), Opfx::max( p1.y, p2.y, p3.y ));
 
 			putLine( min, max, colour );
-			return;
+			freturn;
 		}
 		if( area < 0 ){ std::swap( p2, p3 ); } // NOTE : this is to make sure the triangle is drawn in a clockwise order
 	}
 
 	if( fill ){ DrawTriangle( p1, p2, p3, colour ); }
-	else {   DrawTriangleLines( p1, p2, p3, colour ); }
+	else { DrawTriangleLines( p1, p2, p3, colour ); }
+
+	fend();
 }
 
 void ScreenMngr::putRectCorn( vec2_t p1, vec2_t p2, Color colour, bool fill )
@@ -89,9 +95,11 @@ void ScreenMngr::putRectCorn( vec2_t p1, vec2_t p2, Color colour, bool fill )
 	{
 		qlog( "putRectCorn : two vertices are the same : drawing a point instead", WARN, 0 );
 		putPoin( p1, colour );
-		return;
+		freturn;
 	}
 	putRect( { p1.x, p1.y }, { p2.x - p1.x, p2.y - p1.y }, colour, fill );
+
+	fend();
 }
 void ScreenMngr::putRect( vec2_t pos, vec2_t sizes, Color colour, bool fill )
 {
@@ -113,16 +121,20 @@ void ScreenMngr::putRect( vec2_t pos, vec2_t sizes, Color colour, bool fill )
 			qlog( "putRect : width and height are 0 : drawing a point instead", WARN, 0 );
 			putPoin( pos, colour );
 		}
-		return;
+		freturn;
 	}
 	if( fill ){ DrawRectangle( pos.x, pos.y, sizes.x, sizes.y, colour ); }
 	else { DrawRectangleLines( pos.x, pos.y, sizes.x, sizes.y, colour ); }
+
+	fend();
 }
 void ScreenMngr::putCirc( vec2_t pos, fixed_t radius, Color colour, bool fill )
 {
 	flog( 0 );
 	if( fill ){ DrawCircle( pos.x, pos.y, radius, colour ); }
 	else { DrawCircleLines( pos.x, pos.y, radius, colour ); }
+
+	fend();
 }
 void ScreenMngr::putCircSect( vec2_t pos, fixed_t radius, Angle start, Angle end, Color colour, bool fill )
 {
@@ -132,37 +144,46 @@ void ScreenMngr::putCircSect( vec2_t pos, fixed_t radius, Angle start, Angle end
 	{
 		qlog( "putCircSect : start and end are the same : drawing a circle instead", WARN, 0 );
 		putCirc( pos, radius, colour, fill );
-		return;
+		freturn;
 	}
 	byte_t sideC = byte_t(( start.getDist( end ).getDeg() * 255 ) / 360.0f ); // TODO : test me
 	if ( sideC != 255 ) sideC += 1; //  NOTE : rounds up to prevent zero-div
 
 	if ( fill ){ DrawCircleSector( pos, radius, start.getDeg(), end.getDeg(), sideC, colour ); }
 	else {  DrawCircleSectorLines( pos, radius, start.getDeg(), end.getDeg(), sideC, colour ); }
+
+	fend();
 }
 
 void ScreenMngr::putOval( vec2_t pos, vec2_t sizes, Angle angle, Color colour, bool fill )
 {
 	flog( 0 );
 	putPoly( pos, sizes, angle, 255, colour, fill ); // NOTE : pretends a 255-gon is a cricle
+	fend();
 }
 void ScreenMngr::putRect( vec2_t pos, vec2_t sizes, Angle angle, Color colour, bool fill )
 {
 	flog( 0 );
 	sizes.rotateBy( angle );
 	putRect( pos, sizes, colour, fill ); // TODO : implement me
+	fend();
 }
 void ScreenMngr::putPoly( vec2_t pos, vec2_t sizes, Angle angle, byte_t sideC, Color colour, bool fill )
 {
 	flog( 0 );
 	(void)pos; (void)sizes; (void)angle; (void)sideC; (void)colour; (void)fill;
+
 	// TODO : implement me
+
+	fend();
 }
 
 void ScreenMngr::putForm( vec2_arr_t points, Color colour, bool fill, bool checkOrder )
 {
 	flog( 0 );
 	(void)points; (void)colour; (void)fill; (void)checkOrder;
+
 	// TODO : implement me
 
+	fend();
 }

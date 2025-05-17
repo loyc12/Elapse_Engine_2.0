@@ -7,7 +7,10 @@
 void OnEngineInit()
 { // NOTE : do not add entities here ( or do anything that requires the engine to be started )
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEngineStart()
 {
@@ -49,25 +52,39 @@ void OnEngineStart()
 		G_EnemyNtt->getComponent< CompGraph >()->setCircleRadius( 16 );
 		G_EnemyNtt->getComponent< CompGraph >()->setCol( RED );
 	}
+
+	fend();
 }
 void OnEngineResume()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 
 void OnEnginePause()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEngineStop()
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }
 void OnEngineClose()// NOTE : entities are deleted automatically
 {
 	flog( 0 );
+
 	// TODO : add game specific code here
+
+	fend();
 }

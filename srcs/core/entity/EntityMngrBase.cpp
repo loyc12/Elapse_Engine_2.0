@@ -12,6 +12,7 @@ void EntityMngr::updateMaxID()
 		if( it->first > newMaxID ){ newMaxID = it->first; }
 	}
 	_maxID = newMaxID;
+	fend();
 }
 
 // ================================ STATIC METHODS
@@ -22,7 +23,7 @@ bool EntityMngr::isValidID( id_t id )
 	if( id == 0 )
 	{
 		qlog( "isValidID : Entity ID cannot be 0", WARN, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }

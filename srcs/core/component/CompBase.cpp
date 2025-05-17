@@ -6,9 +6,9 @@ id_t CompBase::getEntityID() const
 	if( _Ntt == nullptr )
 	{
 		qlog( "CompBase::getEntityID() : Entity is nullptr", DEBUG, 0 );
-		return 0;
+		freturn 0;
 	}
-	return _Ntt->getID();
+	freturn _Ntt->getID();
 }
 bool CompBase::isEntityActive() const
 {
@@ -16,9 +16,9 @@ bool CompBase::isEntityActive() const
 	if( _Ntt == nullptr )
 	{
 		qlog( "CompBase::isEntityActive() : Entity is nullptr", DEBUG, 0 );
-		return false;
+		freturn false;
 	}
-	return _Ntt->isActive();
+	freturn _Ntt->isActive();
 }
 bool CompBase::setEntityActivity( bool activate )
 {
@@ -26,9 +26,9 @@ bool CompBase::setEntityActivity( bool activate )
 	if( _Ntt == nullptr )
 	{
 		qlog( "CompBase::setEntityActivity() : Entity is nullptr", WARN, 0 );
-		return false;
+		freturn false;
 	}
-	return _Ntt->setActivity( activate );
+	freturn _Ntt->setActivity( activate );
 }
 
 // =============================== TICK METHODS
@@ -39,35 +39,35 @@ bool CompBase::canTick() const
 	if( !isActive() )
 	{
 		qlog( "CompPos::canTick() : component is not active", DEBUG, 0 );
-		return false;
+		freturn false;
 	}
 	if( !hasEntity() )
 	{
 		qlog( "CompPos::canTick() : no entity found for component", WARN, 0 );
-		return false;
+		freturn false;
 	}
 	if( !isEntityActive() )
 	{
 		qlog( "CompPos::canTick() : component's entity is not active", DEBUG, 0 );
-		return false;
+		freturn false;
 	}
 	if( !hasSisterComps() )
 	{
 		qlog( "CompPos::canTick() : missing required sister components", INFO, 0 );
-		return false;
+		freturn false;
 	}
 	if ( !GetNG->canEngineTick() )
 	{
 		qlog( "CompPos::canTick() : Engine is not in a tickable state", INFO, 0 );
-		return false;
+		freturn false;
 	}
-	return true;
+	freturn true;
 }
 
 bool CompBase::onTick() // NOTE : override this in derived classes
 { //                       NOTE : onTick() should only be called by EntityMngr
 	flog( 0 );
-	if( !canTick() ){ return false; }
+	if( !canTick() ){ freturn false; }
 	// NOTE : CompBase does not do anything on tick
-	return true;
+	freturn true;
 }

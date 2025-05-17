@@ -7,12 +7,14 @@ ScreenMngr::ScreenMngr()
 {
 	flog( 0 );
 	init();
+	fend();
 }
 
 ScreenMngr::~ScreenMngr()
 {
 	flog( 0 );
 	close();
+	fend();
 }
 
 // ================================ CORE METHODS
@@ -32,6 +34,8 @@ void ScreenMngr::init()
 	_camera.zoom     = DEFAULT_ZOOM;
 	_camera.rotation = 0.0f;
 	_camera.offset   = { _screenMngr.x / 2, _screenMngr.y / 2 };
+
+	fend();
 }
 
 void ScreenMngr::open()
@@ -40,7 +44,7 @@ void ScreenMngr::open()
 	if( IsWindowReady() )
 	{
 		qlog( "open : Window already opened", WARN, 0 );
-		return;
+		freturn;
 	}
 
 	InitWindow( _screenMngr.x, _screenMngr.y, WINDOW_DEFAULT_TITLE );
@@ -48,11 +52,13 @@ void ScreenMngr::open()
 	if( !IsWindowReady() )
 	{
 		qlog( "open : Failed to open window", ERROR, 0 );
-		return;
+		freturn;
 	}
 	qlog( "open : Window successfully opened", INFO, 0 );
 
 	SetTargetFPS( _targetFPS );
+
+	fend();
 }
 
 void ScreenMngr::close()
@@ -61,7 +67,7 @@ void ScreenMngr::close()
 	if( !IsWindowReady() )
 	{
 		qlog( "close : Window already closed", INFO, 0 );
-		return;
+		freturn;
 	}
 
 	CloseWindow();
@@ -69,9 +75,11 @@ void ScreenMngr::close()
 	if( IsWindowReady() )
 	{
 		qlog( "close : Failed to close window", ERROR, 0 );
-		return;
+		freturn;
 	}
 	qlog( "close : Window successfully closed", INFO, 0 );
+
+	fend();
 }
 
 void ScreenMngr::update()
@@ -80,6 +88,7 @@ void ScreenMngr::update()
 	updateCamera();
 	updateView();
 	updateMouse();
+	fend();
 }
 
 void ScreenMngr::refresh()
@@ -87,6 +96,7 @@ void ScreenMngr::refresh()
 	flog( 0 );
 	ClearBackground( BACKGROUND_COLOUR );
 	update();
+	fend();
 }
 
 void ScreenMngr::updateView()
@@ -95,12 +105,16 @@ void ScreenMngr::updateView()
 	// sets _screenMngr to the camera view size
 	_screenMngr.x = GetScreenWidth()  * _camera.zoom;
 	_screenMngr.y = GetScreenHeight() * _camera.zoom;
+
+	fend();
 }
 void ScreenMngr::updateMouse()
 {
 	flog( 0 );
 	_mouseScreenPos = GetMousePosition();
 	_mouseWorldPos  = GetScreenToWorld2D( _mouseScreenPos, _camera );
+
+	fend();
 
 }
 void ScreenMngr::updateCamera()
@@ -117,6 +131,7 @@ void ScreenMngr::updateCamera()
 
 	_camera.offset = { GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
 
+	fend();
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -127,10 +142,12 @@ void ScreenMngr::setTargetFPS( byte_t fps )
 	if( fps == 0 )
 	{
 		qlog( "setTargetFPS : FPS cannot be 0", ERROR, 0 );
-		return;
+		freturn;
 	}
 	_targetFPS = fps;
 	if ( IsWindowReady() ){ SetTargetFPS( _targetFPS ); }
+
+	fend();
 }
 
 void ScreenMngr::setZoom(   fixed_t   zoom ){ _camera.zoom = zoom; }

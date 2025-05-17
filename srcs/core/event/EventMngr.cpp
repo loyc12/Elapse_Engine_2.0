@@ -6,9 +6,9 @@
 void EventMngr::init()
 {
 	flog( 0 );
-
 	bzero( &_previousInputs, sizeof( inputs_s ) );
 	bzero( &_latestInputs,   sizeof( inputs_s ) );
+	fend();
 }
 
 // ================================ CONSTRUCTORS / DESTRUCTORS
@@ -17,16 +17,18 @@ EventMngr::EventMngr()
 {
 	flog( 0 );
 	init();
+	fend();
 }
 EventMngr::~EventMngr()
 {
 	flog( 0 );
+	fend();
 }
 
 // ================================ ACCESSORS
 
-inputs_s &EventMngr::getLatestInputs()   { return _latestInputs; }
-inputs_s &EventMngr::getPreviousInputs(){ return _previousInputs; }
+inputs_s &EventMngr::getLatestInputs(){   freturn _latestInputs; }
+inputs_s &EventMngr::getPreviousInputs(){ freturn _previousInputs; }
 
 // ================================ METHODS
 
@@ -96,4 +98,5 @@ void EventMngr::refreshInputs() // NOTE : archaic way of doing things, but it wo
 	_latestInputs.SLA = IsKeyDown( KEY_SLASH );
 
 	OnReadInputs( _latestInputs, _previousInputs ); // from injectors.hpp
+	fend();
 }

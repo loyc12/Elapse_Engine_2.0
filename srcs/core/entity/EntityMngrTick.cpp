@@ -19,6 +19,7 @@ void EntityMngr::updateAllEntities()
 			Ntt->tickComponent( comp_type_e( i ));
 		}
 	}
+	fend();
 }
 void EntityMngr::updateAllComponents()
 {	// NOTE : calls the onTick() method of all components in the map ( each component type at a time)
@@ -27,13 +28,15 @@ void EntityMngr::updateAllComponents()
 	{
 		updateCompsByType( comp_type_e( i ));
 	}
+	fend();
 }
 void EntityMngr::updateCompsByType( comp_type_e compType )
 {	// NOTE : calls the onTick() method of all components of the given type in the map
 	flog( 0 );
-	if( !IsValidCompType( compType )){ return; }
-	// DEBUG : remove this qlog
+	if( !IsValidCompType( compType )){ freturn; }
+
 	qlog( "updateCompsByType : Updating components of type: " + std::to_string( compType ), DEBUG, 0 );
+
 	for( auto it = _NttMap.begin(); it != _NttMap.end(); ++it ) // NOTE : Loop on all entities
 	{
 		Entity *Ntt = it->second;
@@ -50,6 +53,7 @@ void EntityMngr::updateCompsByType( comp_type_e compType )
 		}
 		Ntt->tickComponent( comp_type_e( compType ));
 	}
+	fend();
 }
 
 // ================ TICK METHODS
@@ -59,18 +63,21 @@ void EntityMngr::tickMovements()
 	flog( 0 );
 	OnTickMovements(); // from injectors.hpp
 	updateCompsByType( COMP_MOVEMENT );
+	fend();
 }
 void EntityMngr::tickCollides()
 {
 	flog( 0 );
 	OnTickCollides(); // from injectors.hpp
 	updateCompsByType( COMP_COLLIDE );
+	fend();
 }
 void EntityMngr::tickPhysics()
 {
 	flog( 0 );
 	OnTickPhysics(); // from injectors.hpp
 	updateCompsByType( COMP_PHYSIC );
+	fend();
 }
 
 void EntityMngr::tickSounds()
@@ -78,18 +85,21 @@ void EntityMngr::tickSounds()
 	flog( 0 );
 	OnTickSounds(); // from injectors.hpp
 	//updateCompsByType( COMP_SOUND );
+	fend();
 }
 void EntityMngr::tickShapes()
 {
 	flog( 0 );
 	OnTickShapes(); // from injectors.hpp
 	//updateCompsByType( COMP_SHAPE );
+	fend();
 }
 void EntityMngr::tickGraphics()
 {
 	flog( 0 );
 	OnTickGraphics(); // from injectors.hpp
 	updateCompsByType( COMP_GRAPHIC );
+	fend();
 }
 
 void EntityMngr::tickScripts()
@@ -97,4 +107,5 @@ void EntityMngr::tickScripts()
 	flog( 0 );
 	OnTickScripts(); // from injectors.hpp
 	//updateCompsByType( COMP_SCRIPT );
+	fend();
 }

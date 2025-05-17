@@ -35,7 +35,7 @@ class EntityMngr
 	// ================================ ACCESSORS / MUTATORS
 
 	// ================ ENTITY METHODS
-		id_t    getEntityCount() const;
+		inline id_t getEntityCount() const { return _NttMap.size(); }
 		Entity *getEntity( id_t id ) const;
 
 		inline bool isUsedID( id_t id ) const { return  hasEntity( id ); }
@@ -52,7 +52,7 @@ class EntityMngr
 		bool defragEntityMap(); // NOTE : removes nullptr entities from the map and recalculates the max ID
 
 		// NOTE : add + copy entity and its components
-		bool dupEntity( id_t    src );
+		inline bool dupEntity( id_t src ) { return dupEntity( getEntity( src )); }
 		bool dupEntity( Entity *src );
 
 	// ================ COMPONENT METHODS
