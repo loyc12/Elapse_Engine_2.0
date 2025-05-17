@@ -48,7 +48,13 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 	static bool use_clr = ( log_out == &cout );
 
 	bool use_red = ( lvl == ERROR || ( msg != nullptr && msg[0] == '!' ));
-	if( LOG_TIME ) *log_out << ( use_clr ? ( use_red ? CLR_RED : CLR_LGR ) : "" ) << get_time_str() << " ";
+	if( LOG_TIME )
+	{
+		*log_out << ( use_clr ? ( use_red ? CLR_RED : CLR_LGR ) : "" );
+
+		if ( SHOW_TIME_DIFF ){ *log_out << to_time_str_raw( get_laptime()) << " "; }
+		else { *log_out << to_time_str( get_runtime()) << " "; }
+	}
 
 	switch ( lvl )
 	{

@@ -25,11 +25,12 @@ typedef enum
 #	define LOG_LVL 5 // NONE, DEBUG, INFO, WARN, ERROR, FUNCT ( each level includes the previous ones )
 
 
-#	define LOG_FILE false //     NOTE : writes the log messages to a file instead of the console
-#	define LOG_TIME true //      NOTE : shows the time since start in the log messages
-#	define LOG_LINE true //      NOTE : shows the src file name and line number in the log messages
-#	define SHOW_OBJ_MSG true //  NOTE : shows or ignores the messages what have a specified t_id
-#	define SHOW_FCT_PATH true // NOTE : shows the function pathing in the log messages, as opposed to just the function name
+#	define LOG_FILE false //       NOTE : writes the log messages to a file instead of the console
+#	define LOG_LINE true //        NOTE : shows the src file name and line number in the log messages
+#	define LOG_TIME true //        NOTE : shows the time since start in the log messages
+# define SHOW_TIME_DIFF true //  NOTE : shows the time since the last log message, instead of the time since start
+#	define SHOW_OBJ_MSG true //    NOTE : shows or ignores the messages what have a specified t_id
+#	define SHOW_FCT_PATH false //  NOTE : shows the function pathing in the log messages, as opposed to just the function name
 
 # define FCT_SEPARATOR "\n" // NOTE : this is what will visually separete each function name in the function pathing output
 # define FCT_MUL_PREFIX " " // NOTE : this will be added N times before the function name, where N is the depth of the function call
@@ -38,7 +39,7 @@ typedef enum
 #	if LOG_LVL > LOG_LVL_NONE // NOTE : debug functions to activate if loglevel is greater than NONE
 #	 define qlog( msg, lvl, id )     log( msg, lvl, id, HERE )
 #	 define dtest( dividend, div )   div_test( dividend, div )
-#  define BLOCK                    std::cin.get(); // NOTE : this freezes the program until an input is given. useful for debugging
+#  define BLOCK                    std::cin.get(); //        NOTE : this freezes the program until an input is given. useful for debugging
 #	else
 #	 define qlog( msg, lvl, id )
 #	 define dtest( dividend, div ) true;

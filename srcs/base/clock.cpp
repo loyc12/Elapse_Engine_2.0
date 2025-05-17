@@ -1,4 +1,5 @@
 #include "../../incs/base.hpp"
+#include <string>
 
 time_t clock_per_micro = 1; // implied by the use of timeval
 time_t clock_per_milli = clock_per_micro * 1000;
@@ -22,20 +23,45 @@ struct timeval &start_clock()
 	qlog( "start_clock : Clock started", INFO, 0 );
 	return clock_start_time;
 }
-
 struct timeval &get_start_time()
 {
 	if( !clock_started ){ start_clock(); }
 	return clock_start_time;
 }
 
-string get_time_str()
+ulong get_time_diff( struct timeval &start, struct timeval &end )
+{
+	time_t sec_diff = end.tv_sec - start.tv_sec;
+  suseconds_t usec_diff = end.tv_usec - start.tv_usec;
+
+  return sec_diff * clock_per_sec + usec_diff; // NOTE : in microseconds
+}
+ulong get_time_since( struct timeval &then )
+{
+	struct timeval now;
+	gettimeofday( &now, NULL );
+
+	return get_time_diff( then, now );
+}
+ulong get_laptime() // NOTE : returns the time elapsed since this function was last called
 {
 	if( !clock_started ){ start_clock(); }
+	static struct timeval last_time = get_start_time();
 
+	struct timeval now;
+	gettimeofday( &now, NULL );
+
+	ulong ret = get_time_diff( last_time, now );
+	last_time = now;
+
+	return ret;
+}
+
+
+string to_time_str( ulong time )
+{
+	if( !clock_started ){ start_clock(); }
 	ostrs out; out << std::setfill( '0' );
-
-	ulong time = get_runtime();
 
 	// uint years = time / clock_per_year;
 	// out << years << "y";
@@ -66,25 +92,25 @@ string get_time_str()
 
 	return out.str();
 }
-string get_time_str_raw()
-{
-	if( !clock_started ){ qlog( "get_time_str_raw : Clock not yet started : Starting it now", WARN, 0 ); start_clock(); }
 
-	ostrs out;
-	ulong time = get_runtime();
+string to_time_str_raw( ulong time )
+{
+	if( !clock_started ){ start_clock(); }
+	ostrs out; out << std::setfill( '0' );
 
 	uint seconds = time / clock_per_sec;
 	out << seconds << ".";
 	time -= seconds * clock_per_sec;
 
 	uint microseconds = time / clock_per_micro;
-	out << std::setfill( '0' ) << std::setw( 6 ) << microseconds;
+	out << std::setw( 6 ) << microseconds;
 
 	return out.str();
 }
+
 string get_start_time_str()
 {
-	if( !clock_started ){ qlog( "get_start_time_str : Clock not yet started : Starting it now", WARN, 0 ); start_clock(); }
+	if( !clock_started ){ start_clock(); }
 
 	ostrs out; out << std::setfill( '0' );
 
@@ -99,24 +125,3 @@ string get_start_time_str()
 
 	return out.str();
 }
-
-
-ulong get_time_diff( struct timeval &start, struct timeval &end )
-{
-  time_t sec_diff = end.tv_sec - start.tv_sec;
-  suseconds_t usec_diff = end.tv_usec - start.tv_usec;
-
-  return sec_diff * clock_per_sec + usec_diff; // Microseconds
-}
-ulong get_time_since( struct timeval &since )
-{
-	struct timeval now;
-	gettimeofday( &now, NULL );
-
-	return get_time_diff( since, now );
-}
-ulong get_runtime()
-{
-	return get_time_since( get_start_time() );
-}
-
