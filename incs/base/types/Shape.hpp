@@ -4,6 +4,7 @@
 # include <raylib.h>
 # include "../core.hpp"
 
+# include "./Colour.hpp"
 # include "./FixedPoint.hpp"
 # include "./Angle.hpp"
 # include "./Pos2.hpp"
@@ -20,29 +21,27 @@ class Shape // TODO : move the large definitions to a .cpp file
 	public:
 		vec2_t     _centre; // position of the shape
 		Angle      _angle; //  angle of the
-		Color      _colour; // colour of the shape
+		col_t      _colour; // colour of the shape
 		vec2_arr_t _verts; //  vertices of the shape
 
 	// ============================ CONSTRUCTORS / DESTRUCTORS
 
 		inline ~Shape(){};
 		inline  Shape() : _centre( 0, 0 ), _angle( 0 ), _colour( WHITE ), _verts(){}
-		inline  Shape( const vec2_t &center, const Angle &angle = 0, const Color &colour = WHITE, const vec2_arr_t &verts = vec2_arr_t() ):
+		inline  Shape( const vec2_t &center, const Angle &angle = 0, const col_t &colour = WHITE, const vec2_arr_t &verts = vec2_arr_t() ):
 			_centre( center ),
 			_angle(  angle ),
 			_colour( colour )
-		{
-			copyVerts( verts );
-		}
+		{ copyVerts( verts ); }
 
-		inline  Shape( const Shape &s ){ *this = s; }
-		inline  Shape operator=( const Shape &s ){ _centre = s._centre; _angle = s._angle; _colour = s._colour; copyVerts( s._verts ); return *this; }
+		inline Shape( const Shape &s ){ *this = s; }
+		inline Shape operator=( const Shape &s ){ _centre = s._centre; _angle = s._angle; _colour = s._colour; copyVerts( s._verts ); return *this; }
 
 	// ============================ ACCESSORS / MUTATORS
 
 		inline vec2_t     getCenter() const { return _centre; }
 		inline Angle      getAngle()  const { return _angle; }
-		inline Color      getColour() const { return _colour; }
+		inline col_t      getColour() const { return _colour; }
 		inline vec2_arr_t getVerts()  const { return _verts; }
 
 		inline fixed_t getCenterX()  const { return _centre.getX(); }
@@ -55,7 +54,7 @@ class Shape // TODO : move the large definitions to a .cpp file
 
 		inline void setCenter( const vec2_t    &center ){ _centre = center; }
 		inline void setAngle(  const Angle      &angle ){ _angle  = angle; }
-		inline void setColour( const Color     &colour ){ _colour = colour; }
+		inline void setColour( const col_t     &colour ){ _colour = colour; }
 		inline void setVerts(  const vec2_arr_t &verts ){ _verts  = verts; }
 
 		inline void setCenter( const fixed_t &x, const fixed_t &y ){ _centre.setPos( x, y ); }

@@ -278,19 +278,19 @@ bool Entity::moveHitRad( fixed_t delta )
 
 // ======== GRAPHIC COMPONENT
 
-Color Entity::getCol() const
+col_t Entity::getCol() const
 {
 	flog( _id );
 	if( !hasComponent( COMP_GRAPHIC )){ freturn { 0, 0, 0, 0 }; }
 	freturn getComponent< CompGraph >()->getCol();
 }
-bool Entity::setCol( Color col )
+bool Entity::setCol( col_t colour )
 {
 	flog( _id );
 	if( !hasComponent( COMP_GRAPHIC )){ freturn false; }
-	freturn getComponent< CompGraph >()->setCol( col );
+	freturn getComponent< CompGraph >()->setCol( colour );
 }
-bool Entity::moveCol( Color delta )
+bool Entity::moveCol( col_t delta )
 {
 	flog( _id );
 	if( !hasComponent( COMP_GRAPHIC )){ freturn false; }

@@ -102,20 +102,20 @@ class ScreenMngr
 		bool untrackEntity();
 
 	// ================================ DRAWING METHODS
-		void putPoin( vec2_t pos,                       Color colour = WHITE );
-		void putLine( vec2_t p1,  vec2_t p2,            Color colour = WHITE, bool fill = true );
-		void putTria( vec2_t p1,  vec2_t p2, vec2_t p3, Color colour = WHITE, bool fill = true, bool checkOrder = true );
+		void putPoin( vec2_t pos,                       col_t colour = WHITE );
+		void putLine( vec2_t p1,  vec2_t p2,            col_t colour = WHITE, bool fill = true );
+		void putTria( vec2_t p1,  vec2_t p2, vec2_t p3, col_t colour = WHITE, bool fill = true, bool checkOrder = true );
 
-		void putRect(     vec2_t pos, vec2_t  sizes,    Color colour = WHITE, bool fill = true );
-		void putCirc(     vec2_t pos, fixed_t radius,   Color colour = WHITE, bool fill = true );
-		void putRectCorn( vec2_t p1,  vec2_t  p2,       Color colour = WHITE, bool fill = true );
-		void putCircSect( vec2_t pos, fixed_t radius, angle_t start, angle_t end, Color colour = WHITE, bool fill = true );
+		void putRect(     vec2_t pos, vec2_t  sizes,    col_t colour = WHITE, bool fill = true );
+		void putCirc(     vec2_t pos, fixed_t radius,   col_t colour = WHITE, bool fill = true );
+		void putRectCorn( vec2_t p1,  vec2_t  p2,       col_t colour = WHITE, bool fill = true );
+		void putCircSect( vec2_t pos, fixed_t radius, angle_t start, angle_t end, col_t colour = WHITE, bool fill = true );
 
-		void putRect( vec2_t pos, vec2_t sizes, angle_t angle,               Color colour = WHITE, bool fill = true  ); // TODO : implement me
-		void putOval( vec2_t pos, vec2_t sizes, angle_t angle,               Color colour = WHITE, bool fill = true  ); // TODO : implement me
-		void putPoly( vec2_t pos, vec2_t sizes, angle_t angle, byte_t sideC, Color colour = WHITE, bool fill = true  ); // TODO : implement me
+		void putRect( vec2_t pos, vec2_t sizes, angle_t angle,               col_t colour = WHITE, bool fill = true  ); // TODO : implement me
+		void putOval( vec2_t pos, vec2_t sizes, angle_t angle,               col_t colour = WHITE, bool fill = true  ); // TODO : implement me
+		void putPoly( vec2_t pos, vec2_t sizes, angle_t angle, byte_t sideC, col_t colour = WHITE, bool fill = true  ); // TODO : implement me
 
-		void putForm( vec2_arr_t points, Color colour = WHITE, bool fill = true, bool checkOrder = true );// TODO : implement me
+		void putForm( vec2_arr_t points, col_t colour = WHITE, bool fill = true, bool checkOrder = true );// TODO : implement me
 };
 
 

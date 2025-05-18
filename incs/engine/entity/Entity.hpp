@@ -133,9 +133,9 @@ class Entity
 		bool moveHitRad( fixed_t  delta );
 
 	// ======== GRAPHICS COMPONENT
-		Color getCol() const;
-		bool setCol( Color col );
-		bool moveCol( Color delta );
+		col_t getCol() const;
+		bool setCol(  col_t colour );
+		bool moveCol( col_t  delta );
 
 		fixed_t getCircleRadius() const;
 		bool setCircleRadius(  fixed_t radius );

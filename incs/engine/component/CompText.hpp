@@ -4,22 +4,22 @@
 # include <raylib.h>
 # include "../component/CompBase.hpp"
 
-# define COMP_DEF_TEXT "UNDEFINED" //             NOTE : default content for the component
-# define COMP_DEF_FONTSIZE 12 //                  NOTE : default font size for the component
-# define COMP_DEF_COLOR { 255, 255, 255, 255 } // NOTE : default colour for the component
-# define COMP_DEF_FONT "Arial" //                 NOTE : default font name for the component
+# define COMP_DEF_TEXT "UNDEFINED" //                   NOTE : default content for the component
+# define COMP_DEF_FONTSIZE 12 //                        NOTE : default font size for the component
+# define COMP_DEF_TEXT_COLOR col_t( 255, 255, 255, 255 ) // NOTE : default colour for the component
+# define COMP_DEF_FONT "Arial" //                       NOTE : default font name for the component
 
-# define COMP_DEF_MIN_TEXT_SIZE 1.0f //           NOTE : minimum font size for the component
+# define COMP_DEF_MIN_TEXT_SIZE 1.0f // NOTE : minimum font size for the component
 
 class CompText : public CompBase
 {
 	protected:
 	// ================================ ATTRIBUTES
-		string _title;
-		string _content;
-		string _fontName; // NOTE : name of the font to draw
-		fixed_t  _fontSize; // NOTE : size of the font to draw
-		Color  _fontCol; //  NOTE : colour of the text to draw
+		string  _title;
+		string  _content;
+		string  _fontName; //   NOTE : name of the font to draw
+		fixed_t _fontSize; // NOTE : size of the font to draw
+		col_t   _fontCol; //   NOTE : colour of the text to draw
 
 	// ================================ CORE METHODS
 		void onCpy( const CompText &rhs );
@@ -34,7 +34,7 @@ class CompText : public CompBase
 			string     title = COMP_DEF_TEXT,
 			string   content = COMP_DEF_TEXT,
 			fixed_t fontSize = COMP_DEF_FONTSIZE,
-			Color    fontCol = COMP_DEF_COLOR
+			col_t    fontCol = COMP_DEF_TEXT_COLOR
 		);
 
 		CompText( const CompText &rhs );
@@ -74,13 +74,13 @@ class CompText : public CompBase
 		inline bool moveFontSize(  fixed_t delta    ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, _fontSize + delta ); return true; }
 		inline bool scaleFontSize( fixed_t scale    ){ _fontSize = fmax( COMP_DEF_MIN_TEXT_SIZE, _fontSize * scale ); return true; }
 
-		inline Color getFontCol() const { return _fontCol; }
-		inline bool voidFontCol(){ _fontCol = COMP_DEF_COLOR; return true; } // NOTE : sets the Color to 0
+		inline col_t getFontCol() const { return _fontCol; }
+		inline bool voidFontCol(){ _fontCol = COMP_DEF_TEXT_COLOR; return true; } // NOTE : sets the Colour to 0
 
-		inline bool setFontCol( const Color &Col ){ _fontCol = Col; return true; }
+		inline bool setFontCol( const col_t &Col ){ _fontCol = Col; return true; }
 		inline bool setFontCol( byte_t r, byte_t g, byte_t b, byte_t a ){ _fontCol.r = r; _fontCol.g = g; _fontCol.b = b; _fontCol.a = a; return true; }
 
-		inline bool moveFontCol( const Color &delta ){ _fontCol.r += delta.r; _fontCol.g += delta.g; _fontCol.b += delta.b; _fontCol.a += delta.a;     return true; }
+		inline bool moveFontCol( const col_t &delta ){ _fontCol.r += delta.r; _fontCol.g += delta.g; _fontCol.b += delta.b; _fontCol.a += delta.a;     return true; }
 		inline bool moveFontCol( byte_t dr, byte_t dg, byte_t db, byte_t da ){ _fontCol.r += dr; _fontCol.g += dg; _fontCol.b += db; _fontCol.a += da; return true; }
 
 	// ================================ TICK METHODS

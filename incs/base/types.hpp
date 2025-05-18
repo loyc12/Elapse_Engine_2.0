@@ -4,7 +4,7 @@
 # include "./types/Angle.hpp" // float wrapper, to handle the circular nature of angles
 //# include "./types/Quaternion.hpp" // NOTE : quaternion class
 
-//# include "./types/Colour.hpp" // NOTE : wrapper for raylib's Color class
+# include "./types/Colour.hpp" // colour values wrapper
 # include "./types/Shape.hpp" //  NOTE : shape class
 
 //# include "./types/Bitarrays.hpp" //  NOTE : wrapper for std::bitset, to allow it to be used as an uint_N_t

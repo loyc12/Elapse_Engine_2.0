@@ -52,7 +52,7 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 	{
 		*log_out << ( use_clr ? ( use_red ? CLR_RED : CLR_LGR ) : "" );
 
-		if ( SHOW_TIME_DIFF ){ *log_out << to_time_str_raw( get_laptime()) << " "; }
+		if ( SHOW_LAP_TIME ){ *log_out << to_time_str_raw( get_laptime()) << " "; }
 		else { *log_out << to_time_str( get_runtime()) << " "; }
 	}
 
@@ -89,26 +89,39 @@ bool log_funct( bool unlog, const char *fct, const char *cls, id_t id, const cha
 		return true;
 	}
 
-	static string funct_path = "";
 	static byte_t funct_depth = 0;
+	static string funct_path = "";
 
 	if ( unlog ) // NOTE : unloging the previous function from funct_path
 	{
-		if ( funct_depth == 0 )
+		if ( funct_depth <= 0 )
 		{
 			qlog( "funct_log : funct_depth underflow", DEBUG, 0 );
+			funct_depth = 0;
+			funct_path = "";
 			return false;
 		}
 		else { funct_depth--; }
 
 		size_t pos = funct_path.find_last_of( FCT_SEPARATOR );
 
-		if( funct_path.size() > 0 && pos != string::npos ){ funct_path.erase( pos ); return true; }
+		if( funct_path.size() > 0 && pos != string::npos )
+		{
+			funct_path.erase( pos );
+
+			// NOTE : we avoid overriding it the lap timer if SHOW_LAP_TIME is true
+			//if ( !SHOW_LAP_TIME ){ log( "laptime : " + to_time_str_raw( get_laptime()), FUNCT, id, file, line ); }
+
+			return true;
+		}
 		else { qlog( "funct_log : unloging failed", ERROR, 0 ); return false; }
 	}
-	else
+	else // NOTE : loging the current function to funct_path
 	{
-		if( funct_depth == 255 )
+		// NOTE : we avoid overriding it the lap timer if SHOW_LAP_TIME is true
+		//if ( !SHOW_LAP_TIME ) get_laptime();
+
+		if( funct_depth >= 255 )
 		{
 			qlog( "funct_log : funct_depth overflow", DEBUG, 0 );
 			return false;
