@@ -10,6 +10,7 @@ class Colour
 	public:
 		byte_t r, g, b, a;
 
+	// ============================ CONSTRUCTORS / DESTRUCTORS
 		inline Colour() : r( 0 ), g( 0 ), b( 0 ), a( 255 ){}
 		inline Colour( const byte_t &r_, const byte_t &g_, const byte_t &b_, const byte_t &a_ = 255 ) : r( r_ ), g( g_ ), b( b_ ), a( a_ ){}
 
@@ -21,6 +22,8 @@ class Colour
 		inline Colour operator=( const Color    &c ){ r = c.r; g = c.g; b = c.b; a = c.a; return *this; } // RAYLIB COLOR
 		inline Colour operator=( const uint32_t &c ){ r = ( c >> 24 ) & 0xFF; g = ( c >> 16 ) & 0xFF; b = ( c >> 8 ) & 0xFF; a = c & 0xFF; return *this; }
 
+
+	// ============================ CAST METHODS
 		inline operator Color()    const { return ( Color ){ r, g, b, a }; } // RAYLIB COLOR
 		inline operator uint32_t() const
 		{
@@ -30,38 +33,42 @@ class Colour
 			        ( static_cast< uint32_t >( a )));
 		}
 
-		// ============================ BASE OPERATORS
+	// ============================ ACCESSORS / MUTATORS
+
+		inline byte_t getR() const { return r; }
+		inline byte_t getG() const { return g; }
+		inline byte_t getB() const { return b; }
+		inline byte_t getA() const { return a; }
+
+		inline void setR( const byte_t &r_ ) { r = r_; }
+		inline void setG( const byte_t &g_ ) { g = g_; }
+		inline void setB( const byte_t &b_ ) { b = b_; }
+		inline void setA( const byte_t &a_ ) { a = a_; }
+
+		inline void setRGBA( const byte_t &r_, const byte_t &g_, const byte_t &b_, const byte_t &a_ )
+		{
+			r = r_;
+			g = g_;
+			b = b_;
+			a = a_;
+		}
+		inline void setRGB( const byte_t &r_, const byte_t &g_, const byte_t &b_ )
+		{
+			r = r_;
+			g = g_;
+			b = b_;
+		}
+
+	// ============================ SIMPLE OPERATORS
 
 		inline Colour operator+( const byte_t &val ) const { Colour x = Colour( *this ); x += val; return x; } // NOTE : this will ignores alpha
 		inline Colour operator-( const byte_t &val ) const { Colour x = Colour( *this ); x -= val; return x; } // NOTE : this will  ignores alpha
-
-		inline Colour operator+( const Color  &c   ) const { Colour x = Colour( *this ); x += c;   return x; } // RAYLIB COLOR
-		inline Colour operator-( const Color  &c   ) const { Colour x = Colour( *this ); x -= c;   return x; } // RAYLIB COLOR
-
-		inline Colour operator+( const Colour &c   ) const { Colour x = Colour( *this ); x += c;   return x; }
-		inline Colour operator-( const Colour &c   ) const { Colour x = Colour( *this ); x -= c;   return x; }
-
 		inline Colour operator*( const byte_t &val ) const { Colour x = Colour( *this ); x *= val; return x; }
 		inline Colour operator/( const byte_t &val ) const { Colour x = Colour( *this ); x /= val; return x; }
 		inline Colour operator%( const byte_t &stp ) const { Colour x = Colour( *this ); x %= stp; return x; }
 
-		// ============================ INCREMENTAL OPERATORS
-
 		inline Colour operator+=( const byte_t &val ){ return *this += Colour( r + val, g + val, b + val, 0 ); } // NOTE : this ignores alpha
 		inline Colour operator-=( const byte_t &val ){ return *this -= Colour( r - val, g - val, b - val, 0 ); } // NOTE : this ignores alpha
-
-		inline Colour operator+=( const Color  &c   ){ return *this += Colour( r - c.r, g - c.g, b - c.b, a * c.a ); } // RAYLIB COLOR
-		inline Colour operator-=( const Color  &c   ){ return *this -= Colour( r - c.r, g - c.g, b - c.b, a * c.a ); } // RAYLIB COLOR
-
-		inline Colour operator+=( const Colour &c   )
-		{
-			int16_t r_ = int16_t( r ) + c.r;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
-			int16_t g_ = int16_t( g ) + c.g;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
-			int16_t b_ = int16_t( b ) + c.b;   if ( b_ > 255 ) b_ = 255;   b = byte_t( b_ );
-			int16_t a_ = int16_t( a ) + c.a;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
-
-			return *this;
-		}
 
 		inline Colour operator-=( const Colour &c   )
 		{
@@ -110,16 +117,48 @@ class Colour
 			return *this;
 		}
 
-		// ============================ BOOLEAN OPERATORS
+	// ============================ BOOLEAN OPERATORS
 
+		inline bool operator==( const Color &c  ) const { return ( r == c.r && g == c.g && b == c.b && a == c.a ); } // RAYLIB COLOR
 		inline bool operator==( const Colour &c ) const { return ( r == c.r && g == c.g && b == c.b && a == c.a ); }
+
+		inline bool operator!=( const Color &c  ) const { return ( r != c.r || g != c.g || b != c.b || a != c.a ); } // RAYLIB COLOR
 		inline bool operator!=( const Colour &c ) const { return ( r != c.r || g != c.g || b != c.b || a != c.a ); }
 
+		inline bool operator>=( const Color &c  ) const { return ( r >= c.r && g >= c.g && b >= c.b && a >= c.a ); } // RAYLIB COLOR
 		inline bool operator>=( const Colour &c ) const { return ( r >= c.r && g >= c.g && b >= c.b && a >= c.a ); }
+
+		inline bool operator<=( const Color &c  ) const { return ( r <= c.r && g <= c.g && b <= c.b && a <= c.a ); } // RAYLIB COLOR
 		inline bool operator<=( const Colour &c ) const { return ( r <= c.r && g <= c.g && b <= c.b && a <= c.a ); }
 
+		inline bool operator> ( const Color &c  ) const { return ( r >  c.r && g >  c.g && b >  c.b && a >  c.a ); } // RAYLIB COLOR
 		inline bool operator> ( const Colour &c ) const { return ( r >  c.r && g >  c.g && b >  c.b && a >  c.a ); }
+
+		inline bool operator< ( const Color &c  ) const { return ( r <  c.r && g <  c.g && b <  c.b && a <  c.a ); } // RAYLIB COLOR
 		inline bool operator< ( const Colour &c ) const { return ( r <  c.r && g <  c.g && b <  c.b && a <  c.a ); }
+
+
+	// ============================ COLOUR INTERACTION OPERATORS // TODO : make this behave like paint colour mixing
+
+		inline Colour operator+( const Color  &c ) const { Colour x = Colour( *this ); x += c;   return x; } // RAYLIB COLOR
+		inline Colour operator-( const Color  &c ) const { Colour x = Colour( *this ); x -= c;   return x; } // RAYLIB COLOR
+
+		inline Colour operator+( const Colour &c ) const { Colour x = Colour( *this ); x += c;   return x; }
+		inline Colour operator-( const Colour &c ) const { Colour x = Colour( *this ); x -= c;   return x; }
+
+		inline Colour operator+=( const Color  &c ){ return *this += Colour( r - c.r, g - c.g, b - c.b, a * c.a ); } // RAYLIB COLOR
+		inline Colour operator-=( const Color  &c ){ return *this -= Colour( r - c.r, g - c.g, b - c.b, a * c.a ); } // RAYLIB COLOR
+
+		inline Colour operator+=( const Colour &c )
+		{
+			int16_t r_ = int16_t( r ) + c.r;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
+			int16_t g_ = int16_t( g ) + c.g;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
+			int16_t b_ = int16_t( b ) + c.b;   if ( b_ > 255 ) b_ = 255;   b = byte_t( b_ );
+			int16_t a_ = int16_t( a ) + c.a;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
+
+			return *this;
+		}
+
 };
 
 
