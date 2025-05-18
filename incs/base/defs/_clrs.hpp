@@ -1,5 +1,5 @@
-#ifndef STR_CLR_HPP
-# define STR_CLR_HPP
+#ifndef STR_CLRS_HPP
+# define STR_CLRS_HPP
 
 //#  define C_START	"\001" //*start code
 //#  define C_END		"\002" //*end   code
@@ -19,4 +19,4 @@
 # define CLR_UND	"\001\e[4m\002"
 # define CLR_RST	"\001\e[0m\022\002"
 
-#endif // STR_CLR_HPP
+#endif // STR_CLRS_HPP

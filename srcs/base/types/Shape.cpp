@@ -1,4 +1,4 @@
-#include "../../incs/base.hpp"
+#include "../../../incs/base.hpp"
 
 bool Shape::delVert( int16_t i )
 {
