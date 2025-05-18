@@ -40,52 +40,82 @@ class Colour
 		inline byte_t getB() const { return b; }
 		inline byte_t getA() const { return a; }
 
-		inline void setR( const byte_t &r_ ) { r = r_; }
-		inline void setG( const byte_t &g_ ) { g = g_; }
-		inline void setB( const byte_t &b_ ) { b = b_; }
-		inline void setA( const byte_t &a_ ) { a = a_; }
+		inline void setR( const byte_t &r_ ){ r = r_; }
+		inline void setG( const byte_t &g_ ){ g = g_; }
+		inline void setB( const byte_t &b_ ){ b = b_; }
+		inline void setA( const byte_t &a_ ){ a = a_; }
 
+		inline void setRGBA( const Colour   &c ) { r = c.r; g = c.g; b = c.b; a = c.a; }
+		inline void setRGBA( const Color    &c ) { r = c.r; g = c.g; b = c.b; a = c.a; } // RAYLIB COLOR
+		inline void setRGBA( const uint32_t &c )
+		{
+			r = ( c >> 24 ) & 0xFF;
+			g = ( c >> 16 ) & 0xFF;
+			b = ( c >> 8  ) & 0xFF;
+			a =   c         & 0xFF;
+		}
 		inline void setRGBA( const byte_t &r_, const byte_t &g_, const byte_t &b_, const byte_t &a_ )
 		{
-			r = r_;
-			g = g_;
-			b = b_;
-			a = a_;
+			r = r_;    g = g_;   b = b_;   a = a_;
+		}
+
+		inline void setRGB( const Colour   &c ){ r = c.r; g = c.g; b = c.b; }
+		inline void setRGB( const Color    &c ){ r = c.r; g = c.g; b = c.b; } // RAYLIB COLOR
+		inline void setRGB( const uint32_t &c )
+		{
+			r = ( c >> 24 ) & 0xFF;
+			g = ( c >> 16 ) & 0xFF;
+			b = ( c >> 8  ) & 0xFF;
 		}
 		inline void setRGB( const byte_t &r_, const byte_t &g_, const byte_t &b_ )
 		{
-			r = r_;
-			g = g_;
-			b = b_;
+			r = r_; 	g = g_;   b = b_;
 		}
 
-	// ============================ SIMPLE OPERATORS
+	// ============================ BASIC ARITHMETIC OPERATORS //   NOTE : these will ignores alpha
 
-		inline Colour operator+( const byte_t &val ) const { Colour x = Colour( *this ); x += val; return x; } // NOTE : this will ignores alpha
-		inline Colour operator-( const byte_t &val ) const { Colour x = Colour( *this ); x -= val; return x; } // NOTE : this will  ignores alpha
-		inline Colour operator*( const byte_t &val ) const { Colour x = Colour( *this ); x *= val; return x; }
-		inline Colour operator/( const byte_t &val ) const { Colour x = Colour( *this ); x /= val; return x; }
+		inline Colour operator+( const byte_t &val ) const { Colour x = Colour( *this ); x += val; return x; }
+		inline Colour operator-( const byte_t &val ) const { Colour x = Colour( *this ); x -= val; return x; }
 		inline Colour operator%( const byte_t &stp ) const { Colour x = Colour( *this ); x %= stp; return x; }
+	//inline Colour operator*( const byte_t &val ) const { Colour x = Colour( *this ); x *= val; return x; }
+	//inline Colour operator/( const byte_t &val ) const { Colour x = Colour( *this ); x /= val; return x; }
 
-		inline Colour operator+=( const byte_t &val ){ return *this += Colour( r + val, g + val, b + val, 0 ); } // NOTE : this ignores alpha
-		inline Colour operator-=( const byte_t &val ){ return *this -= Colour( r - val, g - val, b - val, 0 ); } // NOTE : this ignores alpha
-
-		inline Colour operator-=( const Colour &c   )
+		inline Colour operator+=( const byte_t &val )
 		{
-			int16_t r_ = int16_t( r ) - c.r;   if ( r_ < 0 ) r_ = 0;       r = byte_t( r_ );
-			int16_t g_ = int16_t( g ) - c.g;   if ( g_ < 0 ) g_ = 0;       g = byte_t( g_ );
-			int16_t b_ = int16_t( b ) - c.b;   if ( b_ < 0 ) b_ = 0;       b = byte_t( b_ );
-			int16_t a_ = int16_t( a ) - c.a;   if ( a_ < 0 ) a_ = 0;       a = byte_t( a_ );
+			int16_t r_ = int16_t( r ) + val;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
+			int16_t g_ = int16_t( g ) + val;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
+			int16_t b_ = int16_t( b ) + val;   if ( b_ > 255 ) b_ = 255;   b = byte_t( b_ );
+		//int16_t a_ = int16_t( a ) + val;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
 
 			return *this;
 		}
 
-		inline Colour operator*=( const byte_t &val )
+		inline Colour operator-=( const byte_t &val )
+		{
+			int16_t r_ = int16_t( r ) - val;   if ( r_ < 0 ) r_ = 0;       r = byte_t( r_ );
+			int16_t g_ = int16_t( g ) - val;   if ( g_ < 0 ) g_ = 0;       g = byte_t( g_ );
+			int16_t b_ = int16_t( b ) - val;   if ( b_ < 0 ) b_ = 0;       b = byte_t( b_ );
+		//int16_t a_ = int16_t( a ) - val;   if ( a_ < 0 ) a_ = 0;       a = byte_t( a_ );
+
+			return *this;
+		}
+
+		inline Colour operator%=( const byte_t &stp )
+		{
+			r -= ( r % stp );
+			g -= ( g % stp );
+			b -= ( b % stp );
+			//a -= ( a % stp );
+
+			return *this;
+		}
+		/*
+		inline Colour operator*=( const byte_t &val ) /                 NOTE : multiplication and division should handle floating point values
 		{
 			int16_t r_ = int16_t( r ) * val;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
 			int16_t g_ = int16_t( g ) * val;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
 			int16_t b_ = int16_t( b ) * val;   if ( b_ > 255 ) b_ = 255;   b = byte_t( b_ );
-			int16_t a_ = int16_t( a ) * val;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
+		//int16_t a_ = int16_t( a ) * val;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
 
 			return *this;
 		}
@@ -102,63 +132,49 @@ class Colour
 			int16_t r_ = int16_t( r ) / val;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
 			int16_t g_ = int16_t( g ) / val;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
 			int16_t b_ = int16_t( b ) / val;   if ( b_ > 255 ) b_ = 255;   b = byte_t( b_ );
-			int16_t a_ = int16_t( a ) / val;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
+		//int16_t a_ = int16_t( a ) / val;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
 
 			return *this;
 		}
-
-		inline Colour operator%=( const byte_t &stp )
-		{
-			r -= ( r % stp );
-			g -= ( g % stp );
-			b -= ( b % stp );
-			a -= ( a % stp );
-
-			return *this;
-		}
+	*/
 
 	// ============================ BOOLEAN OPERATORS
 
-		inline bool operator==( const Color &c  ) const { return ( r == c.r && g == c.g && b == c.b && a == c.a ); } // RAYLIB COLOR
+		inline bool operator==( const Color  &c ) const { return ( r == c.r && g == c.g && b == c.b && a == c.a ); } // RAYLIB COLOR
 		inline bool operator==( const Colour &c ) const { return ( r == c.r && g == c.g && b == c.b && a == c.a ); }
 
-		inline bool operator!=( const Color &c  ) const { return ( r != c.r || g != c.g || b != c.b || a != c.a ); } // RAYLIB COLOR
+		inline bool operator!=( const Color  &c ) const { return ( r != c.r || g != c.g || b != c.b || a != c.a ); } // RAYLIB COLOR
 		inline bool operator!=( const Colour &c ) const { return ( r != c.r || g != c.g || b != c.b || a != c.a ); }
 
-		inline bool operator>=( const Color &c  ) const { return ( r >= c.r && g >= c.g && b >= c.b && a >= c.a ); } // RAYLIB COLOR
+		inline bool operator>=( const Color  &c ) const { return ( r >= c.r && g >= c.g && b >= c.b && a >= c.a ); } // RAYLIB COLOR
 		inline bool operator>=( const Colour &c ) const { return ( r >= c.r && g >= c.g && b >= c.b && a >= c.a ); }
 
-		inline bool operator<=( const Color &c  ) const { return ( r <= c.r && g <= c.g && b <= c.b && a <= c.a ); } // RAYLIB COLOR
+		inline bool operator<=( const Color  &c ) const { return ( r <= c.r && g <= c.g && b <= c.b && a <= c.a ); } // RAYLIB COLOR
 		inline bool operator<=( const Colour &c ) const { return ( r <= c.r && g <= c.g && b <= c.b && a <= c.a ); }
 
-		inline bool operator> ( const Color &c  ) const { return ( r >  c.r && g >  c.g && b >  c.b && a >  c.a ); } // RAYLIB COLOR
+		inline bool operator> ( const Color  &c ) const { return ( r >  c.r && g >  c.g && b >  c.b && a >  c.a ); } // RAYLIB COLOR
 		inline bool operator> ( const Colour &c ) const { return ( r >  c.r && g >  c.g && b >  c.b && a >  c.a ); }
 
-		inline bool operator< ( const Color &c  ) const { return ( r <  c.r && g <  c.g && b <  c.b && a <  c.a ); } // RAYLIB COLOR
+		inline bool operator< ( const Color  &c ) const { return ( r <  c.r && g <  c.g && b <  c.b && a <  c.a ); } // RAYLIB COLOR
 		inline bool operator< ( const Colour &c ) const { return ( r <  c.r && g <  c.g && b <  c.b && a <  c.a ); }
 
 
-	// ============================ COLOUR INTERACTION OPERATORS // TODO : make this behave like paint colour mixing
+	// ============================ COLOUR-TO_COLOUR OPERATORS //   TODO : make this behave like paint colour mixing
 
-		inline Colour operator+( const Color  &c ) const { Colour x = Colour( *this ); x += c;   return x; } // RAYLIB COLOR
-		inline Colour operator-( const Color  &c ) const { Colour x = Colour( *this ); x -= c;   return x; } // RAYLIB COLOR
-
+		// NOTE : plus operator will average two colours
 		inline Colour operator+( const Colour &c ) const { Colour x = Colour( *this ); x += c;   return x; }
-		inline Colour operator-( const Colour &c ) const { Colour x = Colour( *this ); x -= c;   return x; }
+		inline Colour operator+( const Color  &c ) const { Colour x = Colour( *this ); x += c;   return x; } // RAYLIB COLOR
 
-		inline Colour operator+=( const Color  &c ){ return *this += Colour( r - c.r, g - c.g, b - c.b, a * c.a ); } // RAYLIB COLOR
-		inline Colour operator-=( const Color  &c ){ return *this -= Colour( r - c.r, g - c.g, b - c.b, a * c.a ); } // RAYLIB COLOR
-
+		inline Colour operator+=( const Color  &c ){ return *this += Colour( c ); } // RAYLIB COLOR
 		inline Colour operator+=( const Colour &c )
 		{
-			int16_t r_ = int16_t( r ) + c.r;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
-			int16_t g_ = int16_t( g ) + c.g;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
-			int16_t b_ = int16_t( b ) + c.b;   if ( b_ > 255 ) b_ = 255;   b = byte_t( b_ );
-			int16_t a_ = int16_t( a ) + c.a;   if ( a_ > 255 ) a_ = 255;   a = byte_t( a_ );
+			r = byte_t( int16_t( r ) + c.r ) / 2;
+			g = byte_t( int16_t( g ) + c.g ) / 2;
+			b = byte_t( int16_t( b ) + c.b ) / 2;
+			a = byte_t( int16_t( a ) + c.a ) / 2;
 
 			return *this;
 		}
-
 };
 
 
