@@ -22,7 +22,6 @@ class Colour
 		inline Colour operator=( const Color    &c ){ r = c.r; g = c.g; b = c.b; a = c.a; return *this; } // RAYLIB COLOR
 		inline Colour operator=( const uint32_t &c ){ r = ( c >> 24 ) & 0xFF; g = ( c >> 16 ) & 0xFF; b = ( c >> 8 ) & 0xFF; a = c & 0xFF; return *this; }
 
-
 	// ============================ CAST METHODS
 		inline operator Color()    const { return ( Color ){ r, g, b, a }; } // RAYLIB COLOR
 		inline operator uint32_t() const
@@ -34,7 +33,6 @@ class Colour
 		}
 
 	// ============================ ACCESSORS / MUTATORS
-
 		inline byte_t getR() const { return r; }
 		inline byte_t getG() const { return g; }
 		inline byte_t getB() const { return b; }
@@ -72,15 +70,14 @@ class Colour
 			r = r_; 	g = g_;   b = b_;
 		}
 
-	// ============================ BASIC ARITHMETIC OPERATORS //   NOTE : these will ignores alpha
-
+	// ============================ BASIC ARITHMETIC OPERATORS //                                            NOTE : these generally ignore alpha
 		inline Colour operator+( const byte_t &val ) const { Colour x = Colour( *this ); x += val; return x; }
 		inline Colour operator-( const byte_t &val ) const { Colour x = Colour( *this ); x -= val; return x; }
 		inline Colour operator%( const byte_t &stp ) const { Colour x = Colour( *this ); x %= stp; return x; }
 	//inline Colour operator*( const byte_t &val ) const { Colour x = Colour( *this ); x *= val; return x; }
 	//inline Colour operator/( const byte_t &val ) const { Colour x = Colour( *this ); x /= val; return x; }
 
-		inline Colour operator+=( const byte_t &val )
+		inline Colour operator+=( const byte_t &val ) //   NOTE : raises the colour values ( aka makes them brighter )
 		{
 			int16_t r_ = int16_t( r ) + val;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
 			int16_t g_ = int16_t( g ) + val;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
@@ -90,27 +87,35 @@ class Colour
 			return *this;
 		}
 
-		inline Colour operator-=( const byte_t &val )
+		inline Colour operator-=( const byte_t &val ) //   NOTE : lowers the colour values ( aka makes them darker )
 		{
-			int16_t r_ = int16_t( r ) - val;   if ( r_ < 0 ) r_ = 0;       r = byte_t( r_ );
-			int16_t g_ = int16_t( g ) - val;   if ( g_ < 0 ) g_ = 0;       g = byte_t( g_ );
-			int16_t b_ = int16_t( b ) - val;   if ( b_ < 0 ) b_ = 0;       b = byte_t( b_ );
-		//int16_t a_ = int16_t( a ) - val;   if ( a_ < 0 ) a_ = 0;       a = byte_t( a_ );
+			int16_t r_ = int16_t( r ) - val;   if ( r_ < 0 ) r_ = 0;   r = byte_t( r_ );
+			int16_t g_ = int16_t( g ) - val;   if ( g_ < 0 ) g_ = 0;   g = byte_t( g_ );
+			int16_t b_ = int16_t( b ) - val;   if ( b_ < 0 ) b_ = 0;   b = byte_t( b_ );
+		//int16_t a_ = int16_t( a ) - val;   if ( a_ < 0 ) a_ = 0;   a = byte_t( a_ );
 
 			return *this;
 		}
 
-		inline Colour operator%=( const byte_t &stp )
+		inline Colour operator%=( const byte_t &stp ) //   NOTE : this posterizes the colour's values to the nearest step of stp size
 		{
-			r -= ( r % stp );
-			g -= ( g % stp );
-			b -= ( b % stp );
-			//a -= ( a % stp );
+			if ( stp == 0 )
+			{
+				qlog( "Colour : Modulo by zero : voiding value", ERROR, 0 );
+				r = g = b = a = 0;
+				return *this;
+			}
+
+			// NOTE : avoids rounding down the max value, since we will otherwise almost never have it as a result
+			if ( r != 255 && r != 0 ){ r -= ( r % stp ); }
+			if ( g != 255 && g != 0 ){ g -= ( g % stp ); }
+			if ( b != 255 && b != 0 ){ b -= ( b % stp ); }
+		//if ( a != 255 && a != 0 ){ a -= ( a % stp ); }
 
 			return *this;
 		}
 		/*
-		inline Colour operator*=( const byte_t &val ) /                 NOTE : multiplication and division should handle floating point values
+		inline Colour operator*=( const byte_t &val ) //   NOTE : multiplication and division should handle floating point values
 		{
 			int16_t r_ = int16_t( r ) * val;   if ( r_ > 255 ) r_ = 255;   r = byte_t( r_ );
 			int16_t g_ = int16_t( g ) * val;   if ( g_ > 255 ) g_ = 255;   g = byte_t( g_ );
@@ -124,7 +129,7 @@ class Colour
 		{
 			if ( val == 0 )
 			{
-				qlog( "Colour : Division by zero : voiding value", ERROR, 0 );
+				qlog( "Colour : Division by zero : voiding value", ERROR, 0 );   NOTE : multiplication and division should handle floating point values
 				r = g = b = a = 0;
 				return *this;
 			}
@@ -137,9 +142,7 @@ class Colour
 			return *this;
 		}
 	*/
-
 	// ============================ BOOLEAN OPERATORS
-
 		inline bool operator==( const Color  &c ) const { return ( r == c.r && g == c.g && b == c.b && a == c.a ); } // RAYLIB COLOR
 		inline bool operator==( const Colour &c ) const { return ( r == c.r && g == c.g && b == c.b && a == c.a ); }
 
@@ -159,7 +162,7 @@ class Colour
 		inline bool operator< ( const Colour &c ) const { return ( r <  c.r && g <  c.g && b <  c.b && a <  c.a ); }
 
 
-	// ============================ COLOUR-TO_COLOUR OPERATORS //   TODO : make this behave like paint colour mixing
+	// ============================ COLOUR-TO_COLOUR OPERATORS //                                             TODO : make this behave like paint colour mixing
 
 		// NOTE : plus operator will average two colours
 		inline Colour operator+( const Colour &c ) const { Colour x = Colour( *this ); x += c;   return x; }

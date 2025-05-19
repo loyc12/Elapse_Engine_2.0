@@ -76,6 +76,92 @@ bool CompCollide::hasSisterComps() const
 	freturn true;
 }
 
+// ================ OVERLAP METHODS
+
+bool CompCollide::isOverPos( vec2_t pos, fixed_t otherRad ) const
+{
+	flog( 0 );
+	if( !hasSisterComps() ){ freturn false; }
+	if( pos == NULL_POS ){   freturn false; }
+
+	freturn ( getEntity()->getLineDistTo( pos ) < _hitRad + otherRad );
+}
+bool CompCollide::isOverlaping( CompCollide *other ) const
+{
+	flog( 0 );
+	if( !hasSisterComps() ){ freturn false; }
+	if( other == this ){     freturn false; }
+	if( other == nullptr ){  freturn false; }
+
+	freturn ( isOverPos( other->getEntity()->getPos(), other->getHitRad() ));
+}
+fixed_t CompCollide::getOverlap( CompCollide *other ) const
+{
+	flog( 0 );
+	if( !hasSisterComps() ){ freturn NULL_POS; }
+	if( other == this ){     freturn NULL_POS; }
+	if( other == nullptr ){  freturn NULL_POS; }
+
+	fixed_t gap = getEntity()->getLineDistTo( other->getEntity()->getPos() );
+	gap -= ( _hitRad + other->getHitRad() ); // NOTE : gap is negative if the two components are overlapping
+
+	freturn ( Opfx::max( -gap, 0 ));
+}
+
+// ================ COLLISION METHODS
+
+bool CompCollide::canCollide( CompCollide *other ) const
+{
+	flog( 0 );
+	if( !hasSisterComps() ){ freturn false; }
+	if( other == this ){     freturn false; }
+	if( other == nullptr ){  freturn false; }
+
+	freturn ( _collidable && other->isCollidable() );
+}
+bool CompCollide::isColliding( CompCollide *other ) const
+{
+	flog( 0 );
+	if( !hasSisterComps() ){ freturn false; }
+	if( other == this ){     freturn false; }
+	if( other == nullptr ){  freturn false; }
+
+	freturn ( canCollide( other ) && isOverlaping( other ));
+}
+
+vec2_t CompCollide::getCollideVec( CompCollide *other ) const
+{
+	flog( 0 );
+	if( !hasSisterComps() ){ freturn NULL_POS; }
+	if( other == this ){     freturn NULL_POS; }
+	if( other == nullptr ){  freturn NULL_POS; }
+
+	vec2_t vec = getEntity()->getVecDistTo( other->getEntity()->getPos() );
+	vec.normalize() *= -( getOverlap( other ));
+
+	// NOTE : this is the movement this entity should do to get out of the overlap
+	freturn vec;
+}
+vec2_t CompCollide::collideWith( CompCollide *other )
+{
+	flog( 0 );
+	if( !hasSisterComps() ){ freturn NULL_POS; }
+	if( other == this ){     freturn NULL_POS; }
+	if( other == nullptr ){  freturn NULL_POS; }
+
+	vec2_t vec = getCollideVec( other );
+
+	if ( vec == NULL_POS )
+	{
+		qlog( "CompCollide::collideWith() : no collision vector found", ERROR, getEntityID() );
+		freturn NULL_POS;
+	}
+
+	// TODO : rework this to use velocity and physic stuff
+	getEntity()->movePos( vec * 0.5 ); // forces the entity to move out of the overlap region, assuming the other entity will do half the moving too
+	freturn vec;
+}
+
 // ================================ TICK METHODS
 
 bool CompCollide::onTick()

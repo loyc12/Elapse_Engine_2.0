@@ -12,7 +12,7 @@ class CompCollide : public CompBase
 	protected:
 	// ================================ ATTRIBUTES
 		bool  _collidable; // NOTE : allows for wallhacks and triggers
-		fixed_t _hitRad; //    NOTE : radius of the hitbox
+		fixed_t   _hitRad; // NOTE : radius of the hitbox //   TODO : replace by ShapeComp
 
 	// ================================ CORE METHODS
 		void onCpy( const CompCollide &rhs );
@@ -35,7 +35,7 @@ class CompCollide : public CompBase
 		inline static comp_type_e getStaticType(){    return COMP_COLLIDE; }
 		inline comp_type_e getType() const override { return COMP_COLLIDE; }
 
-		inline bool isCollidable() const { return _collidable; }
+		inline bool isCollidable() const { return    _collidable; }
 		inline bool setCollidable( bool isCollide ){ _collidable = isCollide; return true; }
 
 		// NOTE : checks if the parent entity exists and has the needed components ( position )
@@ -45,22 +45,22 @@ class CompCollide : public CompBase
 		inline fixed_t getHitRad() const { return _hitRad; }
 		inline bool   voidHitRad(){ _hitRad = COMP_DEF_HITRAD; return true; }
 
-		inline bool setHitRad(   fixed_t hitRad ){ _hitRad = fmax( 0.0f,  hitRad );        return true; }
-		inline bool moveHitRad(  fixed_t delta  ){ _hitRad = fmax( 0.0f, _hitRad + delta); return true; }
-		inline bool scaleHitRad( fixed_t scale  ){ _hitRad = fmax( 0.0f, _hitRad * scale); return true; }
+		inline bool setHitRad(   fixed_t hitRad ){ _hitRad = Opfx::max( 0,  hitRad );        return true; }
+		inline bool moveHitRad(  fixed_t delta  ){ _hitRad = Opfx::max( 0, _hitRad + delta); return true; }
+		inline bool scaleHitRad( fixed_t scale  ){ _hitRad = Opfx::max( 0, _hitRad * scale); return true; }
 
-	// ================================ COLLISION METHODS
-		// NOTE : checks if the component is colliding with a point ( with or without its own collision radius )
-		bool isOverlaping( vec2_t pos, fixed_t otherRad = 0 ) const;
+	// ================ OVERLAP METHODS
+		 // NOTE : checks if the component is overlaping a given point ( or circle if otherRad > 0 )
+		bool isOverPos( vec2_t pos, fixed_t otherRad = 0 ) const;
+		bool isOverlaping(  CompCollide *other ) const;
+		fixed_t getOverlap( CompCollide *other ) const; // NOTE : returns the magnitude of the overlap between two components
 
-		// NOTE : checks if two components are colliding
-		bool isOverlaping( CompCollide *other ) const;
-		bool isOverlaping( Entity *other ) const;
-		bool isOverlaping( id_t id ) const;
+	// ================ COLLISION METHODS
+		bool canCollide(      CompCollide *other ) const; // NOTE : checks if both components can collide
+		bool isColliding(     CompCollide *other ) const; // NOTE : checks if both component can be and are colliding
 
-		// NOTE : returns the vector between the two components
-		vec2_t getCollisionVec( CompCollide *other ) const;
-		vec2_t collideWith(     CompCollide *other );
+		vec2_t getCollideVec( CompCollide *other ) const; // NOTE : returns the movement needed to deoverlap the two components
+		vec2_t collideWith(   CompCollide *other ); //       NOTE : applies the collision effect to the current component
 
 	// ================================ TICK METHODS
 		bool onTick() override;

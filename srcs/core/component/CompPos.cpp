@@ -48,37 +48,7 @@ CompPos &CompPos::operator=( const CompPos &rhs )
 }
 
 // ================================ ACCESSORS / MUTATORS
-// ================== DISTANCE METHODS
-fixed_t CompPos::getLineDistTo( id_t id ) const
-{
-	flog( 0 );
-	if( id == 0 )
-	{
-		qlog( "CompPos::getLineDistTo() : id is 0", WARN, 0 );
-		freturn 0;
-	}
-	freturn getLineDistTo( GetNttM->getEntity( id ) );
-}
-fixed_t CompPos::getLineDistTo( Entity *other ) const
-{
-	flog( 0 );
-	if( other == nullptr )
-	{
-		qlog( "CompPos::getLineDistTo() : other is nullptr", WARN, 0 );
-		freturn 0;
-	}
-	freturn getLineDistTo( other->getComponent< CompPos >() );
-}
-fixed_t CompPos::getLineDistTo( CompPos *other ) const
-{
-	flog( 0 );
-	if( other == nullptr )
-	{
-		qlog( "CompPos::getLineDistTo() : other is nullptr", WARN, 0 );
-		freturn 0;
-	}
-	freturn getLineDistTo( other->getPos() );
-}
+
 fixed_t CompPos::getLineDistTo( vec2_t other ) const
 {
 	flog( 0 );
@@ -88,6 +58,22 @@ fixed_t CompPos::getLineDistTo( fixed_t x, fixed_t y ) const
 {
 	flog( 0 );
 	freturn sqrt( sqrf( x - _pos.x ) + sqrf( y - _pos.y ));
+}
+
+vec2_t CompPos::getVecDistTo( vec2_t other ) const
+{
+	flog( 0 );
+	freturn getVecDistTo( other.x, other.y );
+}
+vec2_t CompPos::getVecDistTo( fixed_t x, fixed_t y ) const
+{
+	flog( 0 );
+	vec2_t vec;
+
+	vec.x = x - _pos.x;
+	vec.y = y - _pos.y;
+
+	freturn vec;
 }
 
 

@@ -72,7 +72,7 @@ class CompMove : public CompBase
 	// ================ ROTATION METHODS
 	// ======== VELOCITY METHODS
 		inline angle_t getRotVel() const { return _rotVel; }
-		inline bool  voidRotVel(){ _rotVel = 0; return true; }
+		inline bool   voidRotVel(){ _rotVel = 0; return true; }
 
 		inline bool setRotVel(   angle_t rotVel ){ _rotVel = rotVel; return true; }
 		inline bool moveRotVel(  angle_t delta  ){ _rotVel += delta; return true; }
@@ -80,7 +80,7 @@ class CompMove : public CompBase
 
 	// ======== ACCELERATION METHODS
 		inline angle_t getRotAcc() const { return _rotAcc; }
-		inline bool voidRotAcc(){ _rotAcc = 0; return true; }
+		inline bool   voidRotAcc(){ _rotAcc = 0; return true; }
 
 		inline bool setRotAcc(   angle_t rotAcc ){ _rotAcc = rotAcc; return true; }
 		inline bool moveRotAcc(  angle_t delta  ){ _rotAcc += delta; return true; }

@@ -98,8 +98,14 @@ class Entity
 		fixed_t getLineDistTo( id_t id ) const;
 		fixed_t getLineDistTo( Entity  *other ) const;
 		fixed_t getLineDistTo( CompPos *other ) const;
-		fixed_t getLineDistTo( vec2_t   other ) const;
+		fixed_t getLineDistTo( vec2_t     pos ) const;
 		fixed_t getLineDistTo( fixed_t x, fixed_t y ) const;
+
+		vec2_t getVecDistTo( id_t id ) const;
+		vec2_t getVecDistTo( Entity  *other ) const;
+		vec2_t getVecDistTo( CompPos *other ) const;
+		vec2_t getVecDistTo( vec2_t     pos ) const;
+		vec2_t getVecDistTo( fixed_t x, fixed_t y ) const;
 
 	// ======== MOVEMENT COMPONENT
 		vec2_t getVel() const;

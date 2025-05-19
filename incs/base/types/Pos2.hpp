@@ -65,8 +65,8 @@ class Pos2
 		//inline angle_t angle( const Pos2    &p ) const { return acosf( dotP( p ) / ( len() * p.len() )); }
 		//inline angle_t angle( const Vector2 &v ) const { return acosf( dotP( v ) / ( len() * sqrtf( sqrf( v.x ) + sqrf( v.y )))); }
 
-		inline Pos2 getNormalizedCpy() const { Pos2 r = Pos2( *this ); r.normalize(); return Pos2( x, y ); }
-		inline Pos2 normalize()
+		inline Pos2 getNormalizedCpy() const { Pos2 r = Pos2( *this ).normalize(); return r; }
+		inline Pos2 &normalize()
 		{
 			fixed_t len = this->getLen();
 
@@ -74,7 +74,6 @@ class Pos2
 			{
 				x = y = 0;
 				qlog( "Pos2::normalize : length is 0 : unable to normalize : reseting values to 0", WARN, 0 );
-				return Pos2();
 			}
 			elif ( len != 1 ) // NOTE : skips the math if len is already 1
 			{
@@ -82,13 +81,13 @@ class Pos2
 				y /= len;
 			}
 			else { qlog( "Pos2::normalize : length is 1 : already normalized", DEBUG, 0 ); }
-			return Pos2( x, y ); // NOTE : returns a copy of the resulting Pos2, if needed
+			return *this;
 		}
 
-		inline Pos2 getRotatedCpy( Angle a ) const { Pos2 r = Pos2( *this ); r.rotateBy( a ); return Pos2( x, y ); }
-		inline Pos2 rotateBy( Angle a )
+		inline Pos2 getRotatedCpy( Angle a ) const { Pos2 r = Pos2( *this ).rotateBy( a ); return r; }
+		inline Pos2 &rotateBy(     Angle a )
 		{
-			if ( a == 0 ) { return Pos2( x, y ); } // NOTE : skiping the maths
+			if ( a == 0 ) { return *this; } // NOTE : skiping the maths
 
 			a += Angle( *this ); // finding the resulting angle after rotation
 			fixed_t len = this->getLen();
@@ -96,7 +95,7 @@ class Pos2
 			x = len * a.getX();
 			y = len * a.getY();
 
-			return Pos2( x, y ); // NOTE : returns a copy of the resulting Pos2, if needed
+			return *this;
 		}
 
 

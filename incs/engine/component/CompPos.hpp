@@ -5,7 +5,7 @@
 # include "../component/CompBase.hpp"
 
 # define COMP_DEF_POS vec2_t() // NOTE : { 0, 0 } default position for the component
-# define NULL_POS { LONG_MAX, LONG_MAX } // NOTE : means you fucked up bud
+# define NULL_POS vec2_t( LONG_MAX, LONG_MAX ) // NOTE : means you fucked up bud
 
 class CompPos : public CompBase
 {
@@ -51,21 +51,18 @@ class CompPos : public CompBase
 		inline bool scalePos( fixed_t sx, fixed_t sy ){ _pos.x *= sx; _pos.y *= sy; return true; }
 
 	// ================ ROTATION METHODS
-		inline angle_t getAngle() const { return _angle; }
+		inline angle_t getAngle() const {      return _angle; }
 		inline bool   voidAngle(){ _angle = 0; return true; }
 
 		inline bool setAngle(   angle_t angle ){ _angle  = angle; return true; }
 		inline bool moveAngle(  angle_t delta ){ _angle += delta; return true; }
-		inline bool scaleAngle( fixed_t scale ){ _angle *= scale; return true; }
 
 	// ================ DISTANCE METHODS
-		// NOTE : returns the distance this would need to travel to reach the other point
-		fixed_t getLineDistTo( id_t id ) const;
-		fixed_t getLineDistTo( Entity  *other ) const;
-		fixed_t getLineDistTo( CompPos *other ) const;
-		fixed_t getLineDistTo( vec2_t   other ) const;
+		fixed_t getLineDistTo( vec2_t pos ) const;
 		fixed_t getLineDistTo( fixed_t x, fixed_t y ) const;
 
+		vec2_t getVecDistTo( vec2_t pos ) const;
+		vec2_t getVecDistTo( fixed_t x, fixed_t y ) const;
 
 	// ================================ TICK METHODS
 		bool onTick() override;

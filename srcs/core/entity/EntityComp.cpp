@@ -125,16 +125,45 @@ fixed_t Entity::getLineDistTo( CompPos *other ) const
 	if( other == nullptr ){ freturn LONG_MAX; }
 	freturn getLineDistTo( other->getPos() );
 }
-fixed_t Entity::getLineDistTo( vec2_t other ) const
+fixed_t Entity::getLineDistTo( vec2_t pos ) const
 {
 	flog( _id );
-	freturn getLineDistTo( other.x, other.y );
+	freturn getLineDistTo( pos.x, pos.y );
 }
 fixed_t Entity::getLineDistTo( fixed_t x, fixed_t y ) const
 {
 	flog( _id ); // NOTE : transfers to component side methodes from here
 	if( !hasComponent( COMP_POSITION )){ freturn LONG_MAX; }
 	freturn getComponent< CompPos >()->getLineDistTo( x, y );
+}
+
+vec2_t Entity::getVecDistTo( id_t id ) const
+{
+	flog( _id );
+	freturn getVecDistTo( GetNttM->getEntity( id ) );
+}
+vec2_t Entity::getVecDistTo( Entity *other ) const
+{
+	flog( _id );
+	if( other == nullptr ){ freturn NULL_POS; }
+	freturn getVecDistTo( other->getComponent< CompPos >() );
+}
+vec2_t Entity::getVecDistTo( CompPos *other ) const
+{
+	flog( _id );
+	if( other == nullptr ){ freturn NULL_POS; }
+	freturn getVecDistTo( other->getPos() );
+}
+vec2_t Entity::getVecDistTo( vec2_t pos ) const
+{
+	flog( _id );
+	freturn getVecDistTo( pos.x, pos.y );
+}
+vec2_t Entity::getVecDistTo( fixed_t x, fixed_t y ) const
+{
+	flog( _id ); // NOTE : transfers to component side methodes from here
+	if( !hasComponent( COMP_POSITION )){ freturn NULL_POS; }
+	freturn getComponent< CompPos >()->getVecDistTo( x, y );
 }
 
 // ======== MOVEMENT COMPONENT
