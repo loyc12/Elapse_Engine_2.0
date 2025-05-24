@@ -202,14 +202,14 @@ void OnRenderUI()
 	if( G_PlayerNtt == nullptr )
 	{
 		qlog( "G_PlayerNtt is nullptr", ERROR, 0 );
-		freturn;
+		fend(); return;
 	}
 
 	CompPos *cmpPos = G_PlayerNtt->getComponent< CompPos >();
 	if( cmpPos == nullptr )
 	{
 		qlog( "G_PlayerNtt has no position component", ERROR, 0 );
-		freturn;
+		fend(); return;
 	}
 
 	vec2_t playerWorldPos = G_PlayerNtt->getPos();
