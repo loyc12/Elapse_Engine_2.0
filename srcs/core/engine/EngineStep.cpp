@@ -45,10 +45,10 @@ void Engine::refreshScreen() // TODO : move me to ScreenMngr
 
 	BeginDrawing();
 	{
-		//_screenMngr2D->refresh();
+		_screenMngr2D->refresh();
 
 		OnRenderBackground(); // from injectors.hpp
-		//BeginMode2D( *_screenMngr2D->getCamera() );
+		BeginMode2D( *_screenMngr2D->getCamera() );
 		{
 			//_entityMngr->tickGraphics();
 			OnRenderWorld(); // from injectors.hpp
