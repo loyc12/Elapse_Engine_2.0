@@ -28,8 +28,8 @@ class EntityMngr
 
 	// ================================ CORE METHODS
 
-		void onAdd(); // NOTE : called when the EntityMngr is created
-		void onDel(); // NOTE : called when the EntityMngr is destroyed
+		void onAdd();
+		void onDel();
 
 		inline id_t getMaxID() const { return _maxID; }
 		void updateMaxID();
@@ -57,9 +57,6 @@ class EntityMngr
 
 
 	// ================ COMPONENT METHODS
-
-
-	// ================================ UPDATE METHODS
 
 		void updateAllComponents();
 

@@ -21,20 +21,18 @@ typedef enum : comp_count_t
 	// NOTE : add more component types as needed
 
 	// NOTE : maximum of 253 component types, as the last two values are reserved
-
 	COMP_TYPE_COUNT, //      NOTE : should never be used for a component type
 	COMP_TYPE_BASE = 255, // NOTE : should never be used for a component type
 } comp_type_e;
 
 inline bool IsValidCompType( comp_type_e type )
 {
-	flog( 0 );
 	if( type == COMP_TYPE_BASE || type >= COMP_TYPE_COUNT )
 	{
 		qlog( "Component type is invalid", WARN, 0 );
-		fend(); return false;
+		return false;
 	}
-	fend(); return true;
+	return true;
 }
 
 # define COMP_DEF_ACTIVITY true
@@ -64,8 +62,7 @@ class CompBase
 		inline CompBase &operator=( const CompBase &rhs ){ onCpy( rhs ); return *this; }
 
 	// ================================ ACCESSORS / MUTATORS
-		inline static  comp_type_e getStaticType(){  return COMP_TYPE_BASE; }
-		inline virtual comp_type_e getType() const { return COMP_TYPE_BASE; } // NOTE : override this in derived classes
+		inline static  comp_type_e getType(){ return COMP_TYPE_BASE; }
 
 		inline bool isActive() const { return _active; }
 		inline bool setActivity( bool activate ){ _active = activate; return _active; }
