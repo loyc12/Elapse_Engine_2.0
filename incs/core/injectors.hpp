@@ -1,7 +1,7 @@
 #ifndef INJECTORS_HPP
 # define INJECTORS_HPP
 
-#include "../../base.hpp"
+#include "../base.hpp"
 
 
 
@@ -26,8 +26,8 @@ they are used to inject game specific code into the engine without modifying the
 	void OnStartLoop();
 		void OnStartStep();
 
-			struct inputs_s;
-			void OnReadInputs( inputs_s &inp, inputs_s &prev );
+			//struct inputs_s;
+			//void OnReadInputs( inputs_s &inp, inputs_s &prev );
 
 			void OnTickMovements();
 			void OnTickPhysics();
@@ -48,16 +48,16 @@ they are used to inject game specific code into the engine without modifying the
 
 // ===================== ENTITY TICK INJECTION FUNCTIONS
 // for when the EntityMngr calls an entity's component tick methods
-	class Entity;
+	//class Entity;
 
-	void OnEntityTickMovement( Entity *Ntt ); // TODO : implement and use us
-	void OnEntityTickPhysic(   Entity *Ntt );
-	void OnEntityTickCollide(  Entity *Ntt );
+	//void OnEntityTickMovement( Entity *Ntt ); // TODO : implement and use us
+	//void OnEntityTickPhysic(   Entity *Ntt );
+	//void OnEntityTickCollide(  Entity *Ntt );
 
-	void OnEntityTickSound(   Entity *Ntt );
-	void OnEntityTickShape(   Entity *Ntt );
-	void OnEntityTickGraphic( Entity *Ntt );
+	//void OnEntityTickSound(   Entity *Ntt );
+	//void OnEntityTickShape(   Entity *Ntt );
+	//void OnEntityTickGraphic( Entity *Ntt );
 
-	void OnEntityTickScript( Entity *Ntt );
+	//void OnEntityTickScript( Entity *Ntt );
 
 #endif // INJECTORS_HPP

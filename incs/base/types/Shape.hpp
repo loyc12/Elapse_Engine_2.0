@@ -1,8 +1,7 @@
 #ifndef SHAPE_HPP
 # define SHAPE_HPP
 
-# include <raylib.h>
-# include "../core.hpp"
+# include "../defs.hpp"
 
 # include "./Colour.hpp"
 # include "./FixedPoint.hpp"

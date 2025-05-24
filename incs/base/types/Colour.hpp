@@ -1,9 +1,7 @@
 #ifndef COLOUR_HPP
 # define COLOUR_HPP
 
-#include <cstddef>
-# include <raylib.h>
-# include "../core.hpp"
+# include "../defs.hpp"
 
 class Colour
 {

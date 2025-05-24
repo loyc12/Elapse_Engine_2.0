@@ -1,7 +1,7 @@
 #ifndef FIXED_POINT_HPP
 # define FIXED_POINT_HPP
 
-# include "../core.hpp"
+# include "../defs.hpp"
 
 // TODO : make sure this handles negative vals properly
 // TODO : make sure this handles under/overflows properly

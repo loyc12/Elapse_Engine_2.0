@@ -1,12 +1,11 @@
 #ifndef ENGINE_HPP
 # define ENGINE_HPP
 
-# include <raylib.h>
 # include "../base.hpp"
 
-# include "./entity/EntityMngr.hpp"
-# include "./systems/ScreenMngr.hpp"
-# include "./systems/EventMngr.hpp"
+//# include "./entity/EntityMngr.hpp"
+//# include "./systems/ScreenMngr.hpp"
+//# include "./systems/EventMngr.hpp"
 
 
 typedef enum : byte_t
@@ -23,7 +22,7 @@ typedef enum : byte_t
 	ES_RESUMING,
 
 	ES_PAUSING,
-	ES_RUNNING, // running
+	ES_RUNNING, // currently running
 
 } engineState_e;
 
@@ -36,9 +35,9 @@ class Engine
 		fixed_t _DT; // delta time
 		fixed_t _TS; // time scale
 
-		ScreenMngr *_screenMngr2D;
-		EventMngr  *_eventMngr;
-		EntityMngr *_entityMngr;
+		//ScreenMngr *_screenMngr2D;
+		//EventMngr  *_eventMngr;
+		//EntityMngr *_entityMngr;
 
 		engineState_e _state;
 		std::mutex mtx_state;
@@ -86,15 +85,15 @@ class Engine
 
 		inline bool isTimePaused(){ return ( _TS == 0 ); }
 
-		inline inputs_s   &getLatestInputs(){   return _eventMngr->getLatestInputs(); }
-		inline inputs_s   &getPreviousInputs(){ return _eventMngr->getPreviousInputs(); }
-		inline EventMngr  *getEventMngr(){      return _eventMngr; }
+		//inline inputs_s   &getLatestInputs(){   return _eventMngr->getLatestInputs(); }
+		//inline inputs_s   &getPreviousInputs(){ return _eventMngr->getPreviousInputs(); }
+		//inline EventMngr  *getEventMngr(){      return _eventMngr; }
 
-		inline Camera2D   *getCamera(){     return _screenMngr2D->getCamera(); }
-		inline ScreenMngr *getScreenMngr(){ return _screenMngr2D; }
+		//inline Camera2D   *getCamera(){     return _screenMngr2D->getCamera(); }
+		//inline ScreenMngr *getScreenMngr(){ return _screenMngr2D; }
 
-		inline Entity     *getEntity( id_t id ){ return _entityMngr->getEntity( id ); }
-		inline EntityMngr *getEntityMngr(){      return _entityMngr; }
+		//inline Entity     *getEntity( id_t id ){ return _entityMngr->getEntity( id ); }
+		//inline EntityMngr *getEntityMngr(){      return _entityMngr; }
 
 		inline fixed_t updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
 		inline fixed_t getDeltaTimeScaled() const { return _DT * _TS; }
@@ -113,11 +112,11 @@ class Engine
 // Shortcuts to the engine and its components
 
 extern Engine     *GetNG;
-extern ScreenMngr *GetScrnM;
-extern EventMngr  *GetEvntM;
-extern EntityMngr *GetNttM;
+//extern ScreenMngr *GetScrnM;
+//extern EventMngr  *GetEvntM;
+//extern EntityMngr *GetNttM;
 
 extern fixed_t    GDTS(); // returns _DT * _TS ( aka the delta time scaled )
-extern inputs_s   &GIN();
+//extern inputs_s   &GIN();
 
 #endif // ENGINE_HPP

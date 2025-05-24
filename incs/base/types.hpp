@@ -1,6 +1,8 @@
 #ifndef TYPES_HPP
 # define TYPES_HPP
 
+# include "./defs.hpp"
+
 # include "./types/Angle.hpp" // float wrapper, to handle the circular nature of angles
 //# include "./types/Quaternion.hpp" // NOTE : quaternion class
 

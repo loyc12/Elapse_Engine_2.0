@@ -1,8 +1,7 @@
 #ifndef ANGLE_HPP
 # define ANGLE_HPP
 
-# include <raylib.h>
-# include "../core.hpp"
+# include "../defs.hpp"
 
 # include "./FixedPoint.hpp"
 

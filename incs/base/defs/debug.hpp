@@ -53,7 +53,7 @@ typedef enum
 #	else
 #	 define flog( id )
 #	 define fend()
-#	 define freturn return
+#	 define fend(); return return
 #	endif
 
 void log_time();

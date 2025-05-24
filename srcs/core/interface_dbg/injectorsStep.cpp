@@ -38,6 +38,17 @@ void OnEndStep()
 	fend();
 }
 
+void OnReadInputs()
+{
+	flog( 0 );
+
+	// TODO : add game specific code here
+	// NOTE : this is called before the tick methods, so you can use it to read inputs and set flags
+
+	fend();
+}
+
+/*
 void OnReadInputs( inputs_s &inp, inputs_s &prev )
 {
 	flog( 0 );
@@ -79,6 +90,7 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 
 	fend();
 }
+	*/
 
 // ==================== GLOBAL TICK INJECTION FUNCTIONS
 
@@ -157,6 +169,17 @@ void OnRenderWorld()
 
 	fend();
 }
+
+void OnRenderUI()
+{
+	flog( 0 );
+
+	// TODO : add game specific code here
+
+	fend();
+}
+
+/*
 void OnRenderUI()
 {
 	flog( 0 );
@@ -198,3 +221,4 @@ void OnRenderUI()
 
 	fend();
 }
+	*/

@@ -4,10 +4,10 @@
 // include this in game specific src files
 
 # include "./base.hpp"
-# include "./engine.hpp"
+# include "./core.hpp"
 
-inline Entity *G_PlayerNtt = nullptr;
-inline Entity *G_ObjectNtt = nullptr;
-inline Entity *G_EnemyNtt = nullptr;
+//inline Entity *G_PlayerNtt = nullptr;
+//inline Entity *G_ObjectNtt = nullptr;
+//inline Entity *G_EnemyNtt = nullptr;
 
 #endif // CORE_GAME_HPP

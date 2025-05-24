@@ -1,5 +1,5 @@
 #include <raylib.h>
-#include "../../../incs/engine.hpp"
+#include "../../../incs/core.hpp"
 
 // ================================ STATE METHODS
 
@@ -10,7 +10,7 @@ bool Engine::switchState(  engineState_e targetState )
 	if( getState() == targetState )
 	{
 		qlog( "switchState : State matches current state : " + to_string( targetState ), WARN, 0 );
-		freturn false;
+		fend(); return false;
 	}
 	if ( targetState == ES_CLOSED ){ qlog( "! ================ CLOSING THE ENGINE ================ !", INFO, 0 ); }
 
@@ -43,7 +43,7 @@ bool Engine::switchState(  engineState_e targetState )
 
 		default:
 			qlog( "switchState : Invalid state : Raising from " + to_string( previousState ) + " to " + to_string( targetState ), ERROR, 0 );
-			freturn false;
+			fend(); return false;
 	}}
 
 	// goes through the steps to lower the state
@@ -72,11 +72,11 @@ bool Engine::switchState(  engineState_e targetState )
 
 		default:
 			qlog( "switchState : Invalid state : Lowering from " + to_string( previousState ) + " to " + to_string( targetState ), ERROR, 0 );
-			freturn false;
+			fend(); return false;
 	}}
 
 	qlog( "switchState : State changed from " + to_string( previousState ) + " to " + to_string( targetState ), INFO, 0 );
-	freturn true;
+	fend(); return true;
 }
 
 bool Engine::togglePause()
@@ -88,25 +88,25 @@ bool Engine::togglePause()
 	{
 		prevTS = _TS;
 		_TS = 0.0f;
-		freturn true;
+		fend(); return true;
 	}
 	else
 	{
 		_TS = prevTS;
 		prevTS = 0.0f;
-		freturn false;
+		fend(); return false;
 	}
 }
 
 void Engine::init()
 {
 	flog( 0 );
-	if( getState() > ES_INITIALIZING ){ qlog( "init : Engine already initialized",  ERROR, 0 ); freturn; }
-	if( getState() < ES_CLOSED){        qlog( "init : how did you even get here ?", ERROR, 0 ); freturn; }
+	if( getState() > ES_INITIALIZING ){ qlog( "init : Engine already initialized",  ERROR, 0 ); fend(); return; }
+	if( getState() < ES_CLOSED){        qlog( "init : how did you even get here ?", ERROR, 0 ); fend(); return; }
 
-	_eventMngr    = new EventMngr();   GetEvntM = _eventMngr;
-	_screenMngr2D = new ScreenMngr();  GetScrnM = _screenMngr2D;
-	_entityMngr   = new EntityMngr();  GetNttM  = _entityMngr;
+	//_eventMngr    = new EventMngr();   GetEvntM = _eventMngr;
+	//_screenMngr2D = new ScreenMngr();  GetScrnM = _screenMngr2D;
+	//_entityMngr   = new EntityMngr();  GetNttM  = _entityMngr;
 
 	OnEngineInit(); // from injectors.hpp
 	setState( ES_INITIALIZED );
@@ -117,10 +117,10 @@ void Engine::init()
 void Engine::start()
 {
 	flog( 0 );
-	if( getState() > ES_STARTING ){    qlog( "start : Engine already started", ERROR, 0 ); freturn; }
-	if( getState() < ES_INITIALIZED ){ qlog( "start : Engine not initialized", ERROR, 0 ); freturn; }
+	if( getState() > ES_STARTING ){    qlog( "start : Engine already started", ERROR, 0 ); fend(); return; }
+	if( getState() < ES_INITIALIZED ){ qlog( "start : Engine not initialized", ERROR, 0 ); fend(); return; }
 
-	_screenMngr2D->open();
+	//_screenMngr2D->open();
 
 	OnEngineStart(); // from injectors.hpp
 	setState( ES_STARTED );
@@ -131,8 +131,8 @@ void Engine::start()
 void Engine::resume()
 {
 	flog( 0 );
-	if( getState() > ES_RESUMING ){ qlog( "resume : Engine already running", ERROR, 0 ); freturn; }
-	if( getState() < ES_STARTED ){  qlog( "resume : Engine not yet started", ERROR, 0 ); freturn; }
+	if( getState() > ES_RESUMING ){ qlog( "resume : Engine already running", ERROR, 0 ); fend(); return; }
+	if( getState() < ES_STARTED ){  qlog( "resume : Engine not yet started", ERROR, 0 ); fend(); return; }
 
 	OnEngineResume(); // from injectors.hpp
 	setState( ES_RUNNING );
@@ -143,8 +143,8 @@ void Engine::resume()
 void Engine::pause()
 {
 	flog( 0 );
-	if( getState() < ES_PAUSING ){ qlog( "pause : Engine not currently running", ERROR, 0 ); freturn; }
-	if( getState() > ES_RUNNING ){ qlog( "pause : how did you even get here ?",  ERROR, 0 ); freturn; }
+	if( getState() < ES_PAUSING ){ qlog( "pause : Engine not currently running", ERROR, 0 ); fend(); return; }
+	if( getState() > ES_RUNNING ){ qlog( "pause : how did you even get here ?",  ERROR, 0 ); fend(); return; }
 
 	OnEnginePause(); // from injectors.hpp
 	setState( ES_STARTED );
@@ -155,10 +155,10 @@ void Engine::pause()
 void Engine::stop()
 {
 	flog( 0 );
-	if( getState() < ES_STOPPING ){ qlog( "stop : Engine not yet started",  ERROR, 0 ); freturn; }
-	if( getState() > ES_STARTED ){  qlog( "stop : Engine is still running", ERROR, 0 ); freturn; }
+	if( getState() < ES_STOPPING ){ qlog( "stop : Engine not yet started",  ERROR, 0 ); fend(); return; }
+	if( getState() > ES_STARTED ){  qlog( "stop : Engine is still running", ERROR, 0 ); fend(); return; }
 
-	_screenMngr2D->close();
+	//_screenMngr2D->close();
 
 	OnEngineStop(); // from injectors.hpp
 	setState( ES_INITIALIZED );
@@ -169,15 +169,15 @@ void Engine::stop()
 void Engine::close()
 {
 	flog( 0 );
-	if( getState() < ES_CLOSING ){     qlog( "close : Engine not initialized", ERROR, 0 ); freturn; }
-	if( getState() > ES_INITIALIZED ){ qlog( "close : Engine still started",   ERROR, 0 ); freturn; }
+	if( getState() < ES_CLOSING ){     qlog( "close : Engine not initialized", ERROR, 0 ); fend(); return; }
+	if( getState() > ES_INITIALIZED ){ qlog( "close : Engine still started",   ERROR, 0 ); fend(); return; }
 
 	OnEngineClose(); // from injectors.hpp
 	setState( ES_CLOSED );
 
-	delete _entityMngr;     _entityMngr = nullptr;     GetNttM = nullptr;
-	delete _screenMngr2D;   _screenMngr2D = nullptr;   GetScrnM = nullptr;
-	delete _eventMngr;      _eventMngr = nullptr;      GetEvntM = nullptr;
+	//delete _entityMngr;     _entityMngr = nullptr;     GetNttM = nullptr;
+	//delete _screenMngr2D;   _screenMngr2D = nullptr;   GetScrnM = nullptr;
+	//delete _eventMngr;      _eventMngr = nullptr;      GetEvntM = nullptr;
 
 	fend();
 }

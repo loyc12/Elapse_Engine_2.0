@@ -1,8 +1,7 @@
 #ifndef POS_2_HPP
 # define POS_2_HPP
 
-# include <raylib.h>
-# include "../core.hpp"
+# include "../defs.hpp"
 
 # include "./FixedPoint.hpp"
 # include "./Angle.hpp"
