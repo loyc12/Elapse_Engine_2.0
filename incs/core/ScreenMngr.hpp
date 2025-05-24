@@ -58,7 +58,6 @@ class ScreenMngr
 		void close();
 
 	// ================================ UPDATE METHODS
-
 		void refresh(); // NOTE : clears the screen calls all update methods
 
 		void updateScreen();
@@ -73,7 +72,6 @@ class ScreenMngr
 		void setTargetFPS( byte_t  fps );
 
 	// ================================ SCREEN ACCESSORS / MUTATORS
-
 		inline vec2_t getScreenSize() const { return _screenSize; }
 
 		inline void setScreenSize( fixed_t width, fixed_t height ){ setScreenSize( vec2_t( width, height ) ); }
@@ -85,7 +83,6 @@ class ScreenMngr
 		void setBackgroundColour( col_t colour = BACKGROUND_COLOUR );
 
 	// ================================ CAMERA ACCESSORS / MUTATORS
-
 		inline Camera2D *getCamera() { return &_camera; }
 
 		inline fixed_t getZoom() const { return _camera.zoom; }
@@ -121,7 +118,6 @@ class ScreenMngr
 		inline vec2_t  getBotRight() const { return GetScreenToWorld2D({ getWidth(),    getCenter().y }, _camera ); }
 
 	// ================================ ENTITY TRACKING METHODS
-
 		//inline Entity *getTrackedEntity() const { return _trackedEntity; }
 		//inline bool    isTracking()       const { return _trackedEntity != nullptr; }
 

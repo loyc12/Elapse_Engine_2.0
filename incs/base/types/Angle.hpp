@@ -51,7 +51,7 @@ class Angle
 			return *this;
 		}
 
-		// ============================ ACCESSORS / MUTATORS
+	// ============================ ACCESSORS / MUTATORS
 		inline fixed_t normalize() { _angle = SMOD( _angle, TAU ); return _angle; } // returns the angle in the range [0, TAU]
 
 		inline fixed_t getRad() const { return _angle; } //                 returns the angle in the range [0, TAU]
@@ -107,8 +107,7 @@ class Angle
 			else /* std::is_integral_v< U > */ {           return getDeg(); } // angle in degrees *
 		}
 
-		// ============================ OPERATORS
-
+	// ============================ OPERATORS
 		inline Angle operator+( const Angle &a ) const { Angle r = Angle( *this ); r += a; return r; }
 		inline Angle operator-( const Angle &a ) const { Angle r = Angle( *this ); r -= a; return r; }
 		inline Angle operator*( const Angle &a ) const { Angle r = Angle( *this ); r *= a; return r; }
@@ -289,12 +288,11 @@ class Angle
 			return *this;
 		}
 
-		// ============================ FRIEND METHODS
+	// ============================ FRIEND METHODS
 		friend std::ostream &operator<<( std::ostream &os, const Angle &a ){ os << a.getDeg() << " degrees"; return os;}
 		friend std::string to_string( const Angle &a ){ return to_string( a.getDeg() ); }
 
-		// ============================ STATIC FUNCTIONS
-
+	// ============================ STATIC FUNCTIONS
 		static inline fixed_t normalizeRad( fixed_t angle ) { return SMOD( angle, TAU ); } //    returns the angle in the range [0, TAU]
 		static inline fixed_t normalizeDeg( fixed_t angle ) { return SMOD( angle, 360.0f ); } // returns the angle in the range [0, 360]
 

@@ -55,15 +55,15 @@ class FixedPoint
 			else /* std::is_floating_point_v< T > */{ return T( double( _scaledValue ) / _Scale ); }
 		}
 
+		inline bool isZero() const { return _scaledValue == 0; }
+
 		TU inline void setValue( const U &val )
 		{
 			if constexpr ( std::is_integral_v< U > ){ _scaledValue = T( double( val ) * _Scale ); } // NOTE : this is to avoid overflows
 			else /* std::is_floating_point_v< U > */{ _scaledValue = T( double( val ) * _Scale ); } // NOTE : this is to avoid overflows
 		}
 
-		inline bool isZero() const { return _scaledValue == 0; }
 	// ============================ CASTING METHODS
-
 		TU inline operator U() const { return castValue< U >(); }
 		TU inline U castValue() const
 		{
@@ -74,7 +74,6 @@ class FixedPoint
 	// ============================ IN-CLASS OPERATORS
 
 	// ============== UNARY OPERATORS
-
 		inline FixedPoint operator+() const { return FixedPoint( *this ); }
 		inline FixedPoint operator-() const { FixedPoint r = FixedPoint(); r.setRawValue( -_scaledValue ); return r; }
 
@@ -85,7 +84,6 @@ class FixedPoint
 		inline FixedPoint operator--( int ){ FixedPoint tmp( this ); _scaledValue--; return tmp; }
 
 	// ============== BINARY OPERATORS
-
 		inline FixedPoint operator+( const FixedPoint &fix ) const { FixedPoint r = FixedPoint( *this ); r += fix; return r; }
 		inline FixedPoint operator-( const FixedPoint &fix ) const { FixedPoint r = FixedPoint( *this ); r -= fix; return r; }
 		inline FixedPoint operator*( const FixedPoint &fix ) const { FixedPoint r = FixedPoint( *this ); r *= fix; return r; }
@@ -118,7 +116,6 @@ class FixedPoint
 		}
 
 	// ============== COMPARISON OPERATORS
-
 		inline bool operator==( const FixedPoint &fix ) const { return ( _scaledValue == fix._scaledValue ); }
 		inline bool operator!=( const FixedPoint &fix ) const { return ( _scaledValue != fix._scaledValue ); }
 		inline bool operator<=( const FixedPoint &fix ) const { return ( _scaledValue <= fix._scaledValue ); }
@@ -145,7 +142,6 @@ class FixedPoint
 	// ============================ TEMPLATE METHODES
 
 	// ============== BINARY OPERATORS
-
 		TU inline FixedPoint operator+( const U &val ) const { FixedPoint r = FixedPoint( *this ); r += val; return r; }
 		TU inline FixedPoint operator-( const U &val ) const { FixedPoint r = FixedPoint( *this ); r -= val; return r; }
 		TU inline FixedPoint operator*( const U &val ) const { FixedPoint r = FixedPoint( *this ); r *= val; return r; }
@@ -177,7 +173,6 @@ class FixedPoint
 		}
 
 	// ============== COMPARISON OPERATORS
-
 		TU inline bool operator==( const U &val ) const { return ( _scaledValue == static_cast< T >( val * _Scale )); }
 		TU inline bool operator!=( const U &val ) const { return ( _scaledValue != static_cast< T >( val * _Scale )); }
 		TU inline bool operator<=( const U &val ) const { return ( _scaledValue <= static_cast< T >( val * _Scale )); }
@@ -186,7 +181,6 @@ class FixedPoint
 		TU inline bool operator> ( const U &val ) const { return ( _scaledValue >  static_cast< T >( val * _Scale )); }
 
 	// ============== BITWISE OPERATORS
-
 		TU inline FixedPoint operator&( const U &val ) const { FixedPoint r = FixedPoint( *this ); r &= val; return r; }
 		TU inline FixedPoint operator|( const U &val ) const { FixedPoint r = FixedPoint( *this ); r |= val; return r; }
 		TU inline FixedPoint operator^( const U &val ) const { FixedPoint r = FixedPoint( *this ); r ^= val; return r; }
@@ -196,7 +190,6 @@ class FixedPoint
 		TU inline FixedPoint operator^=( const U &val ){ _scaledValue ^= T( val * _Scale ); return FixedPoint( *this ); }
 
 	// ============== SHIFT OPERATORS
-
 		TU inline FixedPoint operator<<( const U &val ) const { FixedPoint r = FixedPoint( *this ); r <<= val; return r; }
 		TU inline FixedPoint operator>>( const U &val ) const { FixedPoint r = FixedPoint( *this ); r >>= val; return r; }
 
@@ -204,7 +197,6 @@ class FixedPoint
 		TU inline FixedPoint operator>>=( const U &val ){ _scaledValue >>= T( val ); return FixedPoint( *this ); }
 
 	// ============================ FRIEND METHODS
-
 		inline friend std::ostream &operator<<( std::ostream &os, const FixedPoint &fix ){ os << double( fix ); return os; }
 		inline friend std::string to_string( const FixedPoint &fix ){ return std::to_string( double( fix )); }
 
@@ -215,7 +207,6 @@ class FixedPoint
 	// ============================ MARKING POS2 AS VALID INTEGRAL / FLOATING POINT TYPE
 
 // ============================ SIGNED FIXED POINT TYPES
-
 typedef FixedPoint< int8_t,  4  > fxt_8x4_t;
 typedef FixedPoint< int16_t, 4  > fxt_16x4_t;
 typedef FixedPoint< int16_t, 8  > fxt_16x8_t;
@@ -234,7 +225,6 @@ typedef FixedPoint< int64_t, 40 > fxt_64x40_t;
 typedef FixedPoint< int64_t, 48 > fxt_64x48_t;
 
 // ============================ UNSIGNED FIXED POINT TYPES
-
 typedef FixedPoint< uint8_t,  4  > ufx_8x4_t;
 typedef FixedPoint< uint16_t, 4  > ufx_16x4_t;
 typedef FixedPoint< uint16_t, 8  > ufx_16x8_t;

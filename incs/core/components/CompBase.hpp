@@ -62,7 +62,7 @@ class CompBase
 		inline CompBase &operator=( const CompBase &rhs ){ onCpy( rhs ); return *this; }
 
 	// ================================ ACCESSORS / MUTATORS
-		inline static  comp_type_e getType(){ return COMP_TYPE_BASE; }
+		inline static comp_type_e getType(){ return COMP_TYPE_BASE; }
 
 		inline bool isActive() const { return _active; }
 		inline bool setActivity( bool activate ){ _active = activate; return _active; }
@@ -88,7 +88,6 @@ class CompBase
 };
 
 // ================================ TEMPLATES
-
 template <typename CompT>
 concept IsCompBase = std::is_base_of_v< CompBase, CompT >; // NOTE : this is a concept to check if a type is derived from CompBase
 

@@ -57,7 +57,6 @@ struct Operate
 	static_assert( std::integral< V > || std::floating_point< V >, "Operate: V must be a numeric type" );
 
 	// ============================ MONADIC FUNCTIONS
-
 	inline static T abs(  const T &a ){ return T( a < 0 ? -a : a ); } //   Absolute value
 	inline static T sign( const T &a ){ return T( a < 0 ? -1 : a > 0 ? 1 : 0 ); } // Sign
 
@@ -83,7 +82,6 @@ struct Operate
 	inline static T atan( const T &a ){ return T( atanf( double( a ) )); } // Inverse tangent
 
 	// ============================ DIADIC FUNCTIONS
-
 	inline static T atan2( const T &a, const U &b ){ return T( atan2f( double( a ), double( b ))); } //        Inverse tangent of y/x
 
 	inline static T add(  const T &a, const U &b ){ return T( a + b ); } // Addition
@@ -130,7 +128,6 @@ struct Operate
 	}
 
 	// ============================ TRIDIC FUNCTIONS
-
 	inline static T avg(  const T &a, const U &b, const V &c ){ return T( ( a + b + c ) / 3 ); } //                      Average of 3
 	inline static T min(  const T &a, const U &b, const V &c ){ return T( Operate::min( Operate::min( a, b ), c )); } // Minimum of 3
 	inline static T max(  const T &a, const U &b, const V &c ){ return T( Operate::max( Operate::max( a, b ), c )); } // Maximum of 3
@@ -152,8 +149,7 @@ struct Operate
 	}
 };
 
-	// ============================ SHORTHAND FUNCTIONS
-
+// ============================ SHORTHAND FUNCTIONS
 
 # define TU template < typename U = FixedPoint< int64_t, 32 >, typename = std::enable_if_t<( std::is_integral_v< U > || std::is_floating_point_v< U > )>>
 

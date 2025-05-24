@@ -161,7 +161,6 @@ class Colour
 
 
 	// ============================ COLOUR-TO_COLOUR OPERATORS //                                             TODO : make this behave like paint colour mixing
-
 		// NOTE : plus operator will average two colours
 		inline Colour operator+( const Colour &c ) const { Colour x = Colour( *this ); x += c;   return x; }
 		inline Colour operator+( const Color  &c ) const { Colour x = Colour( *this ); x += c;   return x; } // RAYLIB COLOR

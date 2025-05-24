@@ -109,13 +109,10 @@ class Pos3
 		*/
 
 	// ============================ CASTING METHODS
-
 		inline operator Vector3() const { return Vector3{ float( x ), float( y ), float( z )}; }
-
 		TU inline operator U() const { return U( getLen() ); } // returns the vector's lenght
 
 	// ============================ IN-CLASS OPERATORS
-
 		inline Pos3 operator+() const { return Pos3( +x, +y, +z ); }
 		inline Pos3 operator-() const { return Pos3( -x, -y, -z ); }
 
@@ -146,7 +143,6 @@ class Pos3
 		inline bool operator>(  const Pos3 &p ) const { return ( x >  p.x && y >  p.y && z >  p.z ); }
 
 	// ============================ VECTOR2 OPERATORS ( raylib dependent )
-
 		inline Pos3 operator+( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r += v; return r; }
 		inline Pos3 operator-( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r -= v; return r; }
 		inline Pos3 operator*( const Vector3 &v ) const { Pos3 r = Pos3( *this ); r *= v; return r; }
@@ -168,7 +164,6 @@ class Pos3
 		inline bool operator>(  const Vector3 &v ) const { return ( x >  v.x && y >  v.y && z >  v.z ); }
 
 	// ============================ TYPENAME OPERATORS
-
 		TU inline Pos3 operator+( const U &val ) const { Pos3 r = Pos3( *this ); r += val; return r; }
 		TU inline Pos3 operator-( const U &val ) const { Pos3 r = Pos3( *this ); r -= val; return r; }
 		TU inline Pos3 operator*( const U &val ) const { Pos3 r = Pos3( *this ); r *= val; return r; }
@@ -190,7 +185,6 @@ class Pos3
 		TU inline bool operator>(  const U &val ) const { return ( getLenSqr() >  Operate< U >::sqr( val )); } // checks if getLen() >  |val|
 
 	// ============================ FRIEND METHODS
-
 		inline friend std::ostream &operator<<( std::ostream &os, const Pos3 &p ){ os << "[" << p.x << ":" << p.y << ":" << p.z << "]"; return os; }
 		inline friend std::string to_string( const Pos3 &p ){ return "[" + to_string( p.x ) + ":" + to_string( p.y ) + ":" + to_string( p.z ) + "]"; }
 

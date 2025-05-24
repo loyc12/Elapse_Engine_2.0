@@ -99,13 +99,10 @@ class Pos2
 
 
 	// ============================ CASTING METHODS
-
 		inline operator Vector2() const { return Vector2{ float( x ), float( y )}; }
-
 		TU inline operator U() const { return U( getLen() ); } // returns the vector's lenght
 
 	// ============================ IN-CLASS OPERATORS
-
 		inline Pos2 operator+() const { return Pos2( +x, +y ); }
 		inline Pos2 operator-() const { return Pos2( -x, -y ); }
 
@@ -136,7 +133,6 @@ class Pos2
 		inline bool operator>(  const Pos2 &p ) const { return ( x >  p.x && y >  p.y ); }
 
 	// ============================ VECTOR2 OPERATORS ( raylib dependent )
-
 		inline Pos2 operator+( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r += v; return r; }
 		inline Pos2 operator-( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r -= v; return r; }
 		inline Pos2 operator*( const Vector2 &v ) const { Pos2 r = Pos2( *this ); r *= v; return r; }
@@ -158,7 +154,6 @@ class Pos2
 		inline bool operator>(  const Vector2 &v ) const { return ( x >  v.x && y >  v.y ); }
 
 	// ============================ TYPENAME OPERATORS
-
 		TU inline Pos2 operator+( const U &val ) const { Pos2 r = Pos2( *this ); r += val; return r; }
 		TU inline Pos2 operator-( const U &val ) const { Pos2 r = Pos2( *this ); r -= val; return r; }
 		TU inline Pos2 operator*( const U &val ) const { Pos2 r = Pos2( *this ); r *= val; return r; }
@@ -180,7 +175,6 @@ class Pos2
 		TU inline bool operator>(  const U &val ) const { return ( getLenSqr() >  Operate< U >::sqr( val )); } // checks if len() >  |val|
 
 	// ============================ FRIEND METHODS
-
 		inline friend std::ostream &operator<<( std::ostream &os, const Pos2 &p ){ os << "[" << p.x << ":" << p.y << "]"; return os; }
 		inline friend std::string to_string( const Pos2 &p ){ return "[" + to_string( p.x ) + ":" + to_string( p.y ) + "]"; }
 
@@ -190,7 +184,6 @@ class Pos2
 };
 
 // ============================ DEFAULT POS2 TYPES
-
 typedef Pos2< double > pos2d_t;
 typedef Pos2< float  > pos2f_t;
 

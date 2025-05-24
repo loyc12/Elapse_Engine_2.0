@@ -15,7 +15,6 @@ class EntityMngr
 {
 	private:
 	// ================================ ATTRIBUTES
-
 		NttMap_t _NttMap;
 		CmpTbl_t _CmpTbl; // NOTE : array of components, indexed by comp_type_e
 
@@ -27,7 +26,6 @@ class EntityMngr
 		id_set_t _freedIDs;  // NOTE : IDs previously freed		  to update maxID / reuse them later
 
 	// ================================ CORE METHODS
-
 		void onAdd();
 		void onDel();
 
@@ -41,12 +39,10 @@ class EntityMngr
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-
 		inline  EntityMngr(){ onAdd(); };
 		inline ~EntityMngr(){ onDel(); };
 
 	// ================================ ACCESSORS / MUTATORS
-
 		inline id_set_t *getUsedIDs(){   return &_usedIDs; }
 	//inline id_set_t *getActiveIDs(){ return &_activeIDs; }
 	//inline id_set_t *getToAddIDs(){  return &_toAddIDs; }
@@ -57,11 +53,9 @@ class EntityMngr
 
 
 	// ================ COMPONENT METHODS
-
 		void updateAllComponents();
 
 	// ================ TICK METHODS
-
 		void tickMovements(); // NOTE : position update
 		void tickPhysics(); //   NOTE : eg. gravity
 		void tickCollides(); //  NOTE : collision detection

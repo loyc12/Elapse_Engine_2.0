@@ -30,8 +30,8 @@ typedef enum : byte_t
 
 class Engine
 {
-	// ================================ ATTRIBUTES
 	private:
+	// ================================ ATTRIBUTES
 		fixed_t _DT; // delta time
 		fixed_t _TS; // time scale
 
@@ -42,8 +42,8 @@ class Engine
 		engineState_e _state;
 		std::mutex mtx_state;
 
-	// ================================ STATE METHODS
 	public:
+	// ================================ STATE METHODS
 		bool switchState(  engineState_e targetState );
 		bool togglePause(); // switches the state between paused and running
 
@@ -55,8 +55,8 @@ class Engine
 			void stop(); // stops the engine
 		void close(); // closes the engine
 
-	// ================================ STEP METHODS
 	public:
+	// ================================ STEP METHODS
 		bool launchLoop(); // launches the game loop
 		// NOTE : this is a blocking call for now. It will be multithreaded later
 		// TODO : add a way to run the game loop in a separate thread
@@ -76,8 +76,8 @@ class Engine
 		Engine();     ~Engine();
 		static Engine *getEngine();
 
-	// ================================ ACCESSORS / MUTATORS
 	public:
+	// ================================ ACCESSORS / MUTATORS
 		inline bool isEngineClosed(){  MUTEX_LOCK( mtx_state ); return _state == ES_CLOSED; }
 		inline bool isEngineReady(){   MUTEX_LOCK( mtx_state ); return _state == ES_INITIALIZED; }
 		inline bool isEngineStarted(){ MUTEX_LOCK( mtx_state ); return _state == ES_STARTED; }
@@ -101,8 +101,8 @@ class Engine
 		fixed_t setTimeScale( fixed_t timeScale );
 		bool    canEngineTick();
 
-	// ================================ MUTEXED ACCESSORS / MUTATORS
 	private:
+	// ================================ MUTEXED ACCESSORS / MUTATORS
 		inline engineState_e getState(){                MUTEX_LOCK( mtx_state ); return _state; }
 		inline void setState( engineState_e newState ){ MUTEX_LOCK( mtx_state ); _state = newState; }
 

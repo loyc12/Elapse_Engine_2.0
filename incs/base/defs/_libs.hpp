@@ -60,7 +60,6 @@ using std::byte;
 using std::bitset;
 
 // ================================ SHORTHAND
-
 # define elif else if
 # define ostrs ostringstream
 

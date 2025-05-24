@@ -65,8 +65,7 @@ bool log( const char *msg, log_level_e lvl = DEBUG, id_t id = 0, const char *fil
 // TODO : implement/use the "cls" ( class )	parameter
 bool log_funct( bool unlog, const char *fct = nullptr, const char *cls = nullptr, id_t id = 0, const char *file = nullptr, int line = 0 );
 
-// ============================ DIVISION TESTS
-
+// ============================ DIVISION TESTING
 # define TT template< typename T, typename = typename std::enable_if< std::is_arithmetic< T >::value >::type >
 
 inline bool diverror( const char *dividend, const char *divisor )
