@@ -3,9 +3,6 @@
 
 #include "../base.hpp"
 
-
-
-
 /*
 these functions are called by the engine at an appropriate time during their respective function calls
 they are used to inject game specific code into the engine without modifying the engine itself

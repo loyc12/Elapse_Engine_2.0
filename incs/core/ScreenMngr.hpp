@@ -1,9 +1,8 @@
 #ifndef SCREEN_MNGR_HPP
 # define SCREEN_MNGR_HPP
 
-# include "../../base.hpp"
+# include "../base.hpp"
 //# include "../entity/Entity.hpp"
-
 
 # define WINDOW_DEFAULT_TITLE  "ToyEngine"
 # define WINDOW_DEFAULT_FPS    128
@@ -87,6 +86,8 @@ class ScreenMngr
 
 	// ================================ CAMERA ACCESSORS / MUTATORS
 
+		inline Camera2D *getCamera() { return &_camera; }
+
 		inline fixed_t getZoom() const { return _camera.zoom; }
 		inline void scaleZoom( fixed_t factor ){ setZoom( factor * _camera.zoom ); }
 		void setZoom( fixed_t zoom );
@@ -100,24 +101,24 @@ class ScreenMngr
 		void setTarget( vec2_t target, bool overrideTracking = false );
 
 		inline vec2_t getOffset() const { return _camera.offset; }
-		//void setOffset(  vec2_t offset );
-		//void moveOffset( vec2_t delta );
+		//inline void moveOffset( vec2_t delta ){ _camera.offset = delta + _camera.offset; }
+		//inline void setOffset(  vec2_t offset ){ _camera.offset = offset; }
 
 		// NOTE : these are all in world units
-		inline vec2_t  getCenter()  const { return getTarget(); }
-		inline fixed_t getWidth()   const { return _screenSize.x / _camera.zoom; }
-		inline fixed_t getHeight()  const { return _screenSize.y / _camera.zoom; }
-		inline vec2_t  getSize()    const { return _screenSize   / _camera.zoom; }
+		inline vec2_t  getCenter()   const { return getTarget(); }
+		inline fixed_t getWidth()    const { return _screenSize.x / _camera.zoom; }
+		inline fixed_t getHeight()   const { return _screenSize.y / _camera.zoom; }
+		inline vec2_t  getSize()     const { return _screenSize   / _camera.zoom; }
 
-		inline vec2_t getTop()      const { return GetScreenToWorld2D({ 0,             0             }, _camera ); }
-		inline vec2_t getBot()      const { return GetScreenToWorld2D({ getWidth(),    0             }, _camera ); }
-		inline vec2_t getLeft()     const { return GetScreenToWorld2D({ 0,             getHeight()   }, _camera ); }
-		inline vec2_t getRight()    const { return GetScreenToWorld2D({ getWidth(),    getHeight()   }, _camera ); }
+		inline vec2_t  getTop()      const { return GetScreenToWorld2D({ 0,             0             }, _camera ); }
+		inline vec2_t  getBot()      const { return GetScreenToWorld2D({ getWidth(),    0             }, _camera ); }
+		inline vec2_t  getLeft()     const { return GetScreenToWorld2D({ 0,             getHeight()   }, _camera ); }
+		inline vec2_t  getRight()    const { return GetScreenToWorld2D({ getWidth(),    getHeight()   }, _camera ); }
 
-		inline vec2_t getTopLeft()  const { return GetScreenToWorld2D({ getCenter().x, 0             }, _camera ); }
-		inline vec2_t getTopRight() const { return GetScreenToWorld2D({ getCenter().x, getHeight()   }, _camera ); }
-		inline vec2_t getBotLeft()  const { return GetScreenToWorld2D({ 0,             getCenter().y }, _camera ); }
-		inline vec2_t getBotRight() const { return GetScreenToWorld2D({ getWidth(),    getCenter().y }, _camera ); }
+		inline vec2_t  getTopLeft()  const { return GetScreenToWorld2D({ getCenter().x, 0             }, _camera ); }
+		inline vec2_t  getTopRight() const { return GetScreenToWorld2D({ getCenter().x, getHeight()   }, _camera ); }
+		inline vec2_t  getBotLeft()  const { return GetScreenToWorld2D({ 0,             getCenter().y }, _camera ); }
+		inline vec2_t  getBotRight() const { return GetScreenToWorld2D({ getWidth(),    getCenter().y }, _camera ); }
 
 	// ================================ ENTITY TRACKING METHODS
 

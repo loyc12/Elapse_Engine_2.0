@@ -3,9 +3,9 @@
 
 # include "../base.hpp"
 
-# include "./systems/ScreenMngr.hpp"
-//# include "./systems/EventMngr.hpp"
-//# include "./entity/EntityMngr.hpp"
+# include "./ScreenMngr.hpp"
+//# include "./EventMngr.hpp"
+//# include "./EntityMngr.hpp"
 
 
 typedef enum : byte_t
@@ -35,9 +35,9 @@ class Engine
 		fixed_t _DT; // delta time
 		fixed_t _TS; // time scale
 
-		//ScreenMngr _screenMngr2D;
-		//EventMngr  _eventMngr;
-		//EntityMngr _entityMngr;
+		ScreenMngr *_screenMngr2D;
+	//EventMngr  *_eventMngr;
+	//EntityMngr *_entityMngr;
 
 		engineState_e _state;
 		std::mutex mtx_state;
@@ -85,15 +85,15 @@ class Engine
 
 		inline bool isTimePaused(){ return ( _TS == 0 ); }
 
+		inline Camera2D   *getCamera(){     return _screenMngr2D->getCamera(); }
+		inline ScreenMngr *getScreenMngr(){ return _screenMngr2D; }
+
 		//inline inputs_s   &getLatestInputs(){   return _eventMngr->getLatestInputs(); }
 		//inline inputs_s   &getPreviousInputs(){ return _eventMngr->getPreviousInputs(); }
-		//inline EventMngr  *getEventMngr(){      return &_eventMngr; }
-
-		//inline Camera2D   *getCamera(){     return &_screenMngr2D->getCamera(); }
-		//inline ScreenMngr *getScreenMngr(){ return &_screenMngr2D; }
+		//inline EventMngr  *getEventMngr(){      return _eventMngr; }
 
 		//inline Entity     *getEntity( id_t id ){ return _entityMngr->getEntity( id ); }
-		//inline EntityMngr *getEntityMngr(){      return &_entityMngr; }
+		//inline EntityMngr *getEntityMngr(){      return _entityMngr; }
 
 		inline fixed_t updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
 		inline fixed_t getDeltaTimeScaled() const { return _DT * _TS; }
@@ -112,7 +112,7 @@ class Engine
 // Shortcuts to the engine and its components
 
 extern Engine     *GetNG;
-//extern ScreenMngr *GetScrnM;
+extern ScreenMngr *GetScrnM;
 //extern EventMngr  *GetEvntM;
 //extern EntityMngr *GetNttM;
 
