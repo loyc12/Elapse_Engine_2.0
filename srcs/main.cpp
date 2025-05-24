@@ -1,12 +1,12 @@
 #include "../incs/core.hpp"
 
 
-void test()
+void tester()
 {
 
 }
 
-void entry()
+void entrypoint()
 {
 	GetNG->launchLoop();
 }
@@ -15,8 +15,8 @@ int main()
 {
 	GetNG->switchState( ES_RUNNING );
 
-	//test();
-	entry();
+	//tester();
+	entrypoint();
 
 	GetNG->switchState( ES_CLOSED );
 

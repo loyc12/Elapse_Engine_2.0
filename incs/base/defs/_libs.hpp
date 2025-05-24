@@ -16,8 +16,9 @@
 # include <string>
 # include <array>
 # include <vector>
-# include <list>
-# include <map>
+//# include <list>
+//# include <map>
+# include <set>
 # include <unordered_map>
 # include <iterator>
 # include <algorithm>
@@ -51,10 +52,8 @@ using std::string;
 using std::to_string;
 using std::array;
 using std::vector;
-using std::list;
-using std::map;
 using std::unordered_map;
-using std::pair;
+//using std::pair;
 using std::iterator;
 
 using std::byte;

@@ -5,7 +5,7 @@
 
 # include "./ScreenMngr.hpp"
 //# include "./EventMngr.hpp"
-//# include "./EntityMngr.hpp"
+# include "./EntityMngr.hpp"
 
 
 typedef enum : byte_t
