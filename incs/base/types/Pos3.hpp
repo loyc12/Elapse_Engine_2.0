@@ -70,6 +70,7 @@ class Pos3
 		inline Pos3 getNormalizedCpy() const { Pos3 r = Pos3( *this ); r.normalize(); return Pos3( x, y, z ); }
 		inline Pos3 normalize()
 		{
+			flog( 0 );
 			fixed_t len = this->getLen();
 
 			if ( len == 0 ) // NOTE : zero-div protection
@@ -92,6 +93,7 @@ class Pos3
 		inline Pos3 getRotatedCpy( Angle a, Angle b ) const { Pos3 r = Pos3( *this ); r.rotateBy( a, b ); return Pos3( x, y, z ); }
 		inline Pos3 rotateBy( Angle a, Angle b )
 		{
+			flog( 0 );
 			if ( a == 0 && b == 0 ) { return Pos3( x, y, z ); } // NOTE : skiping the maths
 
 			// TODO : check if this is correct

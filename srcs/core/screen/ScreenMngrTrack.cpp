@@ -10,7 +10,7 @@ bool ScreenMngr::trackEntity( Entity *Ntt, bool overrideTracking )
 	{
 		qlog( "trackEntity : Cannot track a nullptr", INFO, 0 );
 		qlog( "trackEntity : Use untrackEntity() to stop tracking", DEBUG, 0 );
-		fend(); return false;
+		return false;
 	}
 
 	if( isTracking() )
@@ -19,21 +19,21 @@ bool ScreenMngr::trackEntity( Entity *Ntt, bool overrideTracking )
 		{
 			qlog( "trackEntity : Already tracking an object", WARN, 0 );
 			qlog( "trackEntity : Use overrideTracking = true to override", INFO, 0 );
-			fend(); return false;
+			return false;
 		}
 		else { qlog( "trackEntity : Overriding tracking", INFO, 0 ); }
 	}
 
 	_trackedEntity = Ntt;
-	fend(); return true;
+	return true;
 }
 
 bool ScreenMngr::untrackEntity()
 {
 	flog( 0 );
-	if( !isTracking() ){ fend(); return false; }
+	if( !isTracking() ){  return false; }
 
 	_trackedEntity = nullptr;
-	fend(); return true;
+	return true;
 }
 */

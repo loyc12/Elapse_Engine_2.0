@@ -107,6 +107,7 @@ struct Operate
 
 	inline static T mod(  const T &a, const U &b ) // Sign variable modulus ( will ltake the sign of a )
 	{
+		flog( 0 );
 		if( b == 0 ) // Ensures this is 0-div safe
 		{
 			qlog( "Operate : Modulo by zero : voiding value", ERROR, 0 );
@@ -116,12 +117,14 @@ struct Operate
 	}
 	inline static T pmod( const T &a, const U &b ) // Strickly positive modulus
 	{
+		flog( 0 );
 		T res = Operate::mod( a, b );
 		if( res < 0 ) res += Operate::abs( b ); // Ensures the result is positive
 		return res;
 	}
 	inline static T nmod ( const T &a, const U &b ) // Strickly negative modulus
 	{
+		flog( 0 );
 		T res = Operate::mod( a, b );
 		if( res > 0 ) res -= Operate::abs( b ); // Ensures the result is negative
 		return res;
@@ -138,6 +141,7 @@ struct Operate
 	inline static T lerp( const T &a, const T &b, const T &t ){ return T( a + ( t * ( b - a ))); } //  Linear interpolation between a and b base on factor t
 	inline static T norm( const T &a, const T &b, const T &v )// Clamps between [0,1] according to v's relative position between a and b
 	{
+		flog( 0 );
 		if(   v <= Operate::min( a, b )) return T( 0 );
 		elif( v >= Operate::max( a, b )) return T( 1 );
 		elif( a == b ) // Ensures this is 0-div safe

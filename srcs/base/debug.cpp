@@ -77,15 +77,11 @@ bool log( const char *msg, log_level_e lvl, id_t id, const char *file, int line 
 	return true;
 }
 
-bool log_funct( bool unlog, const char *fct, const char *cls, id_t id, const char *file, int line )
+bool FunctLog::log_funct( bool unlog, const char *fct, id_t id, const char *file, int line )
 {
 	if( !SHOW_FCT_PATH )
 	{
-		if( !unlog )
-		{
-			if ( cls != nullptr && cls[0] != '\0' ) { log( fct + string( "::" ) + cls, FUNCT, id, file, line ); }
-			else {                                    log( fct, FUNCT, id, file, line ); }
-		}
+		if( !unlog ){ log( fct, FUNCT, id, file, line ); }
 		return true;
 	}
 
@@ -133,7 +129,6 @@ bool log_funct( bool unlog, const char *fct, const char *cls, id_t id, const cha
 		if ( FCT_MUL_PREFIX[ 0 ] != '\0' ){ for ( byte_t i = 0; i < funct_depth; i++ ) { funct_path += FCT_MUL_PREFIX; }}
 
 		if ( file != nullptr && file[0] != '\0' ){ funct_path += " [" + string( file ) + ":" + to_string( line ) + "] "; }
-		if ( cls  != nullptr && cls[0]  != '\0' ){ funct_path += cls + string( "::" ); }
 		if ( fct  != nullptr && fct[0]  != '\0' ){ funct_path += fct + string( "()" ); }
 
 		if ( id > 0 ) { funct_path += "[" + to_string( id ) + "]"; }

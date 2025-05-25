@@ -9,24 +9,18 @@ void OnEngineInit()
 	flog( 0 );
 
 	// TODO : add game specific code here
-
-	fend();
 }
 void OnEngineStart()
 {
 	flog( 0 );
 
 	// TODO : add game specific code here
-
-	fend();
 }
 void OnEngineResume()
 {
 	flog( 0 );
 
 	// TODO : add game specific code here
-
-	fend();
 }
 
 void OnEnginePause()
@@ -34,22 +28,16 @@ void OnEnginePause()
 	flog( 0 );
 
 	// TODO : add game specific code here
-
-	fend();
 }
 void OnEngineStop()
 {
 	flog( 0 );
 
 	// TODO : add game specific code here
-
-	fend();
 }
 void OnEngineClose()
 {
 	flog( 0 );
 
 	// TODO : add game specific code here
-
-	fend();
 }

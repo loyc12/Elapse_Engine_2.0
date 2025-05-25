@@ -22,14 +22,15 @@ typedef enum : comp_count_t
 
 
 	// NOTE : maximum of 253 component types, as the last two values are reserved
-	COMP_TYPE_COUNT, //      NOTE : should never be used for a component type
-	COMP_TYPE_BASE = 255, // NOTE : should never be used for a component type
+	COMP_TYPE_COUNT, //      NOTE : only for internal use
+	COMP_TYPE_BASE = 255, // NOTE : only for internal use
 } comp_type_e;
 
 inline bool IsValid( id_t id ){ return( id > 0 ); }
 inline bool IsValid( comp_type_e type ){ return( type == COMP_TYPE_BASE || type >= COMP_TYPE_COUNT ); }
 inline bool IsValid( comp_type_e type, id_t id )
 {
+	flog( 0 );
 	if ( !IsValid( id ) || !IsValid( type ))
 	{
 		qlog( "IsValid : invalid component type or ID", WARN, 0 );
@@ -53,6 +54,14 @@ class CompBase
 			else { _id = 0; }
 		}
 
+		inline CompBase( const CompBase &cpy ){ *this = cpy; }
+		inline CompBase &operator=( const CompBase &cpy )
+		{
+			flog( 0 );
+			this->_id = cpy._id;
+			return *this;
+		}
+
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getType(){ return COMP_TYPE_BASE; } // NOTE : base type, should be overridden in derived classes
 
@@ -60,6 +69,7 @@ class CompBase
 		inline bool deinit(){ _id = 0; return true; }
 		inline bool init( id_t id )
 		{
+			flog( 0 );
 			if( !IsValid( id ))
 			{
 				qlog( "CompBase::init : invalid ID " + std::to_string( id ), ERROR, 0 );

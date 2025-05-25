@@ -2,6 +2,7 @@
 
 bool Shape::delVert( int16_t i )
 {
+	flog( 0 );
 	if ( i < 0 || i >= getVertC() )
 	{
 		qlog( "Shape::delVert : index out of bounds", WARN, 0 );
@@ -13,6 +14,7 @@ bool Shape::delVert( int16_t i )
 
 bool Shape::addVert( const vec2_t &v )
 {
+	flog( 0 );
 	if ( getVertC() >= MAX_VERT_COUNT )
 	{
 		qlog( "Shape::addVert : MAX_VERT_COUNT reached : cannot add any more", ERROR, 0 );
@@ -25,7 +27,9 @@ bool Shape::addVert( const vec2_t &v )
 
 bool Shape::copyVerts( const vec2_arr_t &verts )
 {
+	flog( 0 );
 	bool copiedAll = true;
+
 	for ( int16_t i = 0; i < int16_t (verts.size() ); i++ )
 	{
 		if ( getVertC() >= MAX_VERT_COUNT )
@@ -42,6 +46,7 @@ bool Shape::copyVerts( const vec2_arr_t &verts )
 
 bool Shape::sortVerts() // TODO : make sure this works
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return false; }
 	std::sort( _verts.begin(), _verts.end(), []( const vec2_t &a, const vec2_t &b ){ return Angle( a ) < Angle( b ); });
 	return true;
@@ -49,6 +54,7 @@ bool Shape::sortVerts() // TODO : make sure this works
 
 bool Shape::scaleVerts( const fixed_t &scale )
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return false; }
 	for ( int16_t i = 0; i < getVertC(); i++ ){ _verts[ i ] *= scale; }
 	return true;
@@ -58,6 +64,7 @@ bool Shape::scaleVerts( const fixed_t &scale )
 
 fixed_t Shape::getWidth() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 
 	fixed_t minX = _verts[ 0 ].x;
@@ -72,6 +79,7 @@ fixed_t Shape::getWidth() const
 }
 fixed_t Shape::getHeight() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 
 	fixed_t minY = _verts[ 0 ].y;
@@ -87,6 +95,7 @@ fixed_t Shape::getHeight() const
 
 fixed_t Shape::getRotatedWidth() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 
 	vec2_t  vert = _verts[ 0 ].getRotatedCpy( _angle );
@@ -103,6 +112,7 @@ fixed_t Shape::getRotatedWidth() const
 }
 fixed_t Shape::getRotatedHeight() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 
 	vec2_t  vert = _verts[ 0 ].getRotatedCpy( _angle );
@@ -120,6 +130,7 @@ fixed_t Shape::getRotatedHeight() const
 
 fixed_t Shape::getArea() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t area = 0;
 
@@ -132,6 +143,7 @@ fixed_t Shape::getArea() const
 }
 fixed_t Shape::getPerimeter() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t perimeter = 0;
 
@@ -145,6 +157,7 @@ fixed_t Shape::getPerimeter() const
 
 fixed_t Shape::getMinRadius() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t minRadius = _verts[ 0 ].getDist( _centre );
 
@@ -157,6 +170,7 @@ fixed_t Shape::getMinRadius() const
 }
 fixed_t Shape::getMaxRadius() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t maxRadius = _verts[ 0 ].getDist( _centre );
 
@@ -169,6 +183,7 @@ fixed_t Shape::getMaxRadius() const
 }
 fixed_t Shape::getAvgRadius() const
 {
+	flog( 0 );
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t avgRadius = 0;
 

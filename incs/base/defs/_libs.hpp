@@ -12,14 +12,18 @@
 # include <iomanip>
 # include <sstream>
 # include <fstream>
-
 # include <string>
+
 # include <array>
 # include <vector>
+# include <deque>
+//# include <queue>
+//# include <stack>
 //# include <list>
 //# include <map>
+//# include <unordered_map>
 # include <set>
-# include <unordered_map>
+
 # include <iterator>
 # include <algorithm>
 
@@ -44,17 +48,25 @@ using std::ostringstream;
 using std::fstream;
 using std::ifstream;
 using std::ofstream;
-
 using std::istream;
 using std::ostream;
-
 using std::string;
 using std::to_string;
+
+using std::pair;
 using std::array;
 using std::vector;
-using std::unordered_map;
-//using std::pair;
+using std::deque;
+//using std::queue;
+//using std::stack;
+//using std::list;
+//using std::map;
+//using std::unordered_map;
+using std::set;
+
 using std::iterator;
+using std::find;
+using std::sort;
 
 using std::byte;
 using std::bitset;
@@ -64,6 +76,7 @@ using std::bitset;
 # define ostrs ostringstream
 
 # define tostr( x ) to_string( x )
+# define MLOCK( mtx ) std::lock_guard< std::mutex > lock( mtx )
 
 typedef bool        bit_t; //  NOTE : implement using bitarray class instead
 typedef bitset< 4 > word_t; // NOTE : implement using bitarray class instead

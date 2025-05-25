@@ -28,13 +28,14 @@ typedef enum
 #	define LOG_FILE false //       	NOTE : writes the log messages to a file instead of the console
 #	define LOG_LINE true //       	NOTE : shows the src file name and line number in the log messages
 #	define LOG_TIME true //       	NOTE : shows the time since start in the log messages
-# define SHOW_LAP_TIME false // 	NOTE : shows the time since the last log message, instead of the time since start
+# define SHOW_LAP_TIME true // 	NOTE : shows the time since the last log message, instead of the time since start
 #	define SHOW_OBJ_MSG true //   	NOTE : shows or ignores the messages what have a specified t_id
 #	define SHOW_FCT_PATH false //  	NOTE : shows the function pathing in the log messages, as opposed to just the function name
 
 # define FCT_SEPARATOR "\n" //    NOTE : this is what will visually separete each function name in the function pathing output
 # define FCT_MUL_PREFIX " " //    NOTE : this will be added N times before the function name, where N is the depth of the function call
 #	define HERE __FILE__, __LINE__
+# define THIS __PRETTY_FUNCTION__
 
 #	if LOG_LVL > LOG_LVL_NONE //    NOTE : debug functions to activate if loglevel is greater than NONE
 #	 define qlog( msg, lvl, id )     log( msg, lvl, id, HERE )
@@ -47,14 +48,13 @@ typedef enum
 #	endif
 
 #	if LOG_LVL == LOG_LVL_FUNCT //  NOTE : debug functions to activate only if loglevel is FUNCT
-#	 define flog( id )   log_funct( false, __FUNCTION__, nullptr, id, HERE )
-#	 define fend()       log_funct( true )
-#  define freturn      log_funct( true ); return
+// NOTE : this macro creates an instance of FunctLof, that will be automatically deleted when the function returns
+#	 define flog( id )   FunctLog _flog_##__FUNCTION__##_##__FILE__##_##__LINE__( THIS, id, HERE )
 #	else
 #	 define flog( id )
-#	 define fend()
-#	 define fend(); return return
 #	endif
+
+// ================================ LOGGING
 
 void log_time();
 
@@ -62,10 +62,33 @@ bool log( ostrs msg,       log_level_e lvl = DEBUG, id_t id = 0, const char *fil
 bool log( string msg,      log_level_e lvl = DEBUG, id_t id = 0, const char *file = nullptr, int line = 0 );
 bool log( const char *msg, log_level_e lvl = DEBUG, id_t id = 0, const char *file = nullptr, int line = 0 );
 
-// TODO : implement/use the "cls" ( class )	parameter
-bool log_funct( bool unlog, const char *fct = nullptr, const char *cls = nullptr, id_t id = 0, const char *file = nullptr, int line = 0 );
+// ================ FUNCTION LOGGING
 
-// ============================ DIVISION TESTING
+class FunctLog
+{
+	// NOTE : this class is used to log function calls and their paths
+	// it ensures that the function is logged when it is called and unlogged when it returns
+	// it is used in conjunction with the flog() macro, which is defined only if LOG_LVL == LOG_LVL_FUNCT
+
+	public:
+		inline FunctLog(
+			const char *fct = nullptr, id_t id = 0,
+			const char *file = nullptr, int line = 0 )
+		{ log_funct( false, fct, id, file, line ); }
+
+		inline ~FunctLog(){ log_funct( true ); }
+
+		// NOTE : prevent copying of the FunctLog instance
+		inline FunctLog(            const FunctLog &cpy ) = delete;
+		inline FunctLog &operator=( const FunctLog &cpy ) = delete;
+
+		// TODO : implement/use the "cls" ( class )	parameter
+		bool log_funct( bool unlog, const char *fct = nullptr, id_t id = 0, const char *file = nullptr, int line = 0 );
+	};
+
+
+// ================================ DIVISION TESTING
+
 # define TT template< typename T, typename = typename std::enable_if< std::is_arithmetic< T >::value >::type >
 
 inline bool diverror( const char *dividend, const char *divisor )

@@ -5,7 +5,7 @@
 //# include "../entity/Entity.hpp"
 
 # define WINDOW_DEFAULT_TITLE  "ToyEngine"
-# define WINDOW_DEFAULT_FPS    128
+# define WINDOW_DEFAULT_FPS    255
 # define SCREEN_DEFAULT_WIDTH  2048
 # define SCREEN_DEFAULT_HEIGHT 1024
 
@@ -40,7 +40,7 @@ class ScreenMngr
 			flog( 0 );
 
 			_isOpened   = false;
-			_targetFPS  = WINDOW_DEFAULT_FPS;
+			_targetFPS  = 0; // NOTE : if 0, it will default to WINDOW_DEFAULT_FPS
 			_screenSize = vec2_t( SCREEN_DEFAULT_WIDTH, SCREEN_DEFAULT_HEIGHT );
 
 			_camera.target   = { 0, 0 };
@@ -49,8 +49,6 @@ class ScreenMngr
 			_camera.offset   = { _screenSize.x / 2, _screenSize.y / 2 };
 
 			//_trackedEntity   = nullptr;
-
-			fend();
 		}
 
 	public:
@@ -86,20 +84,20 @@ class ScreenMngr
 		inline Camera2D *getCamera() { return &_camera; }
 
 		inline fixed_t getZoom() const { return _camera.zoom; }
-		inline void scaleZoom( fixed_t factor ){ setZoom( factor * _camera.zoom ); }
-		void setZoom( fixed_t zoom );
+		inline void  scaleZoom( fixed_t factor ){ setZoom( factor * _camera.zoom ); }
+		void           setZoom( fixed_t zoom );
 
 		inline fixed_t getRotation() const { return _camera.rotation; }
-		inline void moveRotation( angle_t    delta ){ setRotation( delta + fixed_t( _camera.rotation * DtoR )); }
-		inline void setRotation(  angle_t rotation ){ _camera.rotation = rotation.getDeg(); }
+		inline void   moveRotation( angle_t delta ){ setRotation( delta + fixed_t( _camera.rotation * DtoR )); }
+		inline void    setRotation( angle_t rotation ){ _camera.rotation = rotation.getDeg(); }
 
 		inline vec2_t getTarget() const { return _camera.target; }
-		inline void moveTarget( vec2_t delta, bool overrideTracking = false ){ setTarget( delta + _camera.target, overrideTracking ); }
-		void setTarget( vec2_t target, bool overrideTracking = false );
+		inline void  moveTarget( vec2_t delta,  bool overrideTracking = false ){ setTarget( delta + _camera.target, overrideTracking ); }
+		void          setTarget( vec2_t target, bool overrideTracking = false );
 
 		inline vec2_t getOffset() const { return _camera.offset; }
-		//inline void moveOffset( vec2_t delta ){ _camera.offset = delta + _camera.offset; }
-		//inline void setOffset(  vec2_t offset ){ _camera.offset = offset; }
+		//inline void  moveOffset( vec2_t delta  ){ _camera.offset = delta + _camera.offset; }
+		//inline void   setOffset( vec2_t offset ){ _camera.offset = offset; }
 
 		// NOTE : these are all in world units
 		inline vec2_t  getCenter()   const { return getTarget(); }

@@ -46,6 +46,10 @@ class EntityMngr
 		inline  EntityMngr(){ onAdd(); };
 		inline ~EntityMngr(){ onDel(); };
 
+		// NOTE : prevent copying of the EntityMngr instance
+		inline EntityMngr(            const EntityMngr &cpy ) = delete;
+		inline EntityMngr &operator=( const EntityMngr &cpy ) = delete;
+
 	// ================================ ACCESSORS / MUTATORS
 		inline id_set_t *getUsedIDs(){   return &_usedIDs; }
 		inline id_set_t *getActiveIDs(){ return &_activeIDs; }

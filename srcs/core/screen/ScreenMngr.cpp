@@ -10,7 +10,7 @@ void ScreenMngr::open()
 	if( isOpened() )
 	{
 		qlog( "open : Window already opened", WARN, 0 );
-		fend(); return;
+		return;
 	}
 
 	InitWindow( _screenSize.x, _screenSize.y, WINDOW_DEFAULT_TITLE );
@@ -18,14 +18,15 @@ void ScreenMngr::open()
 	if( !IsWindowReady() )
 	{
 		qlog( "open : Failed to open window", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	qlog( "open : Window successfully opened", INFO, 0 );
-	SetTargetFPS( _targetFPS );
-	_isOpened = true;
 
-	fend();
+	if( _targetFPS > 0 ){ SetTargetFPS( _targetFPS ); } // NTOE : if the target FPS is 0, it will default to WINDOW_DEFAULT_FPS
+	else{ SetTargetFPS( WINDOW_DEFAULT_FPS ); qlog( "setTargetFPS : FPS cannot be 0 or negative, setting to default", WARN, 0 ); }
+
+	_isOpened = true;
 }
 
 void ScreenMngr::close()
@@ -34,7 +35,7 @@ void ScreenMngr::close()
 	if( isClosed() )
 	{
 		qlog( "close : Window already closed", INFO, 0 );
-		fend(); return;
+		return;
 	}
 
 	CloseWindow();
@@ -42,13 +43,11 @@ void ScreenMngr::close()
 	if( IsWindowReady() )
 	{
 		qlog( "close : Failed to close window", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	qlog( "close : Window successfully closed", INFO, 0 );
 	_isOpened = false;
-
-	fend();
 }
 
 // ================================ UPDATE METHODS
@@ -60,8 +59,6 @@ void ScreenMngr::refresh()
 	ClearBackground( BACKGROUND_COLOUR );
 	updateCamera();
 	updateScreen();
-
-	fend();
 }
 
 void ScreenMngr::updateScreen()
@@ -70,8 +67,6 @@ void ScreenMngr::updateScreen()
 
 	_screenSize.x = GetScreenWidth();
 	_screenSize.y = GetScreenHeight();
-
-	fend();
 }
 
 void ScreenMngr::updateCamera()
@@ -83,8 +78,6 @@ void ScreenMngr::updateCamera()
 	_camera.offset   = _screenSize / 2; // NOTE : this makes sure the camera is centered on the screen
 
 	//if( isTracking() ){ _camera.target = _trackedEntity->getPos(); }
-
-	fend();
 }
 
 // ================================ ACCESSORS / MUTATORS
@@ -92,15 +85,14 @@ void ScreenMngr::updateCamera()
 void ScreenMngr::setTargetFPS( byte_t fps )
 {
 	flog( 0 );
-	if( fps == 0 )
-	{
-		qlog( "setTargetFPS : FPS cannot be 0", ERROR, 0 );
-		fend(); return;
-	}
 	_targetFPS = fps;
-	if ( IsWindowReady() ){ SetTargetFPS( _targetFPS ); }
 
-	fend();
+	if ( IsWindowReady() )
+	{
+		if( _targetFPS > 0 ){ SetTargetFPS( _targetFPS ); } // NTOE : if the target FPS is 0, it will default to WINDOW_DEFAULT_FPS
+		else{ SetTargetFPS( WINDOW_DEFAULT_FPS ); qlog( "setTargetFPS : FPS cannot be 0 or negative, setting to default", WARN, 0 ); }
+	}
+	else{ qlog( "setTargetFPS : Window is not opened, FPS will be set on next open", INFO, 0 ); }
 }
 
 // ================================ SCREEN ACCESSORS / MUTATORS
@@ -112,14 +104,12 @@ void ScreenMngr::setScreenSize( vec2_t size )
 	if( size.x <= 0 || size.y <= 0 )
 	{
 		qlog( "setScreenSize : Size cannot be 0 or negative", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	_screenSize = size;
 	if ( isOpened() ){ SetWindowSize( _screenSize.x, _screenSize.y ); }
 	else { qlog( "setScreenSize : Window is not opened, size will be set on next open", INFO, 0 ); }
-
-	fend();
 }
 
 void ScreenMngr::setWindowTitle( const char *title )
@@ -129,17 +119,15 @@ void ScreenMngr::setWindowTitle( const char *title )
 	if( isClosed() )
 	{
 		qlog( "setWindowTitle : Window is not opened", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	if( title == nullptr || strlen( title ) == 0 )
 	{
 		qlog( "setWindowTitle : Title cannot be empty", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 	SetWindowTitle( title );
-
-	fend();
 }
 void ScreenMngr::setWindowIcon( const char *iconPath )
 {
@@ -148,17 +136,15 @@ void ScreenMngr::setWindowIcon( const char *iconPath )
 	if( isClosed() )
 	{
 		qlog( "setWindowIcon : Window is not opened", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	if( iconPath == nullptr || strlen( iconPath ) == 0 )
 	{
 		qlog( "setWindowIcon : Icon path cannot be empty", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 	SetWindowIcon( LoadImage( iconPath ) );
-
-	fend();
 }
 
 void ScreenMngr::setBackgroundColour( col_t colour )
@@ -168,12 +154,10 @@ void ScreenMngr::setBackgroundColour( col_t colour )
 	if( isClosed() )
 	{
 		qlog( "setBackgroundColour : Window is not opened", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	ClearBackground( colour );
-
-	fend();
 }
 
 // ================================== CAMERA ACCESSORS / MUTATORS
@@ -188,8 +172,6 @@ void ScreenMngr::setZoom( fixed_t zoom )
 		zoom = Opfx::clmp( zoom, MIN_ZOOM, MAX_ZOOM );
 	}
 	_camera.zoom = float( zoom );
-
-	fend();
 }
 
 void ScreenMngr::setTarget( vec2_t target, bool overrideTracking )
@@ -202,7 +184,7 @@ void ScreenMngr::setTarget( vec2_t target, bool overrideTracking )
 	//	{
 	//		qlog( "setTarget : Already tracking an object", INFO, 0 );
 	//		qlog( "setTarget : Use overrideTracking = true to override", INFO, 0 );
-	//		fend(); return;
+	//		return;
 	//	}
 	//	else { qlog( "setTarget : Overriding tracking", INFO, 0 ); }
 	//}

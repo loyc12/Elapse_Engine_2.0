@@ -10,7 +10,7 @@ void OnStartLoop()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 void OnEndLoop()
 {
@@ -18,7 +18,7 @@ void OnEndLoop()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 
 void OnStartStep()
@@ -27,7 +27,7 @@ void OnStartStep()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 void OnEndStep()
 {
@@ -35,7 +35,7 @@ void OnEndStep()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 
 void OnReadInputs()
@@ -45,7 +45,7 @@ void OnReadInputs()
 	// TODO : add game specific code here
 	// NOTE : this is called before the tick methods, so you can use it to read inputs and set flags
 
-	fend();
+	
 }
 
 /*
@@ -88,7 +88,7 @@ void OnReadInputs( inputs_s &inp, inputs_s &prev )
 	if ( inp.SCROLL_UP   ){ GetScrnM->scaleZoom( 1.1f ); }
 	if ( inp.SCROLL_DOWN ){ GetScrnM->scaleZoom( 0.9f ); }
 
-	fend();
+	
 }
 	*/
 
@@ -100,7 +100,7 @@ void OnTickMovements()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 void OnTickPhysics()
 {
@@ -108,7 +108,7 @@ void OnTickPhysics()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 void OnTickCollides()
 {
@@ -116,7 +116,7 @@ void OnTickCollides()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 
 void OnTickSounds()
@@ -125,7 +125,7 @@ void OnTickSounds()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 void OnTickShapes()
 {
@@ -133,7 +133,7 @@ void OnTickShapes()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 void OnTickGraphics()
 {
@@ -141,7 +141,7 @@ void OnTickGraphics()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 
 void OnTickScripts()
@@ -150,7 +150,7 @@ void OnTickScripts()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 
 void OnRenderBackground()
@@ -159,7 +159,7 @@ void OnRenderBackground()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 void OnRenderWorld()
 {
@@ -167,7 +167,7 @@ void OnRenderWorld()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 
 void OnRenderUI()
@@ -176,7 +176,7 @@ void OnRenderUI()
 
 	// TODO : add game specific code here
 
-	fend();
+	
 }
 
 /*
@@ -202,14 +202,14 @@ void OnRenderUI()
 	if( G_PlayerNtt == nullptr )
 	{
 		qlog( "G_PlayerNtt is nullptr", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	CompPos *cmpPos = G_PlayerNtt->getComponent< CompPos >();
 	if( cmpPos == nullptr )
 	{
 		qlog( "G_PlayerNtt has no position component", ERROR, 0 );
-		fend(); return;
+		return;
 	}
 
 	vec2_t playerWorldPos = G_PlayerNtt->getPos();
@@ -219,6 +219,6 @@ void OnRenderUI()
 	qlog( plInfo, INFO, 0 );
 	DrawText( plInfo.c_str(), FontSizeUI, ( 5.5f * FontSizeUI ), FontSizeUI, WHITE );
 
-	fend();
+	
 }
 	*/

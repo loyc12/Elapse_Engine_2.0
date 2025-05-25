@@ -26,8 +26,6 @@ typedef enum : byte_t
 
 } engineState_e;
 
-# define MUTEX_LOCK( mtx ) std::lock_guard< std::mutex > lock( mtx )
-
 class Engine
 {
 	private:
@@ -66,22 +64,21 @@ class Engine
 		void runStep();
 			void refreshScreen();
 
-	// ================================ CONSTRUCTORS / DESTRUCTORS
-	private:
-		// prevents this singleton from being copied
-		Engine( const Engine &cpy ) = delete;
-		Engine &operator=( const Engine &cpy ) = delete;
-
 	public:
+	// ================================ CONSTRUCTORS / DESTRUCTORS
 		Engine();     ~Engine();
 		static Engine *getEngine();
 
+		// NOTE : prevents copying of the Engine instance
+		Engine(            const Engine &cpy ) = delete;
+		Engine &operator=( const Engine &cpy ) = delete;
+
 	public:
 	// ================================ ACCESSORS / MUTATORS
-		inline bool isEngineClosed(){  MUTEX_LOCK( mtx_state ); return _state == ES_CLOSED; }
-		inline bool isEngineReady(){   MUTEX_LOCK( mtx_state ); return _state == ES_INITIALIZED; }
-		inline bool isEngineStarted(){ MUTEX_LOCK( mtx_state ); return _state == ES_STARTED; }
-		inline bool isEngineRunning(){ MUTEX_LOCK( mtx_state ); return _state == ES_RUNNING; }
+		inline bool isEngineClosed(){  MLOCK( mtx_state ); return _state == ES_CLOSED; }
+		inline bool isEngineReady(){   MLOCK( mtx_state ); return _state == ES_INITIALIZED; }
+		inline bool isEngineStarted(){ MLOCK( mtx_state ); return _state == ES_STARTED; }
+		inline bool isEngineRunning(){ MLOCK( mtx_state ); return _state == ES_RUNNING; }
 
 		inline bool isTimePaused(){ return ( _TS == 0 ); }
 
@@ -103,8 +100,8 @@ class Engine
 
 	private:
 	// ================================ MUTEXED ACCESSORS / MUTATORS
-		inline engineState_e getState(){                MUTEX_LOCK( mtx_state ); return _state; }
-		inline void setState( engineState_e newState ){ MUTEX_LOCK( mtx_state ); _state = newState; }
+		inline engineState_e getState(){ MLOCK( mtx_state ); return _state; }
+		inline void setState( engineState_e newState ){ flog( 0 ); MLOCK( mtx_state ); _state = newState; }
 
 };
 
