@@ -2,7 +2,7 @@
 #include "../../../incs/game.hpp"
 
 // ==================== ENGINE STATE INJECTION FUNCTIONS
-// for when the engine changes state
+// called when the engine changes state
 
 void OnEngineInit()
 { // NOTE : do not add entities here ( or do anything that requires the engine to be started )
@@ -13,6 +13,8 @@ void OnEngineInit()
 void OnEngineStart()
 {
 	flog( 0 );
+
+	G_PlayerNtt = GetNttM->getNewEntity(); // NOTE : get the player entity with ID 1
 
 	// TODO : add game specific code here
 }

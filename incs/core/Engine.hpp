@@ -4,7 +4,7 @@
 # include "../base.hpp"
 
 # include "./ScreenMngr.hpp"
-//# include "./EventMngr.hpp"
+# include "./EventMngr.hpp"
 # include "./EntityMngr.hpp"
 
 
@@ -33,9 +33,9 @@ class Engine
 		fixed_t _DT; // delta time
 		fixed_t _TS; // time scale
 
-		ScreenMngr *_screenMngr2D;
-	//EventMngr  *_eventMngr;
-	//EntityMngr *_entityMngr;
+		ScreenMngr *_screenMngr;
+		EventMngr  *_eventMngr;
+		EntityMngr *_entityMngr;
 
 		engineState_e _state;
 		std::mutex mtx_state;
@@ -82,15 +82,15 @@ class Engine
 
 		inline bool isTimePaused(){ return ( _TS == 0 ); }
 
-		inline Camera2D   *getCamera(){     return _screenMngr2D->getCamera(); }
-		inline ScreenMngr *getScreenMngr(){ return _screenMngr2D; }
+		inline Camera2D   *getCamera(){     return _screenMngr->getCamera(); }
+		inline ScreenMngr *getScreenMngr(){ return _screenMngr; }
 
-		//inline inputs_s   &getLatestInputs(){   return _eventMngr->getLatestInputs(); }
-		//inline inputs_s   &getPreviousInputs(){ return _eventMngr->getPreviousInputs(); }
-		//inline EventMngr  *getEventMngr(){      return _eventMngr; }
+	//inline inputs_s   &getLatestInputs(){   return _eventMngr->getLatestInputs(); }
+	//inline inputs_s   &getPreviousInputs(){ return _eventMngr->getPreviousInputs(); }
+		inline EventMngr  *getEventMngr(){      return _eventMngr; }
 
-		//inline Entity     *getEntity( id_t id ){ return _entityMngr->getEntity( id ); }
-		//inline EntityMngr *getEntityMngr(){      return _entityMngr; }
+		inline Entity     *getEntity( id_t id ){ return _entityMngr->getEntity( id ); }
+		inline EntityMngr *getEntityMngr(){      return _entityMngr; }
 
 		inline fixed_t updateDeltaTime() { _DT = GetFrameTime(); return _DT; }
 		inline fixed_t getDeltaTimeScaled() const { return _DT * _TS; }
@@ -110,8 +110,8 @@ class Engine
 
 extern Engine     *GetNG;
 extern ScreenMngr *GetScrnM;
-//extern EventMngr  *GetEvntM;
-//extern EntityMngr *GetNttM;
+extern EventMngr  *GetEvntM;
+extern EntityMngr *GetNttM;
 
 extern fixed_t    GDTS(); // returns _DT * _TS ( aka the delta time scaled )
 //extern inputs_s   &GIN();

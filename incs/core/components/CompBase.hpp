@@ -27,7 +27,7 @@ typedef enum : comp_count_t
 } comp_type_e;
 
 inline bool IsValid( id_t id ){ return( id > 0 ); }
-inline bool IsValid( comp_type_e type ){ return( type == COMP_TYPE_BASE || type >= COMP_TYPE_COUNT ); }
+inline bool IsValid( comp_type_e type ){ return( type < COMP_TYPE_COUNT ); }
 inline bool IsValid( comp_type_e type, id_t id )
 {
 	flog( 0 );

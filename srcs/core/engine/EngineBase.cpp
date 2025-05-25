@@ -51,8 +51,8 @@ bool Engine::canEngineTick()
 
 Engine        *GetNG = Engine::getEngine();
 ScreenMngr *GetScrnM = GetNG->getScreenMngr();
-//EventMngr  *GetEvntM = GetNG->getEventMngr();
-//EntityMngr  *GetNttM = GetNG->getEntityMngr();
+EventMngr  *GetEvntM = GetNG->getEventMngr();
+EntityMngr  *GetNttM = GetNG->getEntityMngr();
 
 fixed_t  GDTS(){ return GetNG->getDeltaTimeScaled(); }
 //inputs_s &GIN(){ return GetNG->getLatestInputs(); }

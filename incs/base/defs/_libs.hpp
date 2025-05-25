@@ -21,7 +21,7 @@
 //# include <stack>
 //# include <list>
 //# include <map>
-//# include <unordered_map>
+# include <unordered_map>
 # include <set>
 
 # include <iterator>
@@ -61,7 +61,7 @@ using std::deque;
 //using std::stack;
 //using std::list;
 //using std::map;
-//using std::unordered_map;
+using std::unordered_map;
 using std::set;
 
 using std::iterator;
