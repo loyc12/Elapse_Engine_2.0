@@ -107,6 +107,7 @@ void Engine::init()
 	_screenMngr = new ScreenMngr();   GetScrnM = _screenMngr;
 	_eventMngr  = new EventMngr();    GetEvntM = _eventMngr;
 	_entityMngr = new EntityMngr();   GetNttM  = _entityMngr;
+
 	setState( ES_INITIALIZED );
 }
 

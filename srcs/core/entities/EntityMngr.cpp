@@ -19,6 +19,8 @@ Entity::~Entity()
 		GetNttM->removeNttPtr( _id ); // NOTE : remove the entity from the EntityMngr
 	}
 	qlog( "Entity : cleared entity aggregator with ID " + std::to_string( _id ), DEBUG, 0 );
+
+	// NOTE : as this object only aggregates components stored in the EntityMngr, we do not delete them here
 }
 
 
@@ -144,7 +146,7 @@ void EntityMngr::clearID( id_t id )
 {
 	flog( 0 );
 
-	if( id == 0 ) // NOTE : if the ID is 0, return
+	if( id == 0 )
 	{
 		qlog( "clearID : ID cannot be 0", WARN, 0 );
 		return;
@@ -152,7 +154,7 @@ void EntityMngr::clearID( id_t id )
 
 	_usedIDs.erase(   id );
 	_activeIDs.erase( id );
-	_freedIDs.insert( id );
+	_freedIDs.erase(  id );
 }
 
 
@@ -173,7 +175,11 @@ void EntityMngr::clearCompsByType( comp_type_e type )
 	}
 
 	id_t id = 1;
-	for( ; id <= _maxID; ++id ){ _CmpTbl[ type ][ id ].deinit(); }
+	for( ; id <= _maxID; ++id )
+	{
+		qlog( "clearCompsByType : deinitializing component of type " + std::to_string( type ) + " for entity with ID " + std::to_string( id ), DEBUG, 0 );
+		_CmpTbl[ type ][ id ].deinit();
+	}
 
 	qlog( "clearCompsByType : deinitializing all components of type " + std::to_string( type ) + " for IDs 1 to " + std::to_string( _maxID ), DEBUG, 0 );
 
@@ -189,6 +195,9 @@ void EntityMngr::initCompTables()
 	{
 		_CmpTbl[ type ].clear(); //             NOTE : clear the component table for the given type
 		_CmpTbl[ type ].resize( GroupSize ); // NOTE : resize the component table to the maximum possible ID
+
+		//for( size_t i = 0; i < GroupSize; ++i ){ _CmpTbl[ type ][ i ] = CompBase(); }
+
 		_maxPossibleID = GroupSize; //          NOTE : set the maximum possible ID to the initial size
 		qlog( "initCompTables : initialized component table for type " + std::to_string( type ), DEBUG, 0 );
 	}
@@ -200,7 +209,7 @@ void EntityMngr::resizeCompTables()
 
 	if( _maxID < _maxPossibleID - 1 ) // NOTE : if the maxID is less than the maximum possible ID, return
 	{
-		if ( _maxPossibleID <= GroupSize || _maxID > _maxPossibleID - GroupSize )
+		if ( _maxPossibleID <= GroupSize || _maxID > ( _maxPossibleID - 1 ) - GroupSize )
 		{
 			qlog( "resizeCompTables : no need to resize component tables" , DEBUG, 0 );
 			return;
@@ -217,8 +226,10 @@ void EntityMngr::resizeCompTables()
 
 	for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type )
 	{
-		_CmpTbl[ type ].resize( _maxPossibleID );
-		qlog( "resizeCompTables : resized component table for type " + std::to_string( type ), DEBUG, 0 );
+		size_t oldSize = _CmpTbl[ type ].size();
+		_CmpTbl[ type ].resize(_maxPossibleID);
+
+		//for( size_t i = oldSize; i < _maxPossibleID; ++i ){ _CmpTbl[ type ][ i ] = CompBase(); }
 	}
 	qlog( "resizeCompTables : resized all component tables", DEBUG, 0 );
 }
@@ -408,10 +419,30 @@ bool EntityMngr::removeNttPtr( id_t id )
 	if( !IsValid( id )){   return false; }
 	if( !hasNttPtr( id )){ return false; }
 
-	_NttMap.erase( id ); // NOTE : remove the entity from the NttMap
+	auto it = _NttMap.find( id ); // NOTE : find the entity in the NttMap
+	if( it == _NttMap.end()) // NOTE : if the entity is not found, return false
+	{
+		qlog( "removeNttPtr : entity with ID " + std::to_string( id ) + " does not exist in the NttMap", WARN, 0 );
+		return false;
+	}
+	delete it->second;
+	it->second = nullptr;
+	_NttMap.erase( it );
 
 	qlog( "removeNttPtr : removed entity with ID " + std::to_string( id ), DEBUG, 0 );
 	return true;
+}
+void EntityMngr::clearAllNtts()
+{
+	flog( 0 );
+
+	for( auto &pair : _NttMap )
+	{
+		delete pair.second;
+	}
+	_NttMap.clear();
+
+	qlog( "clearAllNtts : cleared all entities from the NttMap", DEBUG, 0 );
 }
 
 // ================================ COMPONENT METHODS
