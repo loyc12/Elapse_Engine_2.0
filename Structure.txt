@@ -1,0 +1,80 @@
+Engine
+├── ScreenMngr
+│   ├── Camera2D
+│   └── Drawing Methods
+├── EventMngr
+│   └── Event
+├── EntityMngr
+│   ├── Entity
+│   │   └── CompBase
+│   └── Component Management
+└── Enums
+    ├── engineState_e
+    ├── event_type_e
+    └── comp_type_e
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+- implemented
++ WIP
+o unimplemented
+
+1. Engine
+	Core Methods:
+		- switchState( targetState )
+			- init()
+			- start()
+			- stop()
+			- close()
+		- togglePause() ( swaps _TS with 0 )
+		- launchLoop()
+		- runStep()
+
+2. ScreenMngr
+	Obj : Camera2D ( raylib )
+	Core Methods:
+		- open()
+		- close()
+		- refresh()
+		o resizeWindow( width, height )
+		o toggleFullscreen()
+
+3. EventMngr
+	Obj : Event
+	Core Methods:
+		+ addEvent( &event )
+		+ clearEvents()
+		+ processEvents()
+		o pollInputs()
+		o getInput( key )
+		o clearInputs()
+
+5. EntityMngr
+	Obj : CompX / Entity
+	Core Methods:
+		- addID()
+		- delID( id )
+		- getEntity( id )
+		- setActivity( id )
+
+6. ResourceMngr
+	Obj : Resource
+	Core Methods:
+		o loadResource(   resource_type, path)
+		o unloadResource( resource_id )
+		o getResource(    resource_id )
+
+A. Enums
+	- engineState_e ( States ) :  ES_CLOSED, ES_INITIALIZED, ES_STARTED, ES_RUNNING, etc.
+	- comp_type_e   ( Types  ) :  CT_TRANSFORM, CT_PHYSIC, CT_GRAPHIC, etc.
+	+ event_type_e  ( Types  ) :  ET_INPUT, ET_SIGNAL, etc
+	o resrc_type_e  ( Types  ) :  RT_AUDIO, RT_TEXTURE, RT_SPRITE, etc
+
+B. Global Shortcuts
+	- Engine     *GetNG
+	- ScreenMngr *GetScrnM
+	- EventMngr  *GetEvntM
+	- EntityMngr *GetNttM
+	o ResrcMngr  *GetRsrcM
+	- fixed_t GDTS(): Returns delta time scaled.
+

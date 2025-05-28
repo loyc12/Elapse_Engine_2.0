@@ -104,11 +104,9 @@ void Engine::init()
 	if( getState() > ES_INITIALIZING ){ qlog( "init : Engine already initialized",  ERROR, 0 );  return; }
 	if( getState() < ES_CLOSED){        qlog( "init : how did you even get here ?", ERROR, 0 );  return; }
 
-	_screenMngr = new ScreenMngr();  GetScrnM = _screenMngr;
-	_eventMngr  = new EventMngr();   GetEvntM = _eventMngr;
-	_entityMngr = new EntityMngr();  GetNttM  = _entityMngr;
-
-	OnEngineInit(); // from injectors.hpp
+	_screenMngr = new ScreenMngr();   GetScrnM = _screenMngr;
+	_eventMngr  = new EventMngr();    GetEvntM = _eventMngr;
+	_entityMngr = new EntityMngr();   GetNttM  = _entityMngr;
 	setState( ES_INITIALIZED );
 }
 
@@ -162,10 +160,9 @@ void Engine::close()
 	if( getState() < ES_CLOSING ){     qlog( "close : Engine not initialized", ERROR, 0 );  return; }
 	if( getState() > ES_INITIALIZED ){ qlog( "close : Engine still started",   ERROR, 0 );  return; }
 
-	OnEngineClose(); // from injectors.hpp
 	setState( ES_CLOSED );
 
-	delete _entityMngr;   _entityMngr = nullptr;     GetNttM = nullptr;
-	delete _eventMngr;    _eventMngr = nullptr;      GetEvntM = nullptr;
-	delete _screenMngr;   _screenMngr = nullptr;     GetScrnM = nullptr;
+	delete _entityMngr;   _entityMngr = nullptr;   GetNttM  = nullptr;
+	delete _eventMngr;    _eventMngr  = nullptr;   GetEvntM = nullptr;
+	delete _screenMngr;   _screenMngr = nullptr;   GetScrnM = nullptr;
 }

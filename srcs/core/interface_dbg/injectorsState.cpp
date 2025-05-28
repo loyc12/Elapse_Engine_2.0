@@ -4,12 +4,6 @@
 // ==================== ENGINE STATE INJECTION FUNCTIONS
 // called when the engine changes state
 
-void OnEngineInit()
-{ // NOTE : do not add entities here ( or do anything that requires the engine to be started )
-	flog( 0 );
-
-	// TODO : add game specific code here
-}
 void OnEngineStart()
 {
 	flog( 0 );
@@ -18,6 +12,7 @@ void OnEngineStart()
 
 	// TODO : add game specific code here
 }
+
 void OnEngineResume()
 {
 	flog( 0 );
@@ -31,13 +26,8 @@ void OnEnginePause()
 
 	// TODO : add game specific code here
 }
-void OnEngineStop()
-{
-	flog( 0 );
 
-	// TODO : add game specific code here
-}
-void OnEngineClose()
+void OnEngineStop()
 {
 	flog( 0 );
 

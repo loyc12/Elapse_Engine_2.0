@@ -28,33 +28,14 @@ void Engine::runStep()
 	if( getState() < ES_STARTED ){ qlog( "runStep : Engine not started", ERROR, 0 );  return; }
 
 	qlog( "! starting a game step !", DEBUG, 0 );
+
 	OnStartStep(); // from injectors.hpp
 
 	_DT = updateDeltaTime();
 
 	// TODO : implement game loop logic here
 
-	refreshScreen();
+	_screenMngr->refresh();
 
 	OnEndStep(); // from injectors.hpp
-}
-
-void Engine::refreshScreen() // TODO : move me to ScreenMngr
-{
-	flog( 0 );
-
-	BeginDrawing();
-	{
-		_screenMngr->refresh();
-
-		OnRenderBackground(); // from injectors.hpp
-		BeginMode2D( *_screenMngr->getCamera() );
-		{
-			//_entityMngr->tickGraphics();
-			OnRenderWorld(); // from injectors.hpp
-		}
-		EndMode2D();
-		OnRenderUI(); // from injectors.hpp
-	}
-	EndDrawing();
 }

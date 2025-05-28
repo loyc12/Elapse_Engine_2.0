@@ -150,7 +150,7 @@ void EntityMngr::clearID( id_t id )
 		return;
 	}
 
-	_usedIDs.erase( id );
+	_usedIDs.erase(   id );
 	_activeIDs.erase( id );
 	_freedIDs.insert( id );
 }
@@ -172,8 +172,11 @@ void EntityMngr::clearCompsByType( comp_type_e type )
 		return;
 	}
 
-	qlog( "clearCompsByType : deinitializing all components of type " + std::to_string( type ), DEBUG, 0 );
-	for( id_t id = 1; id <= _maxID; ++id ){ _CmpTbl[ type ][ id ].deinit(); }
+	id_t id = 1;
+	for( ; id <= _maxID; ++id ){ _CmpTbl[ type ][ id ].deinit(); }
+
+	qlog( "clearCompsByType : deinitializing all components of type " + std::to_string( type ) + " for IDs 1 to " + std::to_string( _maxID ), DEBUG, 0 );
+
 	_CmpTbl[ type ].clear();
 }
 

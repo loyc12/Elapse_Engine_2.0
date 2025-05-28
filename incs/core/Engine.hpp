@@ -62,7 +62,6 @@ class Engine
 
 	private:
 		void runStep();
-			void refreshScreen();
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS

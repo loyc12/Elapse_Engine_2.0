@@ -4,12 +4,13 @@
 // ==================== RENDER INJECTION FUNCTIONS
 // called when the engine calls a render method
 
-void OnRenderBackground()
+void OnRenderStart()
 {
 	flog( 0 );
 
 	// TODO : add game specific code here
 }
+
 void OnRenderWorld()
 {
 	flog( 0 );
@@ -17,7 +18,7 @@ void OnRenderWorld()
 	// TODO : add game specific code here
 }
 
-void OnRenderUI()
+void OnRenderEnd()
 {
 	flog( 0 );
 	int FontSizeUI = DEBUG_FONT_SIZE;

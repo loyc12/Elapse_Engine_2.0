@@ -6,20 +6,18 @@
 typedef byte_t comp_count_t;
 typedef enum : comp_count_t
 {
-	COMP_TRANSFORM, // NOTE : position, rotation, scale
-	COMP_MOVEMENT, //  NOTE : velocity, acceleration, etc.
-	COMP_COLLIDE, //   NOTE : collision detection & response
-	COMP_PHYSIC, //    NOTE : mass, friction, elasticity, etc.
+	CT_TRANSFORM, // NOTE : position, rotation, scale
+	CT_MOVEMENT, //  NOTE : velocity, acceleration, etc.
+	CT_COLLIDE, //   NOTE : collision detection & response
+	CT_PHYSIC, //    NOTE : mass, friction, elasticity, etc.
 
-	COMP_TEXT, //      NOTE : text rendering ( font, size, color, etc. )
-	COMP_SOUND, //     NOTE : sound effects, volume, pitch, etc.
-	COMP_GRAPHIC, //   NOTE : visual rendering ( sprite, texture, etc. )
-	COMP_ANIM, //      NOTE : animation ( frame, speed, etc )
+	CT_TEXT, //      NOTE : text rendering ( font, size, color, etc. )
+	CT_AUDIO, //     NOTE : sound effects, volume, pitch, etc.
+	CT_TEXTURE, //	 NOTE : texture data ( image, size, format, etc. )
+	CT_SPRITE, //    NOTE : animated texture ( sprite sheet, frame rate, etc. )
+	CT_GRAPHIC, //   NOTE : visual rendering ( sprite, texture, etc. )
 
-	COMP_SCRIPT, //    NOTE : script component
 	// NOTE : add more component types as needed
-
-
 
 	// NOTE : maximum of 253 component types, as the last two values are reserved
 	COMP_TYPE_COUNT, //      NOTE : only for internal use

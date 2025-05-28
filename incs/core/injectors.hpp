@@ -4,57 +4,34 @@
 #include "../base.hpp"
 
 /*
-these functions are called by the engine at an appropriate time during their respective function calls
-they are used to inject game specific code into the engine without modifying the engine itself
+These functions are called by the engine at specific points in the game loop
+They are used to inject game specific code into the engine without haviong to modify it yourself
+This mean you can define them in your game code to add your custom game logic
+They can be left undefined if you don't need them, in which case the engine will simply skip them
 */
 
 // ==================== ENGINE STATE INJECTION FUNCTIONS
 // for when the engine changes state
-	void OnEngineInit();
-		void OnEngineStart();
-			void OnEngineResume();
+	void OnEngineStart()  __attribute__(( weak ));
+	void OnEngineResume() __attribute__(( weak ));
 
-			void OnEnginePause();
-		void OnEngineStop();
-	void OnEngineClose();
+	void OnEnginePause()  __attribute__(( weak ));
+	void OnEngineStop()   __attribute__(( weak ));
 
 // ==================== ENGINE STEP INJECTION FUNCTIONS
 // for when the engine calls one of the step method
-	void OnStartLoop();
-		void OnStartStep();
+	void OnStartLoop()    __attribute__(( weak ));
+	void OnStartStep()    __attribute__(( weak ));
 
-			//struct inputs_s;
-			//void OnReadInputs( inputs_s &inp, inputs_s &prev );
+	void OnReadInputs()   __attribute__(( weak ));
 
-			void OnTickMovements();
-			void OnTickPhysics();
-			void OnTickCollides();
+	void OnEndStep()      __attribute__(( weak ));
+	void OnEndLoop()      __attribute__(( weak ));
 
-			void OnTickSounds();
-			void OnTickShapes();
-			void OnTickGraphics();
+// ==================== RENDER INJECTION FUNCTIONS
+	void OnRenderStart()  __attribute__(( weak ));
+	void OnRenderWorld()  __attribute__(( weak ));
+	void OnRenderEnd()    __attribute__(( weak ));
 
-			void OnTickScripts();
-
-			void OnRenderBackground();
-			void OnRenderWorld();
-			void OnRenderUI();
-
-		void OnEndStep();
-	void OnEndLoop();
-
-// ===================== ENTITY TICK INJECTION FUNCTIONS
-// for when the EntityMngr calls an entity's component tick methods
-	//class Entity;
-
-	//void OnEntityTickMovement( Entity *Ntt ); // TODO : implement and use us
-	//void OnEntityTickPhysic(   Entity *Ntt );
-	//void OnEntityTickCollide(  Entity *Ntt );
-
-	//void OnEntityTickSound(   Entity *Ntt );
-	//void OnEntityTickShape(   Entity *Ntt );
-	//void OnEntityTickGraphic( Entity *Ntt );
-
-	//void OnEntityTickScript( Entity *Ntt );
 
 #endif // INJECTORS_HPP

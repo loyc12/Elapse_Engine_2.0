@@ -56,9 +56,22 @@ void ScreenMngr::refresh()
 {
 	flog( 0 );
 
-	ClearBackground( BACKGROUND_COLOUR );
-	updateCamera();
-	updateScreen();
+	BeginDrawing();
+	{
+		ClearBackground( BACKGROUND_COLOUR );
+
+		updateCamera();
+		updateScreen();
+
+		OnRenderStart(); // from injectors.hpp
+		BeginMode2D( _camera );
+		{
+			OnRenderWorld(); // from injectors.hpp
+		}
+		EndMode2D();
+		OnRenderEnd(); // from injectors.hpp
+	}
+	EndDrawing();
 }
 
 void ScreenMngr::updateScreen()
