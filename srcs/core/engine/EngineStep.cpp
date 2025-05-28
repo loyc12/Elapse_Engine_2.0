@@ -11,13 +11,22 @@ bool Engine::launchLoop()
 		qlog( "launchLoop : Engine not yet started", ERROR, 0 );
 		return false;
 	}
-	qlog( "launchLoop : starting the game loop", DEBUG, 0 );
-	OnStartLoop(); // from injectors.hpp
+	if( _screenMngr->isClosed() )
+	{
+		qlog( "launchLoop : ScreenMngr is closed", ERROR, 0 );
+		return false;
+	}
 
-	while( getState() >= ES_STARTED && !WindowShouldClose() ){ runStep(); } // TODO : Multithread this
+	// have this run in a separate thread, so this isn't blocking
+	{
+		qlog( "launchLoop : starting the game loop", DEBUG, 0 );
+		OnStartLoop(); // from injectors.hpp
 
-	qlog( "launchLoop : ending the game loop", DEBUG, 0 );
-	OnEndLoop(); // from injectors.hpp
+		while( getState() >= ES_STARTED && !WindowShouldClose() ){ runStep(); }
+
+		qlog( "launchLoop : ending the game loop", DEBUG, 0 );
+		OnEndLoop(); // from injectors.hpp
+	}
 
 	return true;
 }
@@ -27,14 +36,16 @@ void Engine::runStep()
 	flog( 0 );
 	if( getState() < ES_STARTED ){ qlog( "runStep : Engine not started", ERROR, 0 );  return; }
 
-	qlog( "! starting a game step !", DEBUG, 0 );
+	qlog( "! starting a new game step !", DEBUG, 0 );
 
 	OnStartStep(); // from injectors.hpp
 
 	_DT = updateDeltaTime();
 
-	// TODO : implement game loop logic here
-
+	OnReadInputs(); // from injectors.hpp // TODO : put in EventManager::readInputs()
+	{
+		// TODO : implement game loop logic here
+	}
 	_screenMngr->refresh();
 
 	OnEndStep(); // from injectors.hpp
