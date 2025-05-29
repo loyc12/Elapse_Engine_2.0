@@ -3,9 +3,12 @@
 
 # include "../base.hpp"
 # include "./components/CompBase.hpp"
+# include "./components/CompTransform.hpp"
+# include "./components/CompMovement.hpp"
+# include "./components/CompPhysics.hpp"
 
 typedef vector< CompBase > CmpVec_t; // NOTE : vector of components
-typedef array< CompBase*, COMP_TYPE_COUNT + 1 > CmpArr_t; // NOTE : array of component pointers, indexed by comp_type_e
+typedef array< CompBase*, CT_COUNT + 1 > CmpArr_t; // NOTE : array of component pointers, indexed by comp_type_e
 
 class Entity // NOTE : ease-of-access class aggregating components of a given entity's ID
 {
@@ -59,7 +62,7 @@ class Entity // NOTE : ease-of-access class aggregating components of a given en
 			flog( _id );
 			if( _id == 0 ){ qlog( "isValid : entity with ID 0 is not valid", WARN, 0 ); return false; }
 
-			for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type )
+			for( comp_count_t type = 0; type < CT_COUNT; ++type )
 			{
 				// NOTE : if any component pointer is nullptr, the entity is not valid ( bad initialization )
 				if( _comps[ type ] == nullptr ){ return false; }
@@ -70,7 +73,7 @@ class Entity // NOTE : ease-of-access class aggregating components of a given en
 };
 
 typedef unordered_map< id_t, Entity* > NttMap_t;
-typedef array< CmpVec_t, COMP_TYPE_COUNT + 1 > CmpTbl_t;
+typedef array< CmpVec_t, CT_COUNT + 1 > CmpTbl_t;
 typedef std::set< id_t > id_set_t; // NOTE : set of IDs, used to track specific IDs ( for example, freed IDs )
 
 class EntityMngr

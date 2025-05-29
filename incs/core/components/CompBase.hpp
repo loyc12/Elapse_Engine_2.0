@@ -9,23 +9,23 @@ typedef enum : comp_count_t
 	CT_TRANSFORM, // NOTE : position, rotation, scale
 	CT_MOVEMENT, //  NOTE : velocity, acceleration, etc.
 	CT_COLLIDE, //   NOTE : collision detection & response
-	CT_PHYSIC, //    NOTE : mass, friction, elasticity, etc.
+	CT_PHYSICS, //   NOTE : mass, friction, elasticity, etc.
 
 	CT_TEXT, //      NOTE : text rendering ( font, size, color, etc. )
 	CT_AUDIO, //     NOTE : sound effects, volume, pitch, etc.
 	CT_TEXTURE, //	 NOTE : texture data ( image, size, format, etc. )
 	CT_SPRITE, //    NOTE : animated texture ( sprite sheet, frame rate, etc. )
-	CT_GRAPHIC, //   NOTE : visual rendering ( sprite, texture, etc. )
+	CT_GRAPHICS, //  NOTE : visual rendering ( sprite, texture, etc. )
 
 	// NOTE : add more component types as needed
 
 	// NOTE : maximum of 253 component types, as the last two values are reserved
-	COMP_TYPE_COUNT, //      NOTE : only for internal use
-	COMP_TYPE_BASE = 255, // NOTE : only for internal use
+	CT_COUNT, //      NOTE : only for internal use
+	CT_BASE = 255, // NOTE : only for internal use
 } comp_type_e;
 
 inline bool IsValid( id_t id ){ return( id > 0 ); }
-inline bool IsValid( comp_type_e type ){ return( type < COMP_TYPE_COUNT ); }
+inline bool IsValid( comp_type_e type ){ return( type < CT_COUNT ); }
 inline bool IsValid( comp_type_e type, id_t id )
 {
 	flog( 0 );
@@ -45,8 +45,8 @@ class CompBase
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
-		inline virtual ~CompBase(){ deinit(); } // NOTE : deinitialize the component on destruction
-		inline CompBase( id_t NttID = 0 ) //       NOTE : initializes the component with the given ID if valid
+		inline virtual ~CompBase(){ deinit(); }
+		inline CompBase( id_t NttID = 0 )
 		{
 			if( IsValid( NttID )){ init( NttID ); }
 			else { _id = 0; }
@@ -61,7 +61,7 @@ class CompBase
 		}
 
 	// ================================ ACCESSORS / MUTATORS
-		inline static comp_type_e getType(){ return COMP_TYPE_BASE; } // NOTE : base type, should be overridden in derived classes
+		inline static comp_type_e getType(){ return CT_BASE; } // NOTE : base type, should be defined in derived classes
 
 		inline bool isInit() const { return _id != 0; }
 		inline bool deinit(){ _id = 0; return true; }
@@ -77,8 +77,9 @@ class CompBase
 		}
 
 		// ================================ TICK METHODS
-		inline bool hasSisterComps() const { return true; } // NOTE : checks is asigned entity has required co-components - override this in derived classes
-		inline bool canTick() const { return isInit() && hasSisterComps(); } // NOTE : checks if the component can tick - override this in derived classes
+
+		 // TODO : move this logic to the EntityMngr, so that it can run in batches
+		bool hasSisterComp( comp_type_e type ) const;   bool canTick() const;
 };
 
 #endif // COMP_BASE_HPP

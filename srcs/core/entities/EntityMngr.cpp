@@ -48,7 +48,7 @@ Entity::Entity( id_t id, bool addToMngr ) : _id( id ), _isInMngr( false )
 		_isInMngr = true;
 	}
 
-	for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type )
+	for( comp_count_t type = 0; type < CT_COUNT; ++type )
 	{
 		_comps[ type ] = GetNttM->getComp( comp_type_e( type ), _id ); // NOTE : get the component of the given type for the entity with the given ID
 		if( _comps[ type ] == nullptr ){ qlog( "Entity : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( _id ), WARN, 0 ); }
@@ -162,7 +162,7 @@ void EntityMngr::clearID( id_t id )
 void EntityMngr::clearAllComps()
 {
 	flog( 0 );
-	for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type ){ clearCompsByType( comp_type_e( type )); } // NOTE : clear all components by type
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ clearCompsByType( comp_type_e( type )); } // NOTE : clear all components by type
 	qlog( "clearAllComponents : cleared all components", DEBUG, 0 );
 }
 void EntityMngr::clearCompsByType( comp_type_e type )
@@ -191,7 +191,7 @@ void EntityMngr::clearCompsByType( comp_type_e type )
 void EntityMngr::initCompTables()
 {
 	flog( 0 );
-	for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type )
+	for( comp_count_t type = 0; type < CT_COUNT; ++type )
 	{
 		_CmpTbl[ type ].clear(); //             NOTE : clear the component table for the given type
 		_CmpTbl[ type ].resize( GroupSize ); // NOTE : resize the component table to the maximum possible ID
@@ -214,7 +214,6 @@ void EntityMngr::resizeCompTables()
 			qlog( "resizeCompTables : no need to resize component tables" , DEBUG, 0 );
 			return;
 		}
-
 		qlog( "resizeCompTables : shrinking component tables", DEBUG, 0 );
 		_maxPossibleID -= GroupSize; // NOTE : decrease the maximum possible ID by the group size
 	}
@@ -224,9 +223,10 @@ void EntityMngr::resizeCompTables()
 		_maxPossibleID += GroupSize; // NOTE : increase the maximum possible ID by the group size
 	}
 
-	for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type )
+	for( comp_count_t type = 0; type < CT_COUNT; ++type )
 	{
-		size_t oldSize = _CmpTbl[ type ].size();
+		//size_t oldSize = _CmpTbl[ type ].size();
+
 		_CmpTbl[ type ].resize(_maxPossibleID);
 
 		//for( size_t i = oldSize; i < _maxPossibleID; ++i ){ _CmpTbl[ type ][ i ] = CompBase(); }
@@ -450,7 +450,7 @@ void EntityMngr::clearAllNtts()
 void EntityMngr::updateAllComps()
 {
 	flog( 0 );
-	for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type ){ updateCompsByType( comp_type_e( type )); } // NOTE : update all components by type
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ updateCompsByType( comp_type_e( type )); } // NOTE : update all components by type
 
 	qlog( "updateAllComponents : updated all components", DEBUG, 0 );
 }
@@ -534,15 +534,15 @@ CmpVec_t EntityMngr::getAllComps( id_t id )
 {
 	flog( 0 );
 	CmpVec_t comps = CmpVec_t(); // NOTE : create a new vector
-	comps.resize( COMP_TYPE_COUNT );
+	comps.resize( CT_COUNT );
 
 	if( !IsValid( id )) // NOTE : if the ID is invalid, return an empty component table
 	{
 		qlog( "getAllComps : ID cannot be 0", WARN, 0 );
-		for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type ){ comps[ type ] = CompBase(); } // NOTE : fill the component table with nullptrs
+		for( comp_count_t type = 0; type < CT_COUNT; ++type ){ comps[ type ] = CompBase(); } // NOTE : fill the component table with nullptrs
 		return comps;
 	}
 
-	for( comp_count_t type = 0; type < COMP_TYPE_COUNT; ++type ){ comps[ type ] = _CmpTbl[ type ][ id ]; }
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ comps[ type ] = _CmpTbl[ type ][ id ]; }
 	return comps;
 }
