@@ -1,86 +1,7 @@
 #include "../../../incs/core.hpp"
 
-Entity::~Entity()
-{
-	flog( _id );
-
-	if( _isInMngr ) // NOTE : if the entity poiter is stored in the EntityMngr
-	{
-		if( GetNttM == nullptr )
-		{
-			qlog( "Entity : EntityMngr is not initialized", ERROR, 0 );
-			return;
-		}
-		if( !GetNttM->hasID( _id ))
-		{
-			qlog( "Entity : ID " + std::to_string( _id ) + " does not exist" , WARN, 0 );
-			return;
-		}
-		GetNttM->removeNttPtr( _id ); // NOTE : remove the entity from the EntityMngr
-	}
-	qlog( "Entity : cleared entity aggregator with ID " + std::to_string( _id ), DEBUG, 0 );
-
-	// NOTE : as this object only aggregates components stored in the EntityMngr, we do not delete them here
-}
-
-
-Entity::Entity( id_t id, bool addToMngr ) : _id( id ), _isInMngr( false )
-{
-	flog( _id );
-
-	if( GetNttM == nullptr )
-	{
-		qlog( "Entity : EntityMngr is not initialized", ERROR, 0 );
-		_id = 0;
-		_comps.fill( nullptr );
-		return;
-	}
-	if( !GetNttM->hasID( _id ))
-	{
-		qlog( "Entity : ID " + std::to_string( _id ) + " does not exist" , WARN, 0 );
-		_comps.fill( nullptr );
-		return;
-	}
-
-	if( addToMngr ) // NOTE : if we want to store the entity pointer to the EntityMngr
-	{
-		GetNttM->storeNttPtr( this ); // NOTE : store the entity in the EntityMngr
-		_isInMngr = true;
-	}
-
-	for( comp_count_t type = 0; type < CT_COUNT; ++type )
-	{
-		_comps[ type ] = GetNttM->getComp( comp_type_e( type ), _id ); // NOTE : get the component of the given type for the entity with the given ID
-		if( _comps[ type ] == nullptr ){ qlog( "Entity : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( _id ), WARN, 0 ); }
-	}
-
-	qlog( "Entity : aggregated entity with ID " + std::to_string( _id ), DEBUG, 0 );
-}
-
 
 // ================================ CORE METHODS
-
-void EntityMngr::onAdd()
-{
-	flog( 0 );
-
-	_maxID = 0;
-	clearAllIDs();
-	initCompTables();
-
-	qlog( "onAdd : initialized EntityMngr", DEBUG, 0 );
-}
-void EntityMngr::onDel()
-{
-	flog( 0 );
-
-	clearAllComps(); // NOTE : delete all components
-	clearAllIDs(); //   NOTE : clear all ID sets & reset maxID to 0
-
-	qlog( "onDel : destroyed EntityMngr", DEBUG, 0 );
-}
-
-
 
 void EntityMngr::updateMaxID()
 {
@@ -129,16 +50,100 @@ id_t EntityMngr::getNewID()
 	return newID;
 }
 
+void EntityMngr::initTbl()
+{
+	flog( 0 );
+	_CmpTblSize = TblGrpSize; // NOTE : set the initial size of the component table
 
+	for( comp_count_t type = 0; type < CT_COUNT; ++type )
+	{
+		_CmpTbl[ type ].clear(); //             NOTE : clear the component table for the given type
+		_CmpTbl[ type ].resize( TblGrpSize ); // NOTE : resize the component table to the maximum possible ID
 
-void EntityMngr::clearAllIDs()
+		qlog( "initTbl : initialized component table for type " + std::to_string( type ), DEBUG, 0 );
+	}
+	qlog( "initTbl : initialized component tables with size " + std::to_string( _CmpTblSize ), INFO, 0 );
+}
+void EntityMngr::resizeTbl()
 {
 	flog( 0 );
 
+
+	if( _CmpTblSize > TblGrpSize && _maxID < _CmpTblSize - TblGrpSize - 8 )
+	{ // NOTE : giving ourself some margin to avoid potential resizing issues
+
+		qlog( "resizeTbl : shrinking component tables", DEBUG, 0 );
+		_CmpTblSize -= TblGrpSize;
+	}
+	elif( _maxID >= _CmpTblSize - 4 )
+	{ // NOTE : giving ourself some margin to avoid potential resizing issues
+
+		qlog( "resizeTbl : expanding component tables", DEBUG, 0 );
+		_CmpTblSize += TblGrpSize;
+	}
+	else { qlog( "resizeTbl : no need to resize component tables" , DEBUG, 0 ); return; }
+
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ _CmpTbl[ type ].resize( _CmpTblSize ); }
+
+	qlog( "resizeTbl : resized all component tables", DEBUG, 0 );
+}
+
+void EntityMngr::resetAllComps()
+{
+	flog( 0 );
+
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ resetComps( comp_type_e( type )); }
+
+	qlog( "resetAllComps : reset all components", DEBUG, 0 );
+}
+void EntityMngr::resetComps( id_t id )
+{
+	flog( id );
+
+	if( !IsValid( id ))
+	{
+		qlog( "resetComps : ID cannot be 0", WARN, 0 );
+		return;
+	}
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ resetComp( id, comp_type_e( type )); }
+
+	qlog( "resetComps : reset all components for entity with ID " + std::to_string( id ), DEBUG, 0 );
+}
+void EntityMngr::resetComps( comp_type_e type )
+{
+	flog( 0 );
+
+	if( !IsValid( type ))
+	{
+		qlog( "resetComps : invalid component type " + std::to_string( type ), ERROR, 0 );
+		return;
+	}
+	for( id_t id = 1; id <= _maxID; ++id ){ resetComp( id, type ); } // TODO : iterate through used IDs instead of all IDs
+
+	qlog( "resetComps : reset all components of type " + std::to_string( type ), DEBUG, 0 );
+}
+void EntityMngr::resetComp( id_t id, comp_type_e type )
+{
+	flog( 0 );
+
+	if( !IsValid( type, id ))
+	{
+		qlog( "resetComp : invalid component type or ID", ERROR, 0 );
+		return;
+	}
+
+	_CmpTbl[ type ].at( id ).deinit();
+	qlog( "resetComp : reset component of type " + std::to_string( type ) + " for entity with ID " + std::to_string( id ), DEBUG, 0 );
+}
+
+void EntityMngr::clearIDsets()
+{
+	flog( 0 );
+	_maxID = 0;
+
 	_usedIDs.clear();
 	_activeIDs.clear();
-	_freedIDs.clear();
-	_maxID = 0;
+	_freedIDs.clear(); // NOTE : no need to add the freed IDs to the used IDs, since maxID is now zero
 
 	qlog( "clearAllIDs : cleared all ID sets & reset maxID", DEBUG, 0 );
 }
@@ -154,84 +159,7 @@ void EntityMngr::clearID( id_t id )
 
 	_usedIDs.erase(   id );
 	_activeIDs.erase( id );
-	_freedIDs.erase(  id );
-}
-
-
-
-void EntityMngr::clearAllComps()
-{
-	flog( 0 );
-	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ clearCompsByType( comp_type_e( type )); } // NOTE : clear all components by type
-	qlog( "clearAllComponents : cleared all components", DEBUG, 0 );
-}
-void EntityMngr::clearCompsByType( comp_type_e type )
-{
-	flog( 0 );
-	if( !IsValid( type ))
-	{
-		qlog( "clearCompsByType : invalid component type " + std::to_string( type ), ERROR, 0 );
-		return;
-	}
-
-	id_t id = 1;
-	for( ; id <= _maxID; ++id )
-	{
-		qlog( "clearCompsByType : deinitializing component of type " + std::to_string( type ) + " for entity with ID " + std::to_string( id ), DEBUG, 0 );
-		_CmpTbl[ type ][ id ].deinit();
-	}
-
-	qlog( "clearCompsByType : deinitializing all components of type " + std::to_string( type ) + " for IDs 1 to " + std::to_string( _maxID ), DEBUG, 0 );
-
-	_CmpTbl[ type ].clear();
-}
-
-
-
-void EntityMngr::initCompTables()
-{
-	flog( 0 );
-	for( comp_count_t type = 0; type < CT_COUNT; ++type )
-	{
-		_CmpTbl[ type ].clear(); //             NOTE : clear the component table for the given type
-		_CmpTbl[ type ].resize( GroupSize ); // NOTE : resize the component table to the maximum possible ID
-
-		//for( size_t i = 0; i < GroupSize; ++i ){ _CmpTbl[ type ][ i ] = CompBase(); }
-
-		_maxPossibleID = GroupSize; //          NOTE : set the maximum possible ID to the initial size
-		qlog( "initCompTables : initialized component table for type " + std::to_string( type ), DEBUG, 0 );
-	}
-	_maxID = 0; // NOTE : reset the maxID to 0
-}
-void EntityMngr::resizeCompTables()
-{
-	flog( 0 );
-
-	if( _maxID < _maxPossibleID - 1 ) // NOTE : if the maxID is less than the maximum possible ID, return
-	{
-		if ( _maxPossibleID <= GroupSize || _maxID > ( _maxPossibleID - 1 ) - GroupSize )
-		{
-			qlog( "resizeCompTables : no need to resize component tables" , DEBUG, 0 );
-			return;
-		}
-		qlog( "resizeCompTables : shrinking component tables", DEBUG, 0 );
-		_maxPossibleID -= GroupSize; // NOTE : decrease the maximum possible ID by the group size
-	}
-	else
-	{
-		qlog( "resizeCompTables : expanding component tables", DEBUG, 0 );
-		_maxPossibleID += GroupSize; // NOTE : increase the maximum possible ID by the group size
-	}
-
-	for( comp_count_t type = 0; type < CT_COUNT; ++type )
-	{
-		//size_t oldSize = _CmpTbl[ type ].size();
-
-		_CmpTbl[ type ].resize(_maxPossibleID);
-
-		//for( size_t i = oldSize; i < _maxPossibleID; ++i ){ _CmpTbl[ type ][ i ] = CompBase(); }
-	}
-	qlog( "resizeCompTables : resized all component tables", DEBUG, 0 );
+	_freedIDs.insert( id ); // NOTE : add the ID to the freed ID, so it can be reused later
 }
 
 // ================================ ENTITY METHODS

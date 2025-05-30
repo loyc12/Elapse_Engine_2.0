@@ -8,7 +8,7 @@ typedef enum : comp_count_t
 {
 	CT_TRANSFORM, // NOTE : position, rotation, scale
 	CT_MOVEMENT, //  NOTE : velocity, acceleration, etc.
-	CT_COLLIDE, //   NOTE : collision detection & response
+	CT_COLLIDES, //  NOTE : collision detection & response
 	CT_PHYSICS, //   NOTE : mass, friction, elasticity, etc.
 
 	CT_TEXT, //      NOTE : text rendering ( font, size, color, etc. )
