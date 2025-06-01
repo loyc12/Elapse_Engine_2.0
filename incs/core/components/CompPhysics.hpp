@@ -9,14 +9,12 @@
 
 class CompPhysics : public CompBase
 {
-	protected:
+	public: // NOTE : public to allow access from EntityMngr
 	// ================================ ATTRIBUTES
 		fixed_t _mass;
 		fixed_t _fric; // NOTE : friction coefficient
 		fixed_t _elas; // NOTE : elasticity coefficient
 
-
-	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
 		inline ~CompPhysics(){}
 		inline CompPhysics( id_t NttID = 0, fixed_t mass = COMP_DEF_MASS, fixed_t fric = COMP_DEF_FRIC, fixed_t elas = COMP_DEF_ELAS ) :
@@ -26,9 +24,9 @@ class CompPhysics : public CompBase
 		inline static comp_type_e getType(){ return CT_PHYSICS; }
 
 		inline fixed_t getMass() const { return _mass; }
-		inline void setMass(   fixed_t   mass ){ _mass = Opfx::max( 0,  mass ); }
-		inline void moveMass(  fixed_t  delta ){ _mass = Opfx::max( 0, _mass + delta ); }
-		inline void scaleMass( fixed_t factor ){ _mass = Opfx::max( 0, _mass * factor ); }
+		inline void setMass(   fixed_t   mass ){ _mass = Opfx::max( EPS,  mass ); }
+		inline void moveMass(  fixed_t  delta ){ _mass = Opfx::max( EPS, _mass + delta ); }
+		inline void scaleMass( fixed_t factor ){ _mass = Opfx::max( EPS, _mass * factor ); }
 
 		inline fixed_t getElasticity() const { return _elas; }
 		inline void setElasticity(   fixed_t   elas ){ _elas = Opfx::clmp(  elas,          0.0f, 1.0f ); }

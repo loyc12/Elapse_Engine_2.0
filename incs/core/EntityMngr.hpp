@@ -43,13 +43,13 @@ class Entity // NOTE : ease-of-access class aggregating the components of a give
 		inline void initComp( comp_type_e type )
 		{
 			flog( _id );
-			if( !IsValid( type )){ qlog( "initComp : invalid component type " + std::to_string( type ), ERROR, _id ); return; }
+			if( !IsValid( type )){ qlog( "initComp : invalid component type " + to_string( type ), ERROR, _id ); return; }
 			else { _comps[ type ]->init( _id ); }
 		}
 		inline void deinitComp( comp_type_e type )
 		{
 			flog( _id );
-			if( !IsValid( type )){ qlog( "delComp : invalid component type " + std::to_string( type ), ERROR, _id ); return; }
+			if( !IsValid( type )){ qlog( "delComp : invalid component type " + to_string( type ), ERROR, _id ); return; }
 			else { _comps[ type ]->deinit(); }
 		}
 };
@@ -118,22 +118,20 @@ class EntityMngr
 		Entity *getEntity( id_t id ); // NOTE : allocates a new Entity with the given ID and its component pointers
 
 	// ================================ COMPONENT METHODS
+		bool canTick( id_t id ) const; //                        NOTE : checks if a given entity can tick
+		bool canTick( id_t id, comp_type_e type ) const; //      NOTE : checks if a component of a given type for a given ID can tick
+
 		bool hasComp(      id_t id, comp_type_e type ) const; // NOTE : checks if a component of a given type for a given ID is initialized
 		bool initComp(     id_t id, comp_type_e type ); //       NOTE : initializes a component of a given type for a given ID
 		bool deinitComp(   id_t id, comp_type_e type ); //       NOTE : deinitializes a component of a given type for a given ID
 		CompBase *getComp( id_t id, comp_type_e type ); //       NOTE : gets a pointer to a component of a given type for a given ID
 
 	// ================ TICK METHODS
-		void tickCompsByType( comp_type_e type );
+		bool tickCompsByType( comp_type_e type );
 
-		//void tickMovement(); // NOTE : tick all movement components
-		//void tickCollides(); // NOTE : tick all collidable components
-		//void tickPhysics(); //  NOTE : tick all physics components
-
-		//void tickGraphics(); // NOTE : tick all graphics components
-
-	// ================================ STATIC METHODS
-
+	private:
+		bool tickMovements(); // NOTE : tick all movement components
+		bool applyMovement( id_t id, CompMovement *cm, CompTransform *ct ); // NOTE : tick a specific movement component
 };
 
 #endif // ENTITY_MNGR_HPP

@@ -8,12 +8,11 @@ typedef enum : comp_count_t
 {
 	CT_TRANSFORM, // NOTE : position, rotation, scale
 	CT_MOVEMENT, //  NOTE : velocity, acceleration, etc.
-	CT_COLLIDES, //  NOTE : collision detection & response
+	CT_COLLIDE, //   NOTE : collision detection & response
 	CT_PHYSICS, //   NOTE : mass, friction, elasticity, etc.
 
 	CT_TEXT, //      NOTE : text rendering ( font, size, color, etc. )
 	CT_AUDIO, //     NOTE : sound effects, volume, pitch, etc.
-	CT_TEXTURE, //	 NOTE : texture data ( image, size, format, etc. )
 	CT_SPRITE, //    NOTE : animated texture ( sprite sheet, frame rate, etc. )
 	CT_GRAPHICS, //  NOTE : visual rendering ( sprite, texture, etc. )
 
@@ -23,6 +22,27 @@ typedef enum : comp_count_t
 	CT_COUNT, //      NOTE : only for internal use
 	CT_BASE = 255, // NOTE : only for internal use
 } comp_type_e;
+
+inline string to_string( comp_type_e type )
+{
+	flog( 0 );
+	switch( type )
+	{
+		case CT_TRANSFORM: return "CT_TRANSFORM";
+		case CT_MOVEMENT:  return "CT_MOVEMENT";
+		case CT_COLLIDE:   return "CT_COLLIDES";
+		case CT_PHYSICS:   return "CT_PHYSICS";
+
+		case CT_TEXT:      return "CT_TEXT";
+		case CT_AUDIO:     return "CT_AUDIO";
+		case CT_SPRITE:    return "CT_SPRITE";
+		case CT_GRAPHICS:  return "CT_GRAPHICS";
+
+		case CT_COUNT:     return "CT_COUNT";
+		case CT_BASE:      return "CT_BASE";
+		default:           return "CT_UNDEFINED";
+	}
+}
 
 inline bool IsValid( id_t id ){ return( id > 0 ); }
 inline bool IsValid( comp_type_e type ){ return( type < CT_COUNT ); }
@@ -36,6 +56,7 @@ inline bool IsValid( id_t id, comp_type_e type )
 	}
 	return true;
 }
+
 
 class CompBase
 {

@@ -5,14 +5,13 @@
 
 class CompMovement : public CompBase
 {
-	protected:
+	public: // NOTE : public to allow access from EntityMngr
 	// ================================ ATTRIBUTES
 		vec2_t  _lVel; // NOTE : linear velocity
 		vec2_t  _lAcc; // NOTE : linear acceleration
 		angle_t _rVel; // NOTE : rotational velocity
 		angle_t _rAcc; // NOTE : rotational acceleration
 
-	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
 		inline ~CompMovement(){}
 		inline CompMovement( id_t NttID = 0, vec2_t lVel = { 0, 0 }, vec2_t lAcc = { 0, 0 }, angle_t rVel = 0, angle_t rAcc = 0 ) :

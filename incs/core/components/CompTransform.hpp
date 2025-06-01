@@ -5,13 +5,12 @@
 
 class CompTransform : public CompBase
 {
-	protected:
+	public: // NOTE : public to allow access from EntityMngr
 	// ================================ ATTRIBUTES
 		vec2_t  _pos;
 		vec2_t  _sizes;
 		angle_t _angle;
 
-	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
 		inline ~CompTransform(){}
 		inline CompTransform( id_t NttID = 0, vec2_t pos = { 0, 0 }, vec2_t scale = { 1, 1 }, angle_t angle = 0 ) :

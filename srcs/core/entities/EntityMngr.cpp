@@ -75,7 +75,7 @@ void EntityMngr::initTbl()
 		_CmpTbl[ type ].clear(); //             NOTE : clear the component table for the given type
 		_CmpTbl[ type ].resize( TblGrpSize ); // NOTE : resize the component table to the maximum possible ID
 
-		qlog( "initTbl : initialized component table for type " + std::to_string( type ), DEBUG, 0 );
+		qlog( "initTbl : initialized component table for type " + to_string( type ), DEBUG, 0 );
 	}
 	qlog( "initTbl : initialized component tables with size " + std::to_string( _CmpTblSize ), INFO, 0 );
 }
@@ -139,12 +139,12 @@ void EntityMngr::resetComps( comp_type_e type )
 
 	if( !IsValid( type ))
 	{
-		qlog( "resetComps : invalid component type " + std::to_string( type ), ERROR, 0 );
+		qlog( "resetComps : invalid component type " + to_string( type ), ERROR, 0 );
 		return;
 	}
 	for( id_t id = 1; id <= _maxID; ++id ){ resetComp( id, type ); } // TODO : iterate through used IDs instead of all IDs
 
-	qlog( "resetComps : reset all components of type " + std::to_string( type ), DEBUG, 0 );
+	qlog( "resetComps : reset all components of type " + to_string( type ), DEBUG, 0 );
 }
 void EntityMngr::resetComp( id_t id, comp_type_e type )
 {
@@ -159,12 +159,12 @@ void EntityMngr::resetComp( id_t id, comp_type_e type )
 	CompBase *comp = getComp( id, type );
 	if( comp == nullptr )
 	{
-		qlog( "resetComp : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
+		qlog( "resetComp : component of type " + to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
 		return;
 	}
 	else { comp->deinit(); } // NOTE : deinitialize the component
 
-	qlog( "resetComp : reset component of type " + std::to_string( type ) + " for entity with ID " + std::to_string( id ), DEBUG, 0 );
+	qlog( "resetComp : reset component of type " + to_string( type ) + " for entity with ID " + std::to_string( id ), DEBUG, 0 );
 }
 
 void EntityMngr::clearIDsets()
@@ -309,12 +309,12 @@ Entity *EntityMngr::getEntity( id_t id )
 
 	if( !IsValid( id ))
 	{
-		qlog( "getEntity : ID cannot be 0", WARN, 0 );
+		qlog( "getEntity : ID cannot be 0", ERROR, 0 );
 		return nullptr; // NOTE : return an invalid entity
 	}
 	if( !isUsed( id )) // NOTE : if the ID is not used, return an invalid entity
 	{
-		qlog( "getEntity : entity with ID " + std::to_string( id ) + " does not exist", WARN, 0 );
+		qlog( "getEntity : entity does not exist", ERROR, id );
 		return nullptr; // NOTE : return an invalid entity
 	}
 
@@ -328,6 +328,49 @@ Entity *EntityMngr::getEntity( id_t id )
 
 // ================================ COMPONENT METHODS
 
+bool EntityMngr::canTick( id_t id ) const
+{
+	flog( 0 );
+
+	if( !IsValid( id ))
+	{
+		qlog( "canTick : ID cannot be 0", WARN, id );
+		return false;
+	}
+	if( !isUsed( id ))
+	{
+		qlog( "canTick : entity does not exist", ERROR, id );
+		return false;
+	}
+	if( !isActive( id ))
+	{
+		qlog( "canTick : entity is not active", INFO, id );
+		return false;
+	}
+	return true; // NOTE : if all checks passed, the entity can tick
+}
+bool EntityMngr::canTick( id_t id, comp_type_e type ) const
+{
+	flog( id );
+
+	if( !GetNG->canEngineTick() )
+	{
+		qlog( "CompBase::canTick : Engine cannot tick", INFO, id );
+		return false;
+	}
+	if( !canTick( id ))
+	{
+		qlog( "CompBase::canTick : entity cannot tick", DEBUG, id );
+		return false;
+	}
+	if( !_CmpTbl[ type ][ id ].isInit() )
+	{
+		qlog( "CompBase::canTick : component is not initialized", DEBUG, id );
+		return false;
+	}
+	return true; // NOTE : if all checks passed, the component can tick
+}
+
 bool EntityMngr::hasComp( id_t id, comp_type_e type ) const
 {
 	flog( 0 );
@@ -335,7 +378,7 @@ bool EntityMngr::hasComp( id_t id, comp_type_e type ) const
 	if( !IsValid( id, type )){  return false; }
 	bool exists = _CmpTbl[ type ][ id ].isInit();
 
-	qlog( "hasComp : component of type " + std::to_string( type ) + ( exists ? " exists for entity with ID " + std::to_string( id ) : " does not exist for entity with ID " + std::to_string( id )), DEBUG, 0 );
+	qlog( "hasComp : component of type " + to_string( type ) + ( exists ? " exists for entity with ID " + std::to_string( id ) : " does not exist for entity with ID " + std::to_string( id )), DEBUG, 0 );
 	return exists;
 }
 bool EntityMngr::initComp( id_t id, comp_type_e type )
@@ -345,7 +388,7 @@ bool EntityMngr::initComp( id_t id, comp_type_e type )
 	if( !IsValid( id, type )){  return false; }
 	if( _CmpTbl[ type ][ id ].isInit())
 	{
-		qlog( "addComp : component of type " + std::to_string( type ) + " already exists for entity with ID " + std::to_string( id ), DEBUG, 0 );
+		qlog( "addComp : component of type " + to_string( type ) + " already exists for entity with ID " + std::to_string( id ), DEBUG, 0 );
 		return false;
 	}
 
@@ -359,13 +402,14 @@ bool EntityMngr::deinitComp( id_t id, comp_type_e type )
 	if( !IsValid( id, type )){  return false; }
 	if( !_CmpTbl[ type ][ id ].isInit())
 	{
-		qlog( "delComp : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
+		qlog( "delComp : component of type " + to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
 		return false;
 	}
 
 	_CmpTbl[ type ][ id ].deinit();
 	return true;
 }
+
 CompBase *EntityMngr::getComp( id_t id, comp_type_e type )
 {
 	flog( 0 );
@@ -373,7 +417,7 @@ CompBase *EntityMngr::getComp( id_t id, comp_type_e type )
 	if( !IsValid( id, type )){  return nullptr; }
 	if( !_CmpTbl[ type ][ id ].isInit())
 	{
-		qlog( "getComp : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
+		qlog( "getComp : component of type " + to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
 		return nullptr;
 	}
 
