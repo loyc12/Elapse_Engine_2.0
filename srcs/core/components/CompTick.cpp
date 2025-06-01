@@ -5,7 +5,7 @@
 bool CompBase::hasSisterComp( comp_type_e type ) const // TODO : move this logic to the EntityMngr, so that it can run in batches
 {
 	flog( _id );
-	return GetNttM->hasComp( type, _id );
+	return GetNttM->hasComp( _id, type );
 }
 
 bool CompBase::canTick() const // TODO : move this logic to the EntityMngr, so that it can run in batches
@@ -57,7 +57,7 @@ bool CompMovement::applyVelocity() // TODO : move this logic to the EntityMngr, 
 		qlog( "applyVelocity : transform component not found", ERROR, _id );
 		return false;
 	}
-	CompTransform *transComp = static_cast< CompTransform* >( GetNttM->getComp( CT_TRANSFORM, _id ));
+	CompTransform *transComp = static_cast< CompTransform* >( GetNttM->getComp( _id, CT_TRANSFORM ));
 
 	// NOTE : if there is velocity, apply it to the position
 	if( _lVel != 0 ){ transComp->movePosition( _lVel * GDTS() ); }
@@ -89,7 +89,7 @@ bool CompPhysics::applyGravity( vec2_t gravity )
 	}
 
 	// NOTE : getting the transform component
-	CompMovement *moveComp = static_cast< CompMovement* >( GetNttM->getComp( CT_TRANSFORM, _id ));
+	CompMovement *moveComp = static_cast< CompMovement* >( GetNttM->getComp( _id, CT_TRANSFORM ));
 
 	moveComp->moveAcceleration( gravity );
 

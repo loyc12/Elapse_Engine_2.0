@@ -15,8 +15,8 @@ int main()
 {
 	GetNG->switchState( ES_RUNNING );
 
-	//tester();
-	entrypoint();
+	tester();
+	//entrypoint();
 
 	GetNG->switchState( ES_CLOSED );
 

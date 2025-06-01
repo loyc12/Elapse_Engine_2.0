@@ -11,11 +11,6 @@ void OnEngineStart()
 
 	G_PlayerNtt = GetNttM->getNewEntity(); // NOTE : get the player entity with ID 1
 
-	for ( uint i = 0; i < 1000; ++i ) // TODO : find out why 200 entities segfaults EnityMngr::onDel()
-	{
-		GetNttM->addID(); // NOTE : add 1000 IDs to the EntityMngr
-	}
-
 	// TODO : add game specific code here
 }
 
@@ -36,6 +31,8 @@ void OnEnginePause()
 void OnEngineStop()
 {
 	flog( 0 );
+
+	delete G_PlayerNtt; // NOTE : delete the player entity
 
 	// TODO : add game specific code here
 }

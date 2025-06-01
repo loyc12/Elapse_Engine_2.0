@@ -26,7 +26,7 @@ typedef enum : comp_count_t
 
 inline bool IsValid( id_t id ){ return( id > 0 ); }
 inline bool IsValid( comp_type_e type ){ return( type < CT_COUNT ); }
-inline bool IsValid( comp_type_e type, id_t id )
+inline bool IsValid( id_t id, comp_type_e type )
 {
 	flog( 0 );
 	if ( !IsValid( id ) || !IsValid( type ))
@@ -55,7 +55,6 @@ class CompBase
 		inline CompBase( const CompBase &cpy ){ *this = cpy; }
 		inline CompBase &operator=( const CompBase &cpy )
 		{
-			flog( 0 );
 			this->_id = cpy._id;
 			return *this;
 		}

@@ -7,39 +7,35 @@
 # include "./components/CompMovement.hpp"
 # include "./components/CompPhysics.hpp"
 
-typedef array< CompBase, CT_COUNT > CmpArr_t; // NOTE : the components of a specific entity, indexed by comp_type_e
+typedef array< CompBase*, CT_COUNT > CmpArr_t; // NOTE : array of distinct components, indexed by type
 
-class Entity // NOTE : ease-of-access class aggregating components of a given entity's ID
+class Entity // NOTE : ease-of-access class aggregating the components of a given entity ID
 {
 	private:
 	// ================================ ATTRIBUTES
-		id_t     _id; //       NOTE : ID of the entity
-		CmpArr_t *_comps; //   NOTE : pointer to the components of the entity, indexed by comp_type_e
+		id_t     _id; //    NOTE : ID of the entity
+		CmpArr_t _comps; // NOTE : pointer to the components of the entity, indexed by comp_type_e
 
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
 		inline ~Entity() = default;
-		inline  Entity( id_t id, CmpArr_t *_comps ) : _id( id ), _comps( _comps )
-		{
-			flog( _id );
-			isValid();
-		}
+		inline  Entity( id_t id, CmpArr_t comps = CmpArr_t() ) : _id( id ), _comps( comps ){}
 
 		inline Entity( const Entity &cpy ){ *this = cpy; }
 		inline Entity &operator=( const Entity &cpy ){ _id = cpy._id; _comps = cpy._comps; return *this; }
 
 	// ================================ ACCESSORS / MUTATORS
 		inline id_t getID() const {  return _id; }
-		inline CmpArr_t *getComps(){ return _comps; }
+		inline CmpArr_t &getComps(){ return _comps; }
 
-		inline bool     usesComp( comp_type_e type ) const { return  ( *_comps )[ type ].isInit(); }
-		inline CompBase *getComp( comp_type_e type ){        return &( *_comps )[ type ]; }
+		inline bool     usesComp( comp_type_e type ) const { return _comps[ type ]->isInit(); }
+		inline CompBase *getComp( comp_type_e type ){        return _comps[ type ]; }
 
 		inline bool isValid() const
 		{
 			flog( _id );
 			if( _id == 0 ){ qlog( "isValid : an ID of 0 is not valid", WARN, 0 ); return false; }
-			if( _comps == nullptr ){ qlog( "isValid : entity has no components", WARN, _id ); return false; }
+			if( _comps[ 0 ] == nullptr ){ qlog( "isValid : entity has no components", WARN, _id ); return false; }
 			return true;
 		}
 
@@ -48,20 +44,21 @@ class Entity // NOTE : ease-of-access class aggregating components of a given en
 		{
 			flog( _id );
 			if( !IsValid( type )){ qlog( "initComp : invalid component type " + std::to_string( type ), ERROR, _id ); return; }
-			else {( *_comps )[ type ].init( _id ); }
+			else { _comps[ type ]->init( _id ); }
 		}
 		inline void deinitComp( comp_type_e type )
 		{
 			flog( _id );
 			if( !IsValid( type )){ qlog( "delComp : invalid component type " + std::to_string( type ), ERROR, _id ); return; }
-			else {( *_comps )[ type ].deinit(); }
+			else { _comps[ type ]->deinit(); }
 		}
-
 };
 
-typedef vector< CmpArr_t > CmpVec_t; //           NOTE : vector of component arrays, indexed by ID
-typedef array<  CmpVec_t, CT_COUNT > CmpTbl_t; // NOTE : component table, indexed first by comp_type_e and then ID
+typedef vector< CompBase > CmpVec_t; //           NOTE : vector of similar component, indexed by ID
+typedef array<  CmpVec_t, CT_COUNT > CmpTbl_t; // NOTE : table of component vectors, indexed first by type and then ID
 typedef std::set< id_t > id_set_t; //             NOTE : set of IDs for tracking used, active and freed IDs
+
+# define IS_ID_ACTIVE_BY_DEF true
 
 class EntityMngr
 {
@@ -84,6 +81,7 @@ class EntityMngr
 
 		void initTbl(); //   NOTE : (re)initializes the component table, setting the initial size
 		void resizeTbl(); // NOTE : updates the component table size, resizing vectors if necessary
+		void resetTbl(); //  NOTE : resets the component table, clearing all components and IDs
 
 		void resetAllComps(); //                        NOTE : resets all components, deinitializing them
 		void resetComps( id_t id ); //                  NOTE : resets all components of a given ID
@@ -96,7 +94,7 @@ class EntityMngr
 	public:
 	// ================================ CONSTRUCTORS / DESTRUCTORS
 		inline  EntityMngr(){ initTbl(); };
-		inline ~EntityMngr(){ initTbl(); };
+		inline ~EntityMngr(){ resetTbl(); };
 
 		// NOTE : prevent copying of the EntityMngr instance
 		inline EntityMngr(            const EntityMngr &cpy ) = delete;
@@ -108,15 +106,16 @@ class EntityMngr
 		inline id_set_t *getFreedIDs(){  return &_freedIDs; }
 
 	// ================================ ENTITY METHODS
-		bool delID( id_t id );
-		id_t addID();
+		bool freeID( id_t id );
+		id_t initID();
 
-		bool setActiveID( id_t id, bool activate );
-		bool isUsedID(    id_t id ) const; // NOTE : checks if an ID is used (   exists in the used IDs set )
-		bool isActiveID(  id_t id ) const; // NOTE : checks if an ID is active ( exists in the active IDs set )
-		bool isFreeID(    id_t id ) const; // NOTE : checks if an ID is free (   exists in the freed IDs set )
+		bool setActive( id_t id, bool activate );
+		bool isUsed(    id_t id ) const; // NOTE : checks if an ID is used (   exists in the used IDs set )
+		bool isActive(  id_t id ) const; // NOTE : checks if an ID is active ( exists in the active IDs set )
+		bool isFreed(   id_t id ) const; // NOTE : checks if an ID is free (   exists in the freed IDs set )
 
-		Entity getEntity( id_t id );
+		Entity *getNewEntity(); //       NOTE : allocates a new Entity with a new ID and its component pointers
+		Entity *getEntity( id_t id ); // NOTE : allocates a new Entity with the given ID and its component pointers
 
 	// ================================ COMPONENT METHODS
 		bool hasComp(      id_t id, comp_type_e type ) const; // NOTE : checks if a component of a given type for a given ID is initialized

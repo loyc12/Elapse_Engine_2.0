@@ -11,13 +11,27 @@ void EntityMngr::updateMaxID()
 	{
 		qlog( "updateMaxID : no used IDs, setting maxID to 0", DEBUG, 0 );
 
-		_freedIDs.clear(); // NOTE : clears the freed IDs, since there are no used IDs
+		_activeIDs.clear(); // NOTE : clears the active IDs, since there are no used IDs
+		_freedIDs.clear(); //  NOTE : clears the freed IDs,  since there are no used IDs
 		_maxID = 0;
+
+		resizeTbl(); // NOTE : resize the component table to the initial size
+		return;
 	}
 	else
 	{
-		_maxID = *std::max_element( _usedIDs.begin(), _usedIDs.end()); // NOTE : finds new maxID based on the used IDs
-		qlog( "updateMaxID : updated maxID to " + std::to_string( _maxID ), DEBUG, 0 );
+		id_t newMax = *std::max_element( _usedIDs.begin(), _usedIDs.end()); // NOTE : finds new maxID based on the used IDs
+
+		if ( newMax == _maxID )
+		{
+			qlog( "updateMaxID : maxID is already up to date", DEBUG, 0 );
+			return;
+		}
+		else
+		{
+			_maxID = newMax;
+			qlog( "updateMaxID : updated maxID to " + std::to_string( _maxID ), INFO, 0 );
+		}
 	}
 
 	auto it = _freedIDs.upper_bound( _maxID ); // NOTE : find the first element greater than _maxID
@@ -26,6 +40,7 @@ void EntityMngr::updateMaxID()
 			_freedIDs.erase( it, _freedIDs.end() ); // NOTE : erase all elements from 'it' to the end
 			qlog("updateMaxID : removed freed IDs greater than maxID", DEBUG, 0);
 	}
+	resizeTbl(); // NOTE : resize the component table if necessary
 }
 id_t EntityMngr::getNewID()
 {
@@ -34,8 +49,8 @@ id_t EntityMngr::getNewID()
 
 	if ( _freedIDs.empty() ) // NOTE : if there are no previously freed IDs, we need to get a brand a new one
 	{
-		qlog( "getNewID : no freed ID available, creating a new ID", DEBUG, 0 );
 		newID = ++_maxID; // NOTE : preincrementation also prevents giving ID 0, since it is reserved for invalid entities
+		qlog( "getNewID : no previously freed ID available, creating a new ID " + std::to_string( newID ), DEBUG, 0 );
 	}
 	else // NOTE : if there are previously freed IDs, we can reuse one of them
 	{
@@ -69,14 +84,14 @@ void EntityMngr::resizeTbl()
 	flog( 0 );
 
 
-	if( _CmpTblSize > TblGrpSize && _maxID < _CmpTblSize - TblGrpSize - 8 )
-	{ // NOTE : giving ourself some margin to avoid potential resizing issues
+	if( _CmpTblSize > TblGrpSize && _maxID < _CmpTblSize - TblGrpSize - 4 )
+	{ // NOTE : giving ourself some margin to avoid potential resizing back-and-forth issues
 
 		qlog( "resizeTbl : shrinking component tables", DEBUG, 0 );
 		_CmpTblSize -= TblGrpSize;
 	}
-	elif( _maxID >= _CmpTblSize - 4 )
-	{ // NOTE : giving ourself some margin to avoid potential resizing issues
+	elif( _maxID >= _CmpTblSize - 1 )
+	{
 
 		qlog( "resizeTbl : expanding component tables", DEBUG, 0 );
 		_CmpTblSize += TblGrpSize;
@@ -85,8 +100,17 @@ void EntityMngr::resizeTbl()
 
 	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ _CmpTbl[ type ].resize( _CmpTblSize ); }
 
-	qlog( "resizeTbl : resized all component tables", DEBUG, 0 );
+	qlog( "! resized all component tables !", INFO, 0 );
 }
+void EntityMngr::resetTbl()
+{
+	flog( 0 );
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ _CmpTbl[ type ].clear(); }
+
+	_CmpTblSize = 0; // NOTE : reset the component table size
+	qlog( "deinitTbl : deinitialized all component tables", INFO, 0 );
+}
+
 
 void EntityMngr::resetAllComps()
 {
@@ -126,13 +150,20 @@ void EntityMngr::resetComp( id_t id, comp_type_e type )
 {
 	flog( 0 );
 
-	if( !IsValid( type, id ))
+	if( !IsValid( id, type ))
 	{
 		qlog( "resetComp : invalid component type or ID", ERROR, 0 );
 		return;
 	}
 
-	_CmpTbl[ type ].at( id ).deinit();
+	CompBase *comp = getComp( id, type );
+	if( comp == nullptr )
+	{
+		qlog( "resetComp : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
+		return;
+	}
+	else { comp->deinit(); } // NOTE : deinitialize the component
+
 	qlog( "resetComp : reset component of type " + std::to_string( type ) + " for entity with ID " + std::to_string( id ), DEBUG, 0 );
 }
 
@@ -164,58 +195,45 @@ void EntityMngr::clearID( id_t id )
 
 // ================================ ENTITY METHODS
 
-bool EntityMngr::hasID( id_t id ) const
+bool EntityMngr::freeID( id_t id )
 {
 	flog( 0 );
 
 	if( !IsValid( id ))
 	{
-		qlog( "hasID : invalid ID " + std::to_string( id ), ERROR, 0 );
-		return false; // NOTE : if the ID is invalid, return false
-	}
-
-	bool exists = _usedIDs.find( id ) != _usedIDs.end(); // NOTE : check if the ID exists in the used IDs
-
-	qlog( "hasID : entity with ID " + std::to_string( id ) + ( exists ? " exists" : " does not exist" ), DEBUG, 0 );
-	return exists;
-}
-bool EntityMngr::delID( id_t id )
-{
-	flog( 0 );
-
-	if( !IsValid( id ))
-	{
-		qlog( "delID : ID cannot be 0", WARN, 0 );
+		qlog( "freeID : ID cannot be 0", WARN, 0 );
 		return false;
 	}
 
 	auto it = _usedIDs.find( id ); // NOTE : find the ID in the used IDs
 	if( it == _usedIDs.end()) //     NOTE : if the ID is not found, return false
 	{
-		qlog( "delID : entity with ID " + std::to_string( id ) + " does not exist", WARN, 0 );
+		qlog( "freeID : entity with ID " + std::to_string( id ) + " does not exist", WARN, 0 );
 		return false;
 	}
 
-	clearID( id ); // NOTE : clear the ID from all ID sets, then adds it to the freed IDs
-	updateMaxID(); // NOTE : update the maxID after deleting the entity
+	clearID( id ); // NOTE : clear the ID from the used and active sets, adding it to the freed set
+	updateMaxID();
 
-	qlog( "delID : deleted entity with ID " + std::to_string( id ), DEBUG, 0 );
 	return true;
 }
-id_t EntityMngr::addID()
+id_t EntityMngr::initID()
 {
 	flog( 0 );
-
 	id_t newID = getNewID();
-	_usedIDs.insert( newID );
 
-	qlog( "addID : added entity with ID " + std::to_string( newID ), DEBUG, 0 );
+	_usedIDs.insert( newID );
+	if ( IS_ID_ACTIVE_BY_DEF ){ _activeIDs.insert( newID ); }
+
+	resizeTbl(); // NOTE : resize the component table if necessary
+
+	qlog( "addID : initialized ID " + std::to_string( newID ), DEBUG, 0 );
 	return newID;
 }
 
 
 
-bool EntityMngr::setActivity( id_t id, bool activate )
+bool EntityMngr::setActive( id_t id, bool activate )
 {
 	flog( 0 );
 
@@ -225,71 +243,65 @@ bool EntityMngr::setActivity( id_t id, bool activate )
 		return false;
 	}
 
-	if( !hasID( id )) // NOTE : if the entity does not exist, return false
+	if( !isUsed( id )) // NOTE : if the ID is not used, return false
 	{
-		qlog( "setActivity : entity with ID " + std::to_string( id ) + " does not exist", WARN, 0 );
+		qlog( "setActivity : entity does not exist", WARN, id );
 		return false;
 	}
-
-	if( activate ) // NOTE : if we want to activate the entity
+	if( activate ) // NOTE : if the entity is being activated
 	{
-		if( isActive( id )) // NOTE : if the entity is already active, return true
+		if( isActive( id )) // NOTE : if the entity is already active, return false
 		{
-			qlog( "setActivity : entity with ID " + std::to_string( id ) + " is already active", DEBUG, 0 );
+			qlog( "setActivity : entity already active", DEBUG, id );
 			return false;
 		}
-		else // NOTE : if the entity is not active, just log and return true
-		{
-			_activeIDs.insert( id ); // NOTE : add the ID to the active IDs
 
-			qlog( "setActivity : activated entity with ID " + std::to_string( id ), DEBUG, 0 );
-			return true;
-		}
+		_activeIDs.insert( id ); // NOTE : add the ID to the active IDs
+		qlog( "setActivity : entity activated", DEBUG, id );
 	}
-	else // NOTE : if we want to deactivate the entity
+	else // NOTE : if the entity is being deactivated
 	{
-		if( !isActive( id )) // NOTE : if the entity is already inactive, return true
+		if( !isActive( id )) // NOTE : if the entity is not active, return false
 		{
-			qlog( "setActivity : entity with ID " + std::to_string( id ) + " is already inactive", DEBUG, 0 );
+			qlog( "setActivity : entity is already inactive", DEBUG, id );
 			return false;
 		}
-		else // NOTE : if the entity is active, just log and return true
-		{
-			_activeIDs.erase( id ); // NOTE : remove the ID from the active IDs
 
-			qlog( "setActivity : deactivated entity with ID " + std::to_string( id ), DEBUG, 0 );
-			return true;
-		}
+		_activeIDs.erase( id ); // NOTE : remove the ID from the active IDs
+		qlog( "setActivity : entity deactivated", DEBUG, id );
 	}
+	return true;
 }
-bool EntityMngr::isActive( id_t id ) const
+bool EntityMngr::isUsed( id_t id ) const // NOTE : check if the ID is in the used IDs
 {
 	flog( 0 );
-	bool active = _activeIDs.find( id ) != _activeIDs.end(); // NOTE : check if the ID is in the active IDs
-
-	qlog( "isActive : entity with ID " + std::to_string( id ) + ( active ? " is active" : " is inactive" ), DEBUG, 0 );
-	return active;
+	return _usedIDs.find( id ) != _usedIDs.end();
 }
-bool EntityMngr::isFreeID( id_t id ) const
+bool EntityMngr::isActive( id_t id ) const // NOTE : check if the ID is in the active IDs
 {
 	flog( 0 );
-	bool freed = _freedIDs.find( id ) != _freedIDs.end(); // NOTE : check if the ID is in the freed IDs
-
-	qlog( "isFreeID : ID " + std::to_string( id ) + ( freed ? " is free" : " is not free" ), DEBUG, 0 );
-	return freed;
+	return _activeIDs.find( id ) != _activeIDs.end();
+}
+bool EntityMngr::isFreed( id_t id ) const // NOTE : check if the ID is in the freed IDs
+{
+	flog( 0 );
+	return _freedIDs.find( id ) != _freedIDs.end();
 }
 
 
 
 Entity *EntityMngr::getNewEntity()
 {
-	id_t newID = addID();
-	flog( newID );
+	flog( 0 );
 
-	_NttMap[ newID ] = new Entity( newID, false ); // NOTE : create a new entity with the new ID and add it to the NttMap
-	qlog( "getEntity : returning new entity with ID " + std::to_string( newID ), DEBUG, 0 );
+	id_t newID = initID(); // NOTE : get a new ID for the entity
+	if( newID == 0 )
+	{
+		qlog( "getNewEntity : failed to get a new ID", ERROR, 0 );
+		return nullptr; // NOTE : return an invalid entity
+	}
 
-	return _NttMap[ newID ];
+	return getEntity( newID ); // NOTE : create a new entity with the new ID
 }
 Entity *EntityMngr::getEntity( id_t id )
 {
@@ -298,141 +310,39 @@ Entity *EntityMngr::getEntity( id_t id )
 	if( !IsValid( id ))
 	{
 		qlog( "getEntity : ID cannot be 0", WARN, 0 );
-		return nullptr;
+		return nullptr; // NOTE : return an invalid entity
 	}
-	if( !hasID( id ))
+	if( !isUsed( id )) // NOTE : if the ID is not used, return an invalid entity
 	{
 		qlog( "getEntity : entity with ID " + std::to_string( id ) + " does not exist", WARN, 0 );
-		return nullptr;
-	}
-	if( !hasNttPtr( id )) // NOTE : if the entity is not stored in the NttMap, create a new entity
-	{
-		qlog( "getEntity : entity with ID " + std::to_string( id ) + " does not exist in the NttMap, creating a new entity", DEBUG, 0 );
-		_NttMap[ id ] = new Entity( id, false );
+		return nullptr; // NOTE : return an invalid entity
 	}
 
-	qlog( "getEntity : returning entity with ID " + std::to_string( id ), DEBUG, 0 );
-	return _NttMap[ id ];
-}
+	// NOTE : copy the components of the entity from the component table
+	CmpArr_t comps = CmpArr_t();
+	for( comp_count_t type = 0; type < CT_COUNT; ++type ) { comps[ type ] = &( _CmpTbl[ type ][ id ]); }
 
-bool EntityMngr::hasNttPtr( id_t id ) const
-{
-	flog( 0 );
-
-	if( !IsValid( id )){ return false; }
-	bool exists = _NttMap.find( id ) != _NttMap.end();
-
-	qlog( "hasNttPtr : entity with ID " + std::to_string( id ) + ( exists ? " exists in the NttMap" : " does not exist in the NttMap" ), DEBUG, 0 );
-	return exists;
-}
-bool EntityMngr::storeNttPtr( Entity *entity )
-{
-	if( entity == nullptr )
-	{
-		qlog( "storeNttPtr : entity cannot be nullptr", ERROR, 0 );
-		return false;
-	}
-	flog( entity->getID() );
-
-	_NttMap[ entity->getID() ] = entity; // NOTE : store the entity in the NttMap
-	entity->setIsInMngr( true );
-
-	qlog( "storeNttPtr : stored entity with ID " + std::to_string( entity->getID() ), DEBUG, 0 );
-	return true;
-}
-bool EntityMngr::removeNttPtr( id_t id )
-{
-	flog( id );
-
-	if( !IsValid( id )){   return false; }
-	if( !hasNttPtr( id )){ return false; }
-
-	auto it = _NttMap.find( id ); // NOTE : find the entity in the NttMap
-	if( it == _NttMap.end()) // NOTE : if the entity is not found, return false
-	{
-		qlog( "removeNttPtr : entity with ID " + std::to_string( id ) + " does not exist in the NttMap", WARN, 0 );
-		return false;
-	}
-	delete it->second;
-	it->second = nullptr;
-	_NttMap.erase( it );
-
-	qlog( "removeNttPtr : removed entity with ID " + std::to_string( id ), DEBUG, 0 );
-	return true;
-}
-void EntityMngr::clearAllNtts()
-{
-	flog( 0 );
-
-	for( auto &pair : _NttMap )
-	{
-		delete pair.second;
-	}
-	_NttMap.clear();
-
-	qlog( "clearAllNtts : cleared all entities from the NttMap", DEBUG, 0 );
+	qlog( "getEntity : created entity with ID " + std::to_string( id ), DEBUG, 0 );
+	return new Entity( id, comps ); // NOTE : return the entity with the components
 }
 
 // ================================ COMPONENT METHODS
 
-void EntityMngr::updateAllComps()
-{
-	flog( 0 );
-	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ updateCompsByType( comp_type_e( type )); } // NOTE : update all components by type
-
-	qlog( "updateAllComponents : updated all components", DEBUG, 0 );
-}
-void EntityMngr::updateCompsByType( comp_type_e type )
+bool EntityMngr::hasComp( id_t id, comp_type_e type ) const
 {
 	flog( 0 );
 
-	if( !IsValid( type )) // NOTE : if the type is invalid, return
-	{
-		qlog( "updateCompsByType : invalid component type " + std::to_string( type ), ERROR, 0 );
-		return;
-	}
-
-	for( id_t id = 1; id <= _maxID; ++id ) // NOTE : iterate through all IDs from 1 to maxID
-	{
-		if( !isActive( id )){ continue; } //                 NOTE : if the entity is not active,  skip to the next ID
-		if( !_CmpTbl[ type ][ id ].isInit()){ continue; } // NOTE : if the component is not init, skip to the next ID
-
-		qlog( "updateCompsByType : updating component of type " + std::to_string( type ) + " for entity with ID " + std::to_string( id ), DEBUG, 0 );
-		// _CmpTbl[ type ][ id ].onTick(); // NOTE : call the onTick method of the component   TODO : find another way to call the tick method, since its not supposed to be virtual for performance reasons
-	}
-}
-
-
-
-bool EntityMngr::hasComp( comp_type_e type, id_t id ) const
-{
-	flog( 0 );
-
-	if( !IsValid( type, id )){  return false; }
+	if( !IsValid( id, type )){  return false; }
 	bool exists = _CmpTbl[ type ][ id ].isInit();
 
 	qlog( "hasComp : component of type " + std::to_string( type ) + ( exists ? " exists for entity with ID " + std::to_string( id ) : " does not exist for entity with ID " + std::to_string( id )), DEBUG, 0 );
 	return exists;
 }
-bool EntityMngr::delComp( comp_type_e type, id_t id )
+bool EntityMngr::initComp( id_t id, comp_type_e type )
 {
 	flog( 0 );
 
-	if( !IsValid( type, id )){  return false; }
-	if( !_CmpTbl[ type ][ id ].isInit())
-	{
-		qlog( "delComp : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
-		return false;
-	}
-
-	_CmpTbl[ type ][ id ].deinit();
-	return true;
-}
-bool EntityMngr::addComp( comp_type_e type, id_t id )
-{
-	flog( 0 );
-
-	if( !IsValid( type, id )){  return false; }
+	if( !IsValid( id, type )){  return false; }
 	if( _CmpTbl[ type ][ id ].isInit())
 	{
 		qlog( "addComp : component of type " + std::to_string( type ) + " already exists for entity with ID " + std::to_string( id ), DEBUG, 0 );
@@ -442,35 +352,30 @@ bool EntityMngr::addComp( comp_type_e type, id_t id )
 	_CmpTbl[ type ][ id ].init( id );
 	return true;
 }
-
-
-
-CompBase *EntityMngr::getComp( comp_type_e type, id_t id )
+bool EntityMngr::deinitComp( id_t id, comp_type_e type )
 {
 	flog( 0 );
 
-	if( !IsValid( type, id )){  return nullptr; }
+	if( !IsValid( id, type )){  return false; }
+	if( !_CmpTbl[ type ][ id ].isInit())
+	{
+		qlog( "delComp : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
+		return false;
+	}
+
+	_CmpTbl[ type ][ id ].deinit();
+	return true;
+}
+CompBase *EntityMngr::getComp( id_t id, comp_type_e type )
+{
+	flog( 0 );
+
+	if( !IsValid( id, type )){  return nullptr; }
 	if( !_CmpTbl[ type ][ id ].isInit())
 	{
 		qlog( "getComp : component of type " + std::to_string( type ) + " does not exist for entity with ID " + std::to_string( id ), DEBUG, 0 );
 		return nullptr;
 	}
 
-	return &(_CmpTbl[ type ][ id ]);
-}
-CmpVec_t EntityMngr::getAllComps( id_t id )
-{
-	flog( 0 );
-	CmpVec_t comps = CmpVec_t(); // NOTE : create a new vector
-	comps.resize( CT_COUNT );
-
-	if( !IsValid( id )) // NOTE : if the ID is invalid, return an empty component table
-	{
-		qlog( "getAllComps : ID cannot be 0", WARN, 0 );
-		for( comp_count_t type = 0; type < CT_COUNT; ++type ){ comps[ type ] = CompBase(); } // NOTE : fill the component table with nullptrs
-		return comps;
-	}
-
-	for( comp_count_t type = 0; type < CT_COUNT; ++type ){ comps[ type ] = _CmpTbl[ type ][ id ]; }
-	return comps;
+	return &( _CmpTbl[ type ][ id ]);
 }
