@@ -16,6 +16,18 @@ class CompTransform : public CompBase
 		inline CompTransform( id_t NttID = 0, vec2_t pos = { 0, 0 }, vec2_t scale = { 1, 1 }, angle_t angle = 0 ) :
 			CompBase( NttID ), _pos( pos ), _sizes( scale ), _angle( angle ){ flog( NttID ); }
 
+		inline CompTransform( const CompTransform &cpy ) : CompBase( cpy ){ *this = cpy; }
+		inline CompTransform &operator=( const CompTransform &cpy )
+		{
+			if( this != &cpy )
+			{
+				_pos   = cpy._pos;
+				_sizes = cpy._sizes;
+				_angle = cpy._angle;
+			}
+			return *this;
+		}
+
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getType(){ return CT_TRANSFORM; }
 
@@ -31,6 +43,13 @@ class CompTransform : public CompBase
 		inline angle_t getAngle() const { return _angle; }
 		inline void setAngle(  angle_t angle ){ _angle  = angle; }
 		inline void moveAngle( angle_t delta ){ _angle += delta; }
+
+		// ================================ FRIEND METHODS
+		inline friend std::ostream &operator<<( std::ostream &os, const CompTransform &ct )
+		{
+			os << "CompTransform : [ ID: " << ct._id << ", pos: " << ct._pos << ", sizes: " << ct._sizes << ", angle: " << ct._angle << " ]";
+			return os;
+		}
 };
 
 #endif // COMP_TRANSFORM_HPP

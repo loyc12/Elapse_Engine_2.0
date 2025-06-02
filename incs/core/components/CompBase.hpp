@@ -14,7 +14,7 @@ typedef enum : comp_count_t
 	CT_TEXT, //      NOTE : text rendering ( font, size, color, etc. )
 	CT_AUDIO, //     NOTE : sound effects, volume, pitch, etc.
 	CT_SPRITE, //    NOTE : animated texture ( sprite sheet, frame rate, etc. )
-	CT_GRAPHICS, //  NOTE : visual rendering ( sprite, texture, etc. )
+	CT_SHAPE, //     NOTE : visual rendering
 
 	// NOTE : add more component types as needed
 
@@ -25,7 +25,6 @@ typedef enum : comp_count_t
 
 inline string to_string( comp_type_e type )
 {
-	flog( 0 );
 	switch( type )
 	{
 		case CT_TRANSFORM: return "CT_TRANSFORM";
@@ -36,7 +35,7 @@ inline string to_string( comp_type_e type )
 		case CT_TEXT:      return "CT_TEXT";
 		case CT_AUDIO:     return "CT_AUDIO";
 		case CT_SPRITE:    return "CT_SPRITE";
-		case CT_GRAPHICS:  return "CT_GRAPHICS";
+		case CT_SHAPE:     return "CT_SHAPE";
 
 		case CT_COUNT:     return "CT_COUNT";
 		case CT_BASE:      return "CT_BASE";
@@ -72,13 +71,8 @@ class CompBase
 			if( IsValid( NttID )){ init( NttID ); }
 			else { _id = 0; }
 		}
-
 		inline CompBase( const CompBase &cpy ){ *this = cpy; }
-		inline CompBase &operator=( const CompBase &cpy )
-		{
-			this->_id = cpy._id;
-			return *this;
-		}
+		inline CompBase &operator=( const CompBase &cpy ){ _id = cpy._id; return *this; }
 
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getType(){ return CT_BASE; } // NOTE : base type, should be defined in derived classes
@@ -98,8 +92,16 @@ class CompBase
 
 		// ================================ TICK METHODS
 
-		 // TODO : move this logic to the EntityMngr, so that it can run in batches
-		bool hasSisterComp( comp_type_e type ) const;   bool canTick() const;
+		// NOTE : these redirect to the EntityMngr's methods
+		bool hasSisterComp( comp_type_e type ) const;
+		bool canEntityTick() const;
+
+		// ================================ FRIEND METHODS
+		inline friend std::ostream &operator<<( std::ostream &os, const CompBase &cb )
+		{
+			os << "CompBase : [ ID: " << cb._id << " ]";
+			return os;
+		}
 };
 
 #endif // COMP_BASE_HPP

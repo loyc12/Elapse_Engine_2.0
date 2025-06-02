@@ -67,6 +67,7 @@ void ScreenMngr::refresh()
 		BeginMode2D( _camera );
 		{
 			OnRenderWorld(); // from injectors.hpp
+			GetNttM->tickGraphics();
 		}
 		EndMode2D();
 		OnRenderEnd(); // from injectors.hpp

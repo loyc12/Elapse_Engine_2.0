@@ -182,4 +182,6 @@ class Colour
 
 typedef Colour col_t;
 
+# define DEF_COLOUR col_t( 255, 255, 255, 255 ) // NOTE : white with full opacity
+
 #endif // COLOUR_HPP

@@ -6,6 +6,7 @@
 # include "./components/CompTransform.hpp"
 # include "./components/CompMovement.hpp"
 # include "./components/CompPhysics.hpp"
+# include "./components/CompShape.hpp"
 
 typedef array< CompBase*, CT_COUNT > CmpArr_t; // NOTE : array of distinct components, indexed by type
 
@@ -118,7 +119,7 @@ class EntityMngr
 		Entity *getEntity( id_t id ); // NOTE : allocates a new Entity with the given ID and its component pointers
 
 	// ================================ COMPONENT METHODS
-		bool canTick( id_t id ) const; //                        NOTE : checks if a given entity can tick
+		bool canEntityTick( id_t id ) const; //                  NOTE : checks if a given entity can tick
 		bool canTick( id_t id, comp_type_e type ) const; //      NOTE : checks if a component of a given type for a given ID can tick
 
 		bool hasComp(      id_t id, comp_type_e type ) const; // NOTE : checks if a component of a given type for a given ID is initialized
@@ -129,9 +130,12 @@ class EntityMngr
 	// ================ TICK METHODS
 		bool tickCompsByType( comp_type_e type );
 
+		bool tickPhysics(); // NOTE : tick all movement components
+		bool tickGraphics();
+
 	private:
-		bool tickMovements(); // NOTE : tick all movement components
 		bool applyMovement( id_t id, CompMovement *cm, CompTransform *ct ); // NOTE : tick a specific movement component
+		bool renderShape( id_t id, CompShape *cs, CompTransform *ct ); // NOTE : tick a specific shape component
 };
 
 #endif // ENTITY_MNGR_HPP

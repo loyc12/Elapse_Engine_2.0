@@ -67,7 +67,6 @@ class Pos2
 		inline Pos2 getNormalizedCpy() const { Pos2 r = Pos2( *this ).normalize(); return r; }
 		inline Pos2 &normalize()
 		{
-			flog( 0 );
 			fixed_t len = this->getLen();
 
 			if ( len == 0 ) // NOTE : zero-div protection
@@ -87,7 +86,6 @@ class Pos2
 		inline Pos2 getRotatedCpy( Angle a ) const { Pos2 r = Pos2( *this ).rotateBy( a ); return r; }
 		inline Pos2 &rotateBy(     Angle a )
 		{
-			flog( 0 );
 			if ( a == 0 ) { return *this; } // NOTE : skiping the maths
 
 			a += Angle( *this ); // finding the resulting angle after rotation

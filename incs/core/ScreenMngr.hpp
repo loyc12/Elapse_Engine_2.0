@@ -116,11 +116,11 @@ class ScreenMngr
 		inline vec2_t  getBotRight() const { return GetScreenToWorld2D({ getWidth(),    getCenter().y }, _camera ); }
 
 	// ================================ ENTITY TRACKING METHODS
-		//inline Entity *getTrackedEntity() const { return _trackedEntity; }
-		//inline bool    isTracking()       const { return _trackedEntity != nullptr; }
+	//inline Entity *getTrackedEntity() const { return _trackedEntity; }
+	//inline bool    isTracking()       const { return _trackedEntity != nullptr; }
 
-		//bool trackEntity( Entity *obj, bool overrideTracking = false );
-		//bool untrackEntity();
+	//bool trackEntity( Entity *obj, bool overrideTracking = false );
+	//bool untrackEntity();
 
 	// ================================ DRAWING METHODS
 		void putPoin( vec2_t pos,                       col_t colour = WHITE );
@@ -133,12 +133,24 @@ class ScreenMngr
 		void putRectCorn( vec2_t p1,  vec2_t  p2,       col_t colour = WHITE, bool fill = true );
 		void putCircSect( vec2_t pos, fixed_t radius, angle_t start, angle_t end, col_t colour = WHITE, bool fill = true );
 
-		//void putRectTurn( vec2_t pos, vec2_t sizes, angle_t angle,               col_t colour = WHITE, bool fill = true  ); // TODO : implement me
-		//void putOval(     vec2_t pos, vec2_t sizes, angle_t angle,               col_t colour = WHITE, bool fill = true  ); // TODO : implement me
-		//void putPoly(     vec2_t pos, vec2_t sizes, angle_t angle, byte_t sideC, col_t colour = WHITE, bool fill = true  ); // TODO : implement me
+	//void putRectTurn( vec2_t pos, vec2_t sizes, angle_t angle,               col_t colour = WHITE, bool fill = true  ); // TODO : implement me
+	//void putOval(     vec2_t pos, vec2_t sizes, angle_t angle,               col_t colour = WHITE, bool fill = true  ); // TODO : implement me
+	//void putPoly(     vec2_t pos, vec2_t sizes, angle_t angle, byte_t sideC, col_t colour = WHITE, bool fill = true  ); // TODO : implement me
 
-		//void putForm( vec2_arr_t points, col_t colour = WHITE, bool fill = true, bool checkOrder = true );// TODO : implement me
+	//void putForm( vec2_arr_t points, col_t colour = WHITE, bool fill = true, bool checkOrder = true );// TODO : implement me
+		void putShape( const shape_t &shape, bool fill = true, bool checkOrder = true )
+		{
+			flog( 0 );
+			vec2_arr_t verts = shape.getWorldVerts();
+
+			qlog( "putShape : drawing shape with " + std::to_string( verts.size() ) + " vertices", DEBUG, 0 );
+			for( size_t i = 0; i < verts.size(); i++ )
+			{
+				vec2_t p1 = verts[ i ];
+				vec2_t p2 = verts[( i + 1 ) % verts.size() ];
+				putTria( p1, p2, shape.getCenter(), shape._colour, fill, checkOrder );
+			}
+		}
 };
-
 
 #endif // SCREEN_MNGR_HPP

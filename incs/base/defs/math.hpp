@@ -107,7 +107,6 @@ struct Operate
 
 	inline static T mod(  const T &a, const U &b ) // Sign variable modulus ( will ltake the sign of a )
 	{
-		flog( 0 );
 		if( b == 0 ) // Ensures this is 0-div safe
 		{
 			qlog( "Operate : Modulo by zero : voiding value", ERROR, 0 );
@@ -117,14 +116,12 @@ struct Operate
 	}
 	inline static T pmod( const T &a, const U &b ) // Strickly positive modulus
 	{
-		flog( 0 );
 		T res = Operate::mod( a, b );
 		if( res < 0 ) res += Operate::abs( b ); // Ensures the result is positive
 		return res;
 	}
 	inline static T nmod ( const T &a, const U &b ) // Strickly negative modulus
 	{
-		flog( 0 );
 		T res = Operate::mod( a, b );
 		if( res > 0 ) res -= Operate::abs( b ); // Ensures the result is negative
 		return res;

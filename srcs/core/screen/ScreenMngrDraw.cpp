@@ -7,7 +7,7 @@ void ScreenMngr::putPoin( vec2_t pos, col_t colour )
 	flog( 0 );
 	if ( pos.x < 0 || pos.x > _screenSize.x || pos.y < 0 || pos.y > _screenSize.y )
 	{
-		qlog( "putPoin : point is out of bounds", WARN, 0 );
+		qlog( "putPoin : point is out of bounds" + to_string( pos ), DEBUG, 0 );
 		return;
 	}
 	DrawPixel( pos.x, pos.y, colour );

@@ -11,6 +11,10 @@ void OnEngineStart()
 
 	G_PlayerNtt = GetNttM->getNewEntity(); // NOTE : get the player entity with ID 1
 
+	G_PlayerNtt->initComp( CT_TRANSFORM ); // NOTE : initialize the transform component
+	G_PlayerNtt->initComp( CT_MOVEMENT );  // NOTE : initialize the movement component
+	G_PlayerNtt->initComp( CT_SHAPE );     // NOTE : initialize the shape component
+
 	// TODO : add game specific code here
 }
 

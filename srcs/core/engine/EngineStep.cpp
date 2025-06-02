@@ -42,9 +42,11 @@ void Engine::runStep()
 
 	_DT = updateDeltaTime();
 
+//_eventMngr->readInputs();
+
 	OnReadInputs(); // from injectors.hpp // TODO : put in EventManager::readInputs()
 	{
-		// TODO : implement game loop logic here
+		GetNttM->tickPhysics(); // NOTE : tick the movement components
 	}
 	_screenMngr->refresh();
 

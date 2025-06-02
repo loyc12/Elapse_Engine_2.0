@@ -20,6 +20,18 @@ class CompPhysics : public CompBase
 		inline CompPhysics( id_t NttID = 0, fixed_t mass = COMP_DEF_MASS, fixed_t fric = COMP_DEF_FRIC, fixed_t elas = COMP_DEF_ELAS ) :
 			CompBase( NttID ), _mass( mass ), _fric( fric ), _elas( elas ){}
 
+		inline CompPhysics( const CompPhysics &cpy ) : CompBase( cpy ){ *this = cpy; }
+		inline CompPhysics &operator=( const CompPhysics &cpy )
+		{
+			if( this != &cpy )
+			{
+				_mass	= cpy._mass;
+				_fric = cpy._fric;
+				_elas = cpy._elas;
+			}
+			return *this;
+		}
+
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getType(){ return CT_PHYSICS; }
 
@@ -38,12 +50,12 @@ class CompPhysics : public CompBase
 		inline void moveFriction(  fixed_t  delta ){ _fric = Opfx::clmp( _fric + delta,  0.0f, 1.0f ); }
 		inline void scaleFriction( fixed_t factor ){ _fric = Opfx::clmp( _fric * factor, 0.0f, 1.0f ); }
 
-	// ================================ TICK METHODS
-
-		// TODO : move this logic to the EntityMngr, so that it can run in batches
-		bool applyGravity( vec2_t gravity = { 0.0f, 9.81f } );
-	//bool applyFriction( vec2_t surfaceNormal, fixed_t surfaceFric = COMP_DEF_FRIC );
-	//bool applyBounce(   vec2_t surfaceNormal, fixed_t surfaceElas = COMP_DEF_ELAS );
+		// ================================ FRIEND METHODS
+		inline friend std::ostream &operator<<( std::ostream &os, const CompPhysics &cp )
+		{
+			os << "CompPhysics : [ ID: " << cp._id << ", mass: " << cp._mass << ", friction: " << cp._fric << ", elasticity: " << cp._elas << " ]";
+			return os;
+		}
 };
 
 #endif // COMP_PHYSICS_HPP

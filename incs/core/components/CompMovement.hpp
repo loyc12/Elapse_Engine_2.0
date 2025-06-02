@@ -17,6 +17,19 @@ class CompMovement : public CompBase
 		inline CompMovement( id_t NttID = 0, vec2_t lVel = { 0, 0 }, vec2_t lAcc = { 0, 0 }, angle_t rVel = 0, angle_t rAcc = 0 ) :
 			CompBase( NttID ), _lVel( lVel ), _lAcc( lAcc ), _rVel( rVel ), _rAcc( rAcc ){ flog( NttID ); }
 
+		inline CompMovement( const CompMovement &cpy ) : CompBase( cpy ){ *this = cpy; }
+		inline CompMovement &operator=( const CompMovement &cpy )
+		{
+			if( this != &cpy )
+			{
+				_lVel = cpy._lVel;
+				_lAcc = cpy._lAcc;
+				_rVel = cpy._rVel;
+				_rAcc = cpy._rAcc;
+			}
+			return *this;
+		}
+
 	// ================================ ACCESSORS / MUTATORS
 		inline static comp_type_e getType(){ return CT_MOVEMENT; }
 
@@ -36,8 +49,12 @@ class CompMovement : public CompBase
 		inline void  setRotAcceleration( angle_t  rAcc ){ _rAcc  = rAcc; }
 		inline void moveRotAcceleration( angle_t delta ){ _rAcc += delta; }
 
-	// ================================ TICK METHODS
-		bool applyVelocity(); // TODO : move this logic to the EntityMngr, so that it can run in batches
+		// ================================ FRIEND METHODS
+		inline friend std::ostream &operator<<( std::ostream &os, const CompMovement &cm )
+		{
+			os << "CompMovement : [ ID: " << cm._id << ", lVel: " << cm._lVel << ", lAcc: " << cm._lAcc << ", rVel: " << cm._rVel << ", rAcc: " << cm._rAcc << " ]";
+			return os;
+		}
 };
 
 #endif // COMP_MOVEMENT_HPP

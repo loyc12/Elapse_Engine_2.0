@@ -1,9 +1,9 @@
 #include "../../../incs/base.hpp"
 
-bool Shape::delVert( int16_t i )
+bool Shape::delVert( uint16_t i )
 {
 	flog( 0 );
-	if ( i < 0 || i >= getVertC() )
+	if ( i >= getVertC() )
 	{
 		qlog( "Shape::delVert : index out of bounds", WARN, 0 );
 		return false;
@@ -25,25 +25,6 @@ bool Shape::addVert( const vec2_t &v )
 	return true;
 }
 
-bool Shape::copyVerts( const vec2_arr_t &verts )
-{
-	flog( 0 );
-	bool copiedAll = true;
-
-	for ( int16_t i = 0; i < int16_t (verts.size() ); i++ )
-	{
-		if ( getVertC() >= MAX_VERT_COUNT )
-		{
-			qlog( "Shape::copyVerts : MAX_VERT_COUNT reached : cannot add any more", ERROR, 0 );
-			copiedAll = false;
-			break;
-		}
-		_verts.push_back( verts[ i ]);
-	}
-	sortVerts();
-	return copiedAll;
-}
-
 bool Shape::sortVerts() // TODO : make sure this works
 {
 	flog( 0 );
@@ -56,8 +37,27 @@ bool Shape::scaleVerts( const fixed_t &scale )
 {
 	flog( 0 );
 	if ( getVertC() == 0 ) { return false; }
-	for ( int16_t i = 0; i < getVertC(); i++ ){ _verts[ i ] *= scale; }
+	for ( uint16_t i = 0; i < getVertC(); i++ ){ _verts[ i ] *= scale; }
 	return true;
+}
+
+vec2_arr_t Shape::getWorldVerts() const
+{
+	flog( 0 );
+	vec2_arr_t worldVerts;
+
+	if( getVertC() == 0 ) { return worldVerts; } // NOTE : if there are no vertices, return an empty vector
+	if( getVertC() > MAX_VERT_COUNT )
+	{
+		qlog( "Shape::getWorldVerts : too many vertices, returning empty vector", ERROR, 0 );
+		return worldVerts; // NOTE : if there are too many vertices, return an empty vector
+	}
+	for( uint16_t i = 0; i < getVertC(); i++ )
+	{
+		vec2_t rotatedVert = _verts[ i ];
+		worldVerts.push_back( rotatedVert.rotateBy( _angle ) + _centre );
+	}
+	return worldVerts;
 }
 
 // ============================ SHAPE METHODS
@@ -70,7 +70,7 @@ fixed_t Shape::getWidth() const
 	fixed_t minX = _verts[ 0 ].x;
 	fixed_t maxX = _verts[ 0 ].x;
 
-	for ( int16_t i = 1; i < getVertC(); i++ )
+	for ( uint16_t i = 1; i < getVertC(); i++ )
 	{
 		if ( _verts[ i ].getX() < minX ) { minX = _verts[ i ].getX(); }
 		if ( _verts[ i ].getX() > maxX ) { maxX = _verts[ i ].getX(); }
@@ -85,7 +85,7 @@ fixed_t Shape::getHeight() const
 	fixed_t minY = _verts[ 0 ].y;
 	fixed_t maxY = _verts[ 0 ].y;
 
-	for ( int16_t i = 1; i < getVertC(); i++ )
+	for ( uint16_t i = 1; i < getVertC(); i++ )
 	{
 		if ( _verts[ i ].getY() < minY ) { minY = _verts[ i ].getY(); }
 		if ( _verts[ i ].getY() > maxY ) { maxY = _verts[ i ].getY(); }
@@ -102,7 +102,7 @@ fixed_t Shape::getRotatedWidth() const
 	fixed_t minX = vert.x;
 	fixed_t maxX = vert.x;
 
-	for ( int16_t i = 1; i < getVertC(); i++ )
+	for ( uint16_t i = 1; i < getVertC(); i++ )
 	{
 		vert = _verts[ i ].getRotatedCpy( _angle );
 		if ( vert.getX() < minX ) { minX = vert.getX(); }
@@ -119,7 +119,7 @@ fixed_t Shape::getRotatedHeight() const
 	fixed_t minY = vert.y;
 	fixed_t maxY = vert.y;
 
-	for ( int16_t i = 1; i < getVertC(); i++ )
+	for ( uint16_t i = 1; i < getVertC(); i++ )
 	{
 		vert = _verts[ i ].getRotatedCpy( _angle );
 		if ( vert.getY() < minY ) { minY = vert.getY(); }
@@ -134,9 +134,9 @@ fixed_t Shape::getArea() const
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t area = 0;
 
-	for ( int16_t i = 0; i < getVertC(); i++ )
+	for ( uint16_t i = 0; i < getVertC(); i++ )
 	{
-		int16_t j = ( i + 1 ) % getVertC();
+		uint16_t j = ( i + 1 ) % getVertC();
 		area += ( _verts[ i ].getX() * _verts[ j ].getY() ) - ( _verts[ j ].getX() * _verts[ i ].getY() );
 	}
 	return area / 2;
@@ -147,9 +147,9 @@ fixed_t Shape::getPerimeter() const
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t perimeter = 0;
 
-	for ( int16_t i = 0; i < getVertC(); i++ )
+	for ( uint16_t i = 0; i < getVertC(); i++ )
 	{
-		int16_t j = ( i + 1 ) % getVertC();
+		uint16_t j = ( i + 1 ) % getVertC();
 		perimeter += _verts[ i ].getDist( _verts[ j ] );
 	}
 	return perimeter;
@@ -161,7 +161,7 @@ fixed_t Shape::getMinRadius() const
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t minRadius = _verts[ 0 ].getDist( _centre );
 
-	for ( int16_t i = 1; i < getVertC(); i++ )
+	for ( uint16_t i = 1; i < getVertC(); i++ )
 	{
 		fixed_t radius = _verts[ i ].getDist( _centre );
 		if ( radius < minRadius ) { minRadius = radius; }
@@ -174,7 +174,7 @@ fixed_t Shape::getMaxRadius() const
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t maxRadius = _verts[ 0 ].getDist( _centre );
 
-	for ( int16_t i = 1; i < getVertC(); i++ )
+	for ( uint16_t i = 1; i < getVertC(); i++ )
 	{
 		fixed_t radius = _verts[ i ].getDist( _centre );
 		if ( radius > maxRadius ) { maxRadius = radius; }
@@ -187,7 +187,7 @@ fixed_t Shape::getAvgRadius() const
 	if ( getVertC() == 0 ) { return 0; }
 	fixed_t avgRadius = 0;
 
-	for ( int16_t i = 0; i < getVertC(); i++ )
+	for ( uint16_t i = 0; i < getVertC(); i++ )
 	{
 		avgRadius += _verts[ i ].getDist( _centre );
 	}

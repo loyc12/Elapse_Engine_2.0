@@ -14,17 +14,18 @@ bool EntityMngr::tickCompsByType( comp_type_e type )
 
 	switch( type )
 	{
-		case CT_MOVEMENT:  return tickMovements();
+		case CT_MOVEMENT:   return tickPhysics();
+		case CT_SHAPE:      return tickGraphics();
 
 		default:
-			qlog( "tickCompsByType : no tick logic for component type " + to_string( type ), WARN, 0 );
+			qlog( "tickCompsByType : no primary tick logic for component type " + to_string( type ), WARN, 0 );
 			return false;
 	}
 }
 
-// ================ MOVEMENT METHODS
+// ================ PHYSICS METHODS
 
-bool EntityMngr::tickMovements()
+bool EntityMngr::tickPhysics()
 {
 	flog( 0 );
 	for( id_t id : _activeIDs )
@@ -42,7 +43,7 @@ bool EntityMngr::applyMovement( id_t id, CompMovement *cm, CompTransform *ct )
 
 	if( cm == nullptr || !cm->isInit())
 	{
-		qlog( "applyMovement : movement component not found for entity with ID " + std::to_string( id ), ERROR, id );
+		qlog( "applyMovement : movement component not found", ERROR, id );
 		return false;
 	}
 
@@ -66,6 +67,46 @@ bool EntityMngr::applyMovement( id_t id, CompMovement *cm, CompTransform *ct )
 	// NOTE : if there is velocity, apply it to the position
 	if( cm->_lVel != 0 ){ ct->movePosition( cm->_lVel * GDTS() ); }
 	if( cm->_rVel != 0 ){ ct->moveAngle(    cm->_rVel * GDTS() ); }
+
+	return true;
+}
+
+// ================ GRAPHICS METHODS
+bool EntityMngr::tickGraphics()
+{
+	flog( 0 );
+	for( id_t id : _activeIDs )
+	{
+		CompTransform *ct = static_cast< CompTransform* >( getComp( id, CT_TRANSFORM ));
+		CompShape 	  *cs = static_cast< CompShape*     >( getComp( id, CT_SHAPE ));
+
+		renderShape( id, cs, ct ); // NOTE : render the shape component
+	}
+	return true;
+}
+bool EntityMngr::renderShape( id_t id, CompShape *cs, CompTransform *ct )
+{
+	flog( id );
+
+	if( cs == nullptr || !cs->isInit())
+	{
+		qlog( "renderShape : shape component not found", ERROR, id );
+		return false;
+	}
+
+	if( ct == nullptr || !ct->isInit())
+	{
+		qlog( "renderShape : transform component not found", ERROR, id );
+		return false;
+	}
+
+	// NOTE : render the shape at the position of the transform component
+	cs->_shape.setCenter( ct->_pos );
+	cs->_shape.setAngle(  ct->_angle );
+
+	//std::cout << cs->_shape << std::endl; // DEBUG : print the shape to the console
+
+	GetScrnM->putShape( cs->_shape );
 
 	return true;
 }
